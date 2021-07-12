@@ -54,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/css/**", "**.png", "/product-images/**").permitAll()
+                .antMatchers("/").permitAll()
 //                .antMatchers("/clearAll", "/checkOut", "/addInDetail", "/add/**", "/viewCart", "/delete/**",
 //                        "/page/**", "/detail/**", "/listAll").hasAuthority("USER")
 //                .antMatchers("/product/**").hasAuthority("ADMIN")
@@ -74,7 +74,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/css/**", "**.png", "/product-images/**");
+        web.ignoring().antMatchers("/css/**", "**.png", "**.jpg", "/images/**");
     }
 
     @Autowired
