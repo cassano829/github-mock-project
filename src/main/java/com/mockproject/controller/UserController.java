@@ -8,6 +8,7 @@ package com.mockproject.controller;
 import com.mockproject.model.User;
 import com.mockproject.model.User_Role;
 import com.mockproject.security.UserDetailServiceImp;
+import com.mockproject.service.MailService;
 import com.mockproject.service.User_RoleService;
 import javax.servlet.http.HttpServletRequest;
 import net.bytebuddy.utility.RandomString;
@@ -33,9 +34,6 @@ public class UserController {
 
     @Autowired
     User_RoleService user_roleService;
-
-    @Autowired
-    MailController mail;
 
     @GetMapping("/")
     public String loginPage() {

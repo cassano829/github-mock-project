@@ -5,13 +5,12 @@
  */
 package com.mockproject.security;
 
-import com.mockproject.controller.MailController;
 import com.mockproject.model.User;
 import com.mockproject.repository.UserRepository;
+import com.mockproject.service.MailService;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
-import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,7 +31,7 @@ public class UserDetailServiceImp implements UserDetailsService {
     UserRepository repo;
 
     @Autowired
-    MailController mailSender;
+    MailService mailSender;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

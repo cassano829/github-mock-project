@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mockproject.controller;
+package com.mockproject.service;
 
 import com.mockproject.model.User;
 import java.io.UnsupportedEncodingException;
@@ -14,14 +14,14 @@ import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author ACER
  */
-@Controller
-public class MailController {
+@Service
+public class MailService {
 
     @Autowired
     JavaMailSender javaMailSender;
@@ -42,9 +42,7 @@ public class MailController {
             helper.setText(mailContent, true);
             javaMailSender.send(msg);
         } catch (MessagingException | UnsupportedEncodingException ex) {
-            Logger.getLogger(MailController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MailService.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
-
 }
