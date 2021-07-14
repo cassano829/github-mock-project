@@ -5,8 +5,8 @@
  */
 package com.mockproject.service;
 
-import com.mockproject.model.User;
-import com.mockproject.repository.UserRepository;
+import com.mockproject.model.User_Role;
+import com.mockproject.repository.User_RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +15,12 @@ import org.springframework.stereotype.Service;
  * @author ACER
  */
 @Service
-public class UserService {
+public class User_RoleService {
 
     @Autowired
-    UserRepository repo;
+    User_RoleRepository repo;
 
-    public User getUserByUsername(String email) {
-        User user = repo.findUserByEmail(email);
-        return user;
+    public void save(User_Role ur){
+        repo.save(ur);
     }
 }

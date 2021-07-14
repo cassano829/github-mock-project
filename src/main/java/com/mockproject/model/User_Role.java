@@ -5,12 +5,21 @@
  */
 package com.mockproject.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import lombok.Data;
+
 /**
  *
  * @author ACER
  */
-public class Demo {
+@Entity
+@Data
+@Table(name = "Users_Roles")
+public class User_Role {
 
-    private String name;
-    private int age;
+    @Id
+    private Integer user_id;
+    private int idRole;
 }
