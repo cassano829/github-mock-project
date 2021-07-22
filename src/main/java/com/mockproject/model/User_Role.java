@@ -16,10 +16,10 @@ import lombok.Data;
  */
 @Entity
 @Data
-@Table(name = "Users_Roles")
+@Table(name = "RolesOfUser")
 public class User_Role {
 
     @Id
-    private Integer user_id;
+    private Integer idUser;
     private int idRole;
 }

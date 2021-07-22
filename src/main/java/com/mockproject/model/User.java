@@ -34,7 +34,7 @@ public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer user_id;
+    private Integer idUser;
     private String fullName;
 
     @Column(nullable = false, unique = true)
@@ -53,8 +53,8 @@ public class User implements Serializable {
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
-            name = "Users_Roles",
-            joinColumns = @JoinColumn(name = "user_id"),
+            name = "RolesOfUser",
+            joinColumns = @JoinColumn(name = "idUser"),
             inverseJoinColumns = @JoinColumn(name = "idRole")
     )
     private Set<Role> roles = new HashSet<Role>();

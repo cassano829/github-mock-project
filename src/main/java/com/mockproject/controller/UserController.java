@@ -8,13 +8,9 @@ package com.mockproject.controller;
 import com.mockproject.model.User;
 import com.mockproject.model.User_Role;
 import com.mockproject.security.UserDetailServiceImp;
-import com.mockproject.service.MailService;
 import com.mockproject.service.User_RoleService;
-import javax.servlet.http.HttpServletRequest;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,20 +36,73 @@ public class UserController {
         return "login";
     }
 
-    @GetMapping("/index")
-    public String homePage() {
-        return "index";
+    @GetMapping("/403")
+    public String handleError() {
+        return "403";
     }
 
-    @GetMapping("/user/create")
+    //admin
+    @GetMapping("/admin/home")
+    public String adminHomePage() {
+        return "adminHome";
+    }
+
+    @GetMapping("/admin/subject")
+    public String adminSubjectPage() {
+        return "adminSubject";
+    }
+
+    @GetMapping("/admin/account")
+    public String adminAccountPage() {
+        return "adminAccount";
+    }
+
+    @GetMapping("/admin/user")
+    public String adminUserPage() {
+        return "adminUser";
+    }
+
+    //teacher
+    @GetMapping("/teacher/home")
+    public String teacherHomePage() {
+        return "teacherHome";
+    }
+
+    @GetMapping("/teacher/subject")
+    public String teacherSubjectPage() {
+        return "teacherSubject";
+    }
+
+    @GetMapping("/teacher/account")
+    public String teacherAccountPage() {
+        return "teacherAccount";
+    }
+
+    //student
+    @GetMapping("/student/home")
+    public String studentHomePage() {
+        return "studentHome";
+    }
+
+    @GetMapping("/student/class")
+    public String studentClassPage() {
+        return "studentClass";
+    }
+
+    @GetMapping("/student/account")
+    public String studentAccountPage() {
+        return "studentAccount";
+    }
+
+    @GetMapping("/student/create")
     public String signUp(Model model) {
         model.addAttribute("user", new User());
         return "sign-up";
     }
 
-    @PostMapping("/user/save")
-    public String signUp(@ModelAttribute("user") User user, @RequestParam("roleSelection") int roleSelection,
-            Model model, @RequestParam("rePassword") String rePwd, HttpServletRequest req) {
+    @PostMapping("/student/save")
+    public String signUp(@ModelAttribute("user") User user,
+            Model model, @RequestParam("rePassword") String rePwd) {
 
         boolean checkEmpty = true;
         if (user.getEmail().trim().isEmpty()) {
@@ -63,9 +112,6 @@ public class UserController {
             checkEmpty = false;
         }
         if (user.getPassword().trim().isEmpty()) {
-            checkEmpty = false;
-        }
-        if (roleSelection == 0) {
             checkEmpty = false;
         }
         if (checkEmpty) {
@@ -90,8 +136,8 @@ public class UserController {
                 } else {
                     service.register(user);
                     User_Role ur = new User_Role();
-                    ur.setIdRole(roleSelection);
-                    ur.setUser_id(user.getUser_id());
+                    ur.setIdRole(3); // 3 = student role
+                    ur.setIdUser(user.getIdUser());
                     user_roleService.save(ur);
                     model.addAttribute("message", "Registered successfully!");
                     model.addAttribute("nofitication", "Please check your email to verify your account!");
@@ -107,7 +153,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/verify")
+    @PostMapping("/student/verify")
     public String verifyAccount(@RequestParam("AUTHEN_CODE") String code, Model model) {
         boolean verified = service.verify(code);
         if (verified) {
@@ -116,10 +162,5 @@ public class UserController {
             model.addAttribute("messageError", "Invalid code verify!");
             return "verify";
         }
-    }
-
-    @GetMapping("/403")
-    public String handleError() {
-        return "403";
     }
 }
