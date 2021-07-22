@@ -20,11 +20,10 @@ and open the template in the editor.
             <h3 th:text="${messageError}" style="color: red"></h3>
         </div>
 
-        <form class="form-add-user" th:action="@{/user/save}" th:object="${user}" method="POST">
+        <form class="form-add-user" th:action="@{/student/save}" th:object="${user}" method="POST">
             <div class="left-panel">
                 <div>Email:</div>
                 <div>Full name:</div>
-                <div>You use for teaching or studying:</div>
                 <div>Password:</div>
                 <div>Confirm password:</div>
             </div>
@@ -32,15 +31,11 @@ and open the template in the editor.
             <div class="right-panel">
                 <div><input type="text" th:field="*{email}" name="email" ></div>
                 <div><input type="text" th:field="*{fullName}" name="fullName" ></div>
-                <div>
-                    <input type="radio" name="roleSelection" value="2" checked="checked"/>Teacher
-                    <input type="radio" name="roleSelection" value="3"/>Student
-                </div>
                 <div><input type="password" th:field="*{password}" name="password"/></div>
                 <div><input type="password" name="rePassword" /></div>
                 <button type="submit">Sign up</button>
             </div>
         </form>
-        <p style="font-weight: bold">Already have an account? <a th:href="@{/login}">Login</a></p>
+        <p style="font-weight: bold">Already have an account? <a th:href="@{/}">Login</a></p>
     </body>
 </html>
