@@ -60,6 +60,22 @@
                 <form th:action="@{/quiz/chooseQuestion}" method="get">
                     <div class="container-fluid">
                         <h3><i class="fas fa-id-card"></i> Quiz</h3>
+                        <div class="d-flex justify-content-center flex-wrap mt-4">
+                            <!--List cau hoi-->
+                            <div>
+                                <div class="row quiz-panel text-center">
+                                    <div>
+                                        Time left: <span id="timer">60s</span>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <input type="submit" class="btn btn-finish btn-radius" name="action" value="Save"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="questionId" th:value="${session.questions.get(session.questionIndex).idQuestion}">
+                            <input type="hidden" name="txtSubjectId" th:value="${txtSubjectId}">
+                        </div>
                         <div class="quiz-container mt-4">
                             <div class="row">
                                 <div class="col-md-12 body-content bg-white">
@@ -109,22 +125,7 @@
                             </div>
 
                         </div>
-                        <div class="d-flex justify-content-between mt-4">
-                            <!--List cau hoi-->
-                            <div>
-                                <div class="row quiz-panel text-center">
-                                    <div>
-                                        <span class="minutes"></span>: <span class="seconds"></span>
-                                    </div>
-                                    <br>
-                                    <div>
-                                        <input type="submit" class="btn btn-finish btn-radius" name="action" value="Save"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <input type="hidden" name="questionId" th:value="${session.questions.get(session.questionIndex).idQuestion}">
-                            <input type="hidden" name="txtSubjectId" th:value="${txtSubjectId}">
-                        </div>
+
                     </div>
                 </form>
                 <th:block th:if="${action eq 'Save'}">
@@ -148,41 +149,48 @@
                 integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
         crossorigin="anonymous"></script>
         <script th:inline="javascript">
-            function getTimeRemaining(endtime) {
-                var t = Date.parse(endtime) - Date.parse(new Date());
-                var seconds = Math.floor((t / 1000) % 60);
-                var minutes = Math.floor((t / 1000 / 60) % 60);
-                return {
-                    'total': t,
-                    'minutes': minutes,
-                    'seconds': seconds
-                };
+            function submitQuiz() {
+            $.ajax({
+            url: 'quiz',
+                    type: 'POST',
+                    data: $("#answer-form").serialize(),
+                    success: function () {},
+                    error: function () {
+                    alert("Cannot save your answer!");
+                    }
+            });
             }
 
-            function initializeClock(id, endtime) {
-                var clock = document.getElementById(id);
-                var minutesSpan = clock.querySelector('.minutes');
-                var secondsSpan = clock.querySelector('.seconds');
-
-                function updateClock() {
-                    var t = getTimeRemaining(endtime);
-                    minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
-                    secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
-
-                    if (t.total <= 0) {
-                        clearInterval(timeinterval);
-                    }
-                    if (t.minutes == 0 && t.seconds == 0) {
-                        document.getElementById('submitQuiz').click();
-                    }
-                }
-
-                updateClock();
-                var timeinterval = setInterval(updateClock, 1000);
+            function cal(timer) {
+            var minutes = parseInt(timer / 60, 10);
+            var seconds = parseInt(timer % 60, 10);
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+            document.querySelector('#timer').textContent = minutes + ":" + seconds;
             }
-            var deadline = new Date(Date.parse(new Date([[${session.TimeStartQuiz}]])) + [[${timeLimit}]] * 60 * 1000);
-            initializeClock('clockdiv', deadline);
 
+            function startTimer(duration) {
+            var timer = duration;
+            cal(timer);
+            var intervalCount = setInterval(function () {
+            cal(timer);
+            if (--timer < 0) {
+            $('#submit-form').submit();
+            clearInterval(intervalCount);
+            }
+            }, 1000);
+            }
+            window.onload = function () {
+            var endTime = new Date(Date.parse(new Date([[${session.TimeStartQuiz}]])) + [[${timeLimit}]] * 60 * 1000);
+            var curTime = new Date().getTime();
+            var diff = Math.round((endTime - curTime) / 1000);
+            startTimer(diff);
+            }
+            $("input[type=radio]").click(function () {
+            if ($(this).prop("checked")) {
+            submitQuiz()
+            }
+            });
         </script>
     </body>
 
