@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>admin count assignment Page</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <link rel="stylesheet" th:href="@{/css/adminCountAssignment.css}">
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    </head>
+
+    <body>
+
+        <header th:replace="~{/adminAssignmentMenu}"> </header>  
+
+        <!-- Page Content -->
+        <div id="content">
+            <div class="container-fluid">
+                <h3><i class="fas fa-book-open"></i> Assignment</h3>
+                <a><strong>Assignments</a></strong>
+                <ul class="as">
+                    <li class="act"><a th:href="@{/adminListAssignment}">List Assignment</a></li>
+                    <li><a th:href="@{/createAssignment}">Create</a></li>
+                </ul>
+                <div class="main-container">
+                    <!--  -->
+                    <fieldset class="fs">
+                        <legend><strong>Amount Assignment</strong></legend>
+                        <form class="form-add-product" action="" style="margin-top: 20px;">
+
+                            <a class="collapsible"><i class="fas fa-sort-down"></i> Assignment Detail</a>
+                            <div class="con">
+                                <div>
+                                    <label>
+                                        <strong>Subject</strong>
+                                    </label>
+                                    <div>
+                                        <input readonly type="text" th:value="${assignment.idSubject}" maxlength="100" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label>
+                                        <strong>Assignment Instructions</strong>
+                                    </label>
+                                    <div>
+                                        <textarea readonly name="" cols="90" rows="5" th:text="${assignment.content}" ></textarea>
+                                    </div>
+                                </div>
+                                <div>
+                                    File : <a th:if="${assignment.link != null and assignment.link != ''}" th:href="${assignment.link}" download>Download</a>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label"><strong>Open Date</strong></label>
+                                    <div class='input-group date' style="width: 40%; border-radius: 1px;">
+                                        <input type="datetime-local" readonly class="form-control" th:value="${#dates.format(assignment.createDate,'yyyy-MM-dd')}+'T'+${#dates.format(assignment.createDate,'HH:mm:ss')}"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label"><strong>Open Date</strong></label>
+                                    <div class='input-group date' style="width: 40%; border-radius: 1px;">
+                                        <input type="datetime-local" readonly class="form-control" th:value="${#dates.format(assignment.deadline,'yyyy-MM-dd')}+'T'+${#dates.format(assignment.deadline,'HH:mm:ss')}"/>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label><strong>Create By :</strong> </label><span th:text="@{' user_id: ' + ${assignment.userId}}"></span>
+                                </div>
+                            </div>
+                            <div><label><strong>Submissions</strong></label></div>
+                            <div>
+                                <table class="tblinfo" th:if="${#authentication.getPrincipal().getUser().getUser_id() == assignment.userId}">
+                                    <tr>
+                                        <th>Students</th>
+                                        <th>Submitted Date</th>
+                                        <th>Check</th>
+                                    </tr>
+                                    <tr th:if="${studentAssignments.empty}">
+                                        <td colspan="2"> No Submission Available </td>
+                                    </tr>
+                                    <tr th:each="studentAssignment : ${studentAssignments}">
+                                        <td>
+                                            <strong th:text="${mapFullNames.get(studentAssignment.userId)}"></strong>
+                                        </td>
+                                        <td th:text="${#dates.format(studentAssignment.uploadTime,'yyyy-MM-dd')}+' '+${#dates.format(studentAssignment.uploadTime,'HH:mm:ss')}"></td>
+                                        <td>
+                                            <a class="btn" th:href="@{'/viewStudentAssignment/' + ${studentAssignment.idUpload}}">View</a>
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+
+                            <div class="btt">
+                                <a class="btn" th:href="@{/adminListAssignment}">Cancel</a>
+                            </div>
+                        </form>
+
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+        <!--  -->
+        <!-- jQuery CDN - Slim version (=without AJAX) -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js " integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo " crossorigin="anonymous "></script>
+        <!-- Popper.JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js " integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ " crossorigin="anonymous "></script>
+        <!-- Bootstrap JS -->
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js " integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm " crossorigin="anonymous "></script>
+        <script>
+            var coll = document.getElementsByClassName("collapsible");
+            var i;
+
+            for (i = 0; i < coll.length; i++) {
+                coll[i].addEventListener("click", function () {
+                    this.classList.toggle("active");
+                    var content = this.nextElementSibling;
+                    if (content.style.display === "block") {
+                        content.style.display = "none";
+                    } else {
+                        content.style.display = "block";
+                    }
+                });
+            }
+        </script>
+    </body>
+
+</html>
