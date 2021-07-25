@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserDetailServiceImp implements UserDetailsService {
 
-    public final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    public final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
     UserRepository repo;
@@ -53,7 +53,6 @@ public class UserDetailServiceImp implements UserDetailsService {
         user.setVerificationCode(rdn);
 
 //        String random = RandomString.make(64);
-
         repo.save(user);
         mailSender.sendMail(user, rdn);
     }
@@ -64,14 +63,19 @@ public class UserDetailServiceImp implements UserDetailsService {
         user.setPassword(encodedPassword);
     }
 
-    public User getUserByUsername(String email) {
-        User user = repo.findUserByEmail(email);
+//    public User getUserByEmail(String email) {
+//        User user = repo.findUserByEmail(email);
+//        return user;
+//    }
+    
+    public User getUserByIdUser(int id) {
+        User user = repo.findUserByIdUser(id);
         return user;
     }
 
     public boolean isEmailUnique(String email) {
-        User existedUser = repo.findUserByEmail(email); 
-        return existedUser == null; 
+        User existedUser = repo.findUserByEmail(email);
+        return existedUser == null;
     }
 
     public boolean isValidEmail(String email) {

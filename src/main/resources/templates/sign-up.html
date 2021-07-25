@@ -20,7 +20,7 @@ and open the template in the editor.
             <h3 th:text="${messageError}" style="color: red"></h3>
         </div>
 
-        <form class="form-add-user" th:action="@{/student/save}" th:object="${user}" method="POST">
+        <form class="form-add-user" th:action="@{/save}" th:object="${user}" method="POST">
             <div class="left-panel">
                 <div>Email:</div>
                 <div>Full name:</div>

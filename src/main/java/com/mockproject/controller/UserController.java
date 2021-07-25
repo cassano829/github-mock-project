@@ -5,16 +5,22 @@
  */
 package com.mockproject.controller;
 
+import com.mockproject.model.News;
 import com.mockproject.model.User;
 import com.mockproject.model.User_Role;
+import com.mockproject.security.CustomUserDetail;
 import com.mockproject.security.UserDetailServiceImp;
+import com.mockproject.service.NewsService;
 import com.mockproject.service.User_RoleService;
-import net.bytebuddy.utility.RandomString;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -29,6 +35,9 @@ public class UserController {
     UserDetailServiceImp service;
 
     @Autowired
+    NewsService newService;
+
+    @Autowired
     User_RoleService user_roleService;
 
     @GetMapping("/")
@@ -41,66 +50,54 @@ public class UserController {
         return "403";
     }
 
-    //admin
-    @GetMapping("/admin/home")
-    public String adminHomePage() {
-        return "adminHome";
+    @GetMapping("/handleException")
+    public String handleException() {
+        CustomUserDetail user = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (user.hasRole("ADMIN")) {
+            return "redirect:/admin/home";
+        } else if (user.hasRole("TEACHER")) {
+            return "redirect:/teacher/home";
+        } else if (user.hasRole("STUDENT")) {
+            return "redirect:/student/home";
+        }
+        return null;
+    }
+    
+    @GetMapping("/page/{pageNumber}")
+    public String listByPage(Model model, @PathVariable(name = "pageNumber") Integer currentPage) {
+        CustomUserDetail user = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User u = new User();
+        Page<News> page = newService.getListNewsByStatus(currentPage);
+        int totalPages = page.getTotalPages();
+        List<News> list = page.getContent();
+        for (News n : list) {
+            u = service.getUserByIdUser(n.getIdUser());
+        }
+        if (list != null) {
+            if (list.size() != 0) {
+                model.addAttribute("currentPage", currentPage);
+                model.addAttribute("totalPages", totalPages);
+                model.addAttribute("nameUser", u.getFullName());
+                model.addAttribute("listNews", list);
+            } else {
+                model.addAttribute("message", "Empty Announcement!");
+            }
+        }
+        if (user.hasRole("TEACHER")) {
+            return "teacherHome";
+        } else if (user.hasRole("STUDENT")) {
+            return "studentHome";
+        }
+        return null;
     }
 
-    @GetMapping("/admin/subject")
-    public String adminSubjectPage() {
-        return "adminSubject";
-    }
-
-    @GetMapping("/admin/account")
-    public String adminAccountPage() {
-        return "adminAccount";
-    }
-
-    @GetMapping("/admin/user")
-    public String adminUserPage() {
-        return "adminUser";
-    }
-
-    //teacher
-    @GetMapping("/teacher/home")
-    public String teacherHomePage() {
-        return "teacherHome";
-    }
-
-    @GetMapping("/teacher/subject")
-    public String teacherSubjectPage() {
-        return "teacherSubject";
-    }
-
-    @GetMapping("/teacher/account")
-    public String teacherAccountPage() {
-        return "teacherAccount";
-    }
-
-    //student
-    @GetMapping("/student/home")
-    public String studentHomePage() {
-        return "studentHome";
-    }
-
-    @GetMapping("/student/class")
-    public String studentClassPage() {
-        return "studentClass";
-    }
-
-    @GetMapping("/student/account")
-    public String studentAccountPage() {
-        return "studentAccount";
-    }
-
-    @GetMapping("/student/create")
+    @GetMapping("/create")
     public String signUp(Model model) {
         model.addAttribute("user", new User());
         return "sign-up";
     }
 
-    @PostMapping("/student/save")
+    @PostMapping("/save")
     public String signUp(@ModelAttribute("user") User user,
             Model model, @RequestParam("rePassword") String rePwd) {
 
@@ -153,7 +150,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/student/verify")
+    @PostMapping("/verify")
     public String verifyAccount(@RequestParam("AUTHEN_CODE") String code, Model model) {
         boolean verified = service.verify(code);
         if (verified) {
