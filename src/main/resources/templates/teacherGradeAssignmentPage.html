@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Teacher Grade Assignment Page</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <link rel="stylesheet" th:href="@{/css/adminViewStuAssign.css}">
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    </head>
+
+    <body>
+
+        <!-- Page Content -->
+        <div id="content">
+            <div class="container-fluid">
+                <h3><i class="fas fa-book-open"></i> Assignment</h3>
+                <a><strong>Assignments</a></strong>
+                <ul class="as">
+                    <li class="act"><a th:href="@{/teacher/assignment/list}">List Assignment</a></li>
+                    <li><a th:href="@{/teacher/assignment/create}">Create</a></li>
+                </ul>
+                <div class="main-container">
+                    <!--  -->
+                    <fieldset class="fs">
+                        <legend><strong th:text="${userFullName}"> Submission</strong></legend>
+                        <form class="form-add-product" style="margin-top: 20px;" th:action="@{'/teacher/assignment/grade/detail/submit/' + ${assignmentOfUserData.idAssignmentOfUser}}">
+
+                            <div>
+                                <label><strong>Id Assignment:</strong></label>
+                                <span th:text="${assignmentOfUserData.idAssignment}"></span>
+                            </div>
+                            
+                            <div>
+                                <label><strong>Id Class</strong></label>
+                                <span th:text="${assignmentOfUserData.idClass}"></span>
+                            </div>
+                            
+                            <div>
+                                <label><strong>Id User</strong></label>
+                                <span th:text="${assignmentOfUserData.idUser}"></span>
+                            </div>
+                            
+                            <div>
+                                <label><strong>Content</strong></label>
+                                <div>
+                                    <textarea cols="90" rows="5" readonly th:text="${assignmentOfUserData.content}"></textarea>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label><strong>Attachments:</strong></label>
+                                <a th:if="${assignmentOfUserData.attachments != null and !assignmentOfUserData.attachments.empty}" th:href="@{assignmentOfUserData.attachments}" download>Download</a>
+                                <span th:unless="${assignmentOfUserData.attachments != null and !assignmentOfUserData.attachments.empty}" th:href="@{assignmentOfUserData.attachments}">No Files to download</span>
+                            </div>
+                            
+                            <div>
+                                <span class="text-danger" th:if="${assignmentReportData == null}" >Not Graded</span>
+                                <span class="text-danger" th:if="${assignmentReportData != null}" >Graded</span>
+                            </div>
+                            
+                            <div>
+                                <input type="number" min="0" max="10" th:name="mark" value="0" th:if="${assignmentReportData == null}" >
+                                <input type="number" min="0" max="10" th:name="mark"  th:if="${assignmentReportData != null}" th:value="${assignmentReportData.grade}">
+                            </div>
+                            
+                            <div class="btt">
+                                <button type="submit" class="btn">Grade</button>
+                                <a th:href="@{/teacher/assignment/grade/class/page/1}">Cancel</a>
+                            </div>
+                        </form>
+                    </fieldset>
+                    <!--  -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js " integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo " crossorigin="anonymous "></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js " integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ " crossorigin="anonymous "></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js " integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm " crossorigin="anonymous "></script>
+
+</body>
+
+</html>
