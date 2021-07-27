@@ -6,8 +6,7 @@
 package com.mockproject.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.mockproject.model.Quiz;
-import com.mockproject.model.Subject;
+import com.mockproject.model.Class;
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -17,10 +16,11 @@ import org.springframework.stereotype.Repository;
  * @author Asus
  */
 @Repository
-public interface QuizRepository extends JpaRepository<Quiz, Integer> {
-       
-    List<Quiz> findByIdUser(int idUser);
+public interface ClassRepository extends JpaRepository<Class, Integer>{
     
-    @Query("SELECT q FROM Quiz q JOIN q.classes c JOIN q.subject s WHERE c.idClass=?1 AND s.idSubject =?2")
-    List<Quiz> getAllQuizByIdClassAndIdSubject(int idClass,String idSubject);
+    List<Class> findByIdUser(int idUser);
+    
+    @Query("SELECT c FROM Class c JOIN c.subject s WHERE c.idUser=?1 AND s.idSubject=?2")
+    List<Class> findByIdUserAndIdQuiz(int idUser,String idSubject);
+    
 }

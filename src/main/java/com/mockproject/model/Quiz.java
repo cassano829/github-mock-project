@@ -6,13 +6,21 @@
 package com.mockproject.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  *
@@ -27,15 +35,31 @@ public class Quiz {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idQuiz;
 
-    private String idSubject;
-
     private int idUser;
     private int numOfQues;
     private int timeLimit;
     private boolean status;
-    
-    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
-    @Column(name = "createDate")
-    private String createDate;
+
+    private String nameQuiz;
+
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", shape = JsonFormat.Shape.STRING)
+    @Column(name = "openDate")
+    private String openDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", shape = JsonFormat.Shape.STRING)
+    @Column(name = "dueDate")
+    private String dueDate;
+
+    @ManyToOne
+    @JoinColumn(name = "idSubject")
+    private Subject subject;
+
+    @ManyToMany(mappedBy = "quizes", fetch = FetchType.LAZY)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<Class> classes;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "quiz")
+    private Set<QuizOfStudent> quizOfStudents;
 
 }

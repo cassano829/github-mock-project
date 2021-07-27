@@ -33,6 +33,20 @@ public class Question {
     private String content;
     private boolean status;
     private Set<Answer> answers = new HashSet<Answer>(0);
+    private Set<QuizDetail> QuizDetails = new HashSet<QuizDetail>(0);
+    
+    public Question(int idQuiz, String questionContent, boolean status, String createDate) {
+        this.idQuiz = idQuiz;
+        this.content = questionContent;
+        this.status = status;
+        this.createDate = createDate;
+    }
+
+    public Question(int idQuiz, String questionContent, Set<Answer> answer) {
+        this.idQuiz = idQuiz;
+        this.content = questionContent;
+        this.answers = answer;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,8 +57,6 @@ public class Question {
     public void setIdQuestion(int idQuestion) {
         this.idQuestion = idQuestion;
     }
-
-
 
     @Column(name = "content")
     public String getContent() {
@@ -58,7 +70,6 @@ public class Question {
     public void setContent(String content) {
         this.content = content;
     }
-
 
     @Column(name = "status")
     public boolean isStatus() {
@@ -99,18 +110,15 @@ public class Question {
         this.idQuiz = idQuiz;
     }
 
-    public Question(int idQuiz, String questionContent, boolean status, String createDate) {
-        this.idQuiz = idQuiz;
-        this.content = questionContent;
-        this.status = status;
-        this.createDate = createDate;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "question")
+    public Set<QuizDetail> getQuizDetails() {
+        return QuizDetails;
     }
 
-    public Question(int idQuiz, String questionContent, Set<Answer> answer) {
-        this.idQuiz = idQuiz;
-        this.content = questionContent;
-        this.answers=answer;
+    public void setQuizDetails(Set<QuizDetail> QuizDetails) {
+        this.QuizDetails = QuizDetails;
     }
 
     
+
 }

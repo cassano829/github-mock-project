@@ -247,51 +247,19 @@ MEDIAQUERIES
 
 /* fileset */
 
-table {
-    width: 964px;
-    margin: 0 auto;
+html,
+body {
+    height: 100%;
 }
 
-td:nth-child(odd) {
-    font-weight: bold;
-}
-
-.tblinfo {
+.container {
     width: 90%;
+    margin-left: 5%;
     text-align: left;
-    margin-bottom: 10px;
 }
 
-.tblinfo tr {
-    border: 1px solid rgb(230, 230, 255);
-}
-
-.tblinfo td {
-    border: 1px solid rgb(230, 230, 255);
-}
-
-.tblinfo tr:nth-child(odd) {
-    background-color: #f2f2f3;
-    padding-bottom: 3px;
-}
-
-input {
-    width: 60%
-}
-
-form {
-    padding: 0 2em;
-}
-
-fieldset {
-    width: 100%;
-    border: 2px black solid;
-}
-
-legend {
-    width: auto;
+.form-add-product {
     text-align: left;
-    margin-left: 2%;
 }
 
 .form-add-product button {
@@ -306,14 +274,17 @@ legend {
     padding-bottom: 5px;
 }
 
-.btn {
-    margin-left: 5%;
-    margin-bottom: 10px;
-    margin-top: 10px;
+.btt {
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
-.remove {
-    text-align: center;
+input {
+    width: 60%
+}
+
+form {
+    padding: 0 2em;
 }
 
 .btn:hover,
@@ -321,14 +292,37 @@ legend {
     background-color: green;
 }
 
-.edit {
-    text-decoration: underline;
-    color: red;
+a:hover {
+    text-decoration: none;
 }
 
-.edit:hover {
-    text-decoration: underline;
-    color: hotpink;
+.fs {
+    width: 100%;
+    border: 2px black solid;
+}
+
+.nav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+.nav li {
+    float: left;
+}
+
+.nav li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.nav li a:hover {
+    background-color: #111;
 }
 
 .as {
@@ -359,20 +353,67 @@ legend {
     background-color: darkblue;
 }
 
-/*.btn-view{
-  background-color: #0b1660;
+fieldset {
+    width: 100%;
+    border: 2px black solid;
+}
+
+legend {
+    width: auto;
+    text-align: left;
+    margin-left: 2%;
+}
+
+.collapsible {
+    background-color: lightseagreen;
     color: white;
-    padding: 9px 12px;
-    border: none;
     cursor: pointer;
-    border-radius: 5px;
-    width: fit-content;
-    padding-top: 5px;
-    padding-bottom: 5px;  
-}*/
+    padding: 5px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    border-radius: 3px;
+}
+
+.con {
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
+    background-color: #f1f1f1;
+}
+
+table {
+    width: 964px;
+    margin: 0 auto;
+}
+
+td:nth-child(odd) {
+    font-weight: bold;
+}
+
+.tblinfo {
+    width: 90%;
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.tblinfo tr {
+    border: 1px solid rgb(230, 230, 255);
+}
+
+.tblinfo td {
+    border: 1px solid rgb(230, 230, 255);
+}
+
+.tblinfo tr:nth-child(odd) {
+    background-color: #f2f2f3;
+    padding-bottom: 3px;
+}
+
 .act {
     background-color: lightcyan;
     border-radius: 0px 30px 30px 0px;
 }
-
 /*  */

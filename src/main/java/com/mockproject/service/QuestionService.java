@@ -22,6 +22,9 @@ public class QuestionService {
     @Autowired
     QuestionRepository questionRepository;
 
+    public Question findbyId(int idQuestion){
+        return questionRepository. getById(idQuestion);
+    }
     public void save(Question question) {
         questionRepository.save(question);
     }

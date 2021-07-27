@@ -6,9 +6,12 @@
 package com.mockproject.model;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Data;
 
@@ -24,9 +27,15 @@ public class QuizDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idQuizDetail;
     
-    private int idQuizOfUser;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idQuizOfUser")
+    private QuizOfStudent quizOfStudent;
     
-    private int idQuestion;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idQuestion")
+    private Question question;
     
     private int userAnswer;
+    
+    
 }

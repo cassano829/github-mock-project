@@ -10,17 +10,17 @@ import com.mockproject.model.QuizCart;
 import com.mockproject.model.QuizDetail;
 import com.mockproject.model.QuizOfStudent;
 import com.mockproject.security.CustomUserDetail;
-import com.mockproject.service.MailService;
 import com.mockproject.service.QuestionService;
 import com.mockproject.service.QuizDetailService;
 import com.mockproject.service.QuizOfStudentService;
-import java.security.Principal;
+import com.mockproject.service.QuizService;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,8 +35,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/student/quiz")
 public class QuizController {
 
+    public final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
     @Autowired
     QuestionService questionService;
+
 //    @Autowired
 //    AnswerService answerService;
     @Autowired
@@ -45,10 +48,12 @@ public class QuizController {
     @Autowired
     QuizDetailService quizDetailService;
 
+    @Autowired
+    QuizService quizService;
+
     @GetMapping("/showQuiz")
     public String showQuiz(HttpSession session,
             Model model) {
-        //Them para txtSubject
         int idQuiz = 1;
         List<Question> questions = questionService.findListQuestionByIdQuiz(idQuiz);
         session.setAttribute("questions", questions);
@@ -64,7 +69,7 @@ public class QuizController {
 
     @GetMapping("/chooseQuestion")
     public String add(HttpSession session, HttpServletRequest request, Model model) throws Exception {
-        String page="quiz";
+        String page = "quiz";
         int questionIndex = 0;
         int idQuestion = Integer.parseInt(request.getParameter("questionId"));
         int userAnswer = -1;
@@ -82,9 +87,9 @@ public class QuizController {
         cart.getQuizCart().put(idQuestion, userAnswer);
         session.setAttribute("quizCart", cart);
         model.addAttribute("questionIndex", questionIndex);
-        
+
         if (request.getParameter("action") != null && request.getParameter("action").equals("Finish")) {
-            page=submitQuiz(session, model, request);
+            page = submitQuiz(session, model, request);
         }
         return page;
     }
@@ -101,26 +106,32 @@ public class QuizController {
         }
 
         QuizOfStudent quizOfStudent = new QuizOfStudent();
-        quizOfStudent.setIdQuiz(cart.getIdQuiz());
-        if (totalCorrect / questions.size() >= 0.5) {
+        quizOfStudent.setQuiz(quizService.getQuizByIdQuiz(cart.getIdQuiz()));
+        if ((totalCorrect / questions.size()) >= 0.5) {
             quizOfStudent.setPass(true);
         } else {
             quizOfStudent.setPass(false);
         }
-        quizOfStudent.setIdUser(cart.getIdUser());
+        CustomUserDetail userDetail = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        quizOfStudent.setUser(userDetail.getUser());
         quizOfStudent.setTotalCorrect(totalCorrect);
-        quizOfStudentService.save(quizOfStudent);
+        quizOfStudent.setSubmitDate(df.format(new Date()));
         int idQuizOfStudent = quizOfStudentService.getIdOfQuizOfUser();
+        quizOfStudent.setIdQuizOfUser(idQuizOfStudent + 1);
+
+        quizOfStudentService.save(quizOfStudent);
         for (Integer questionId : cart.getQuizCart().keySet()) {
             QuizDetail quizDetail = new QuizDetail();
-            quizDetail.setIdQuestion(questionId);
-            quizDetail.setIdQuizOfUser(idQuizOfStudent);
+            quizDetail.setQuestion(questionService.findbyId(questionId));
+            quizDetail.setQuizOfStudent(quizOfStudent);
             quizDetail.setUserAnswer(cart.getQuizCart().get(questionId));
             quizDetailService.insertQuizDetail(quizDetail);
         }
+
         //send notification
-        CustomUserDetail userDetail = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         quizOfStudentService.sendEmailToNotifyQuiz(userDetail.getUser(), totalCorrect, questions.size());
+
         session.removeAttribute("quizCart");
         session.removeAttribute("questionIndex");
         session.removeAttribute("TimeStartQuiz");
