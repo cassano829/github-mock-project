@@ -5,8 +5,8 @@
  */
 package com.mockproject.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import com.mockproject.model.Quiz;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**

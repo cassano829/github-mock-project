@@ -6,11 +6,12 @@
 package com.mockproject.service;
 
 import com.mockproject.model.Answer;
-import com.mockproject.repository.QuestionRepository;
 import com.mockproject.model.Question;
-import java.util.List;
+import com.mockproject.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  *

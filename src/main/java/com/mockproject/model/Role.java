@@ -5,14 +5,10 @@
  */
 package com.mockproject.model;
 
-import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import lombok.Data;
+
+import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  *
@@ -30,4 +26,14 @@ public class Role implements Serializable {
 
     @Column(name = "nameRole")
     private String name;
+
+//    public int hashCode() {
+//        return Objects.hash(this.name);
+//    }
+//
+//    public boolean equals(Object o) {
+//        if (o == this) { return true; }
+//        if (o == null || !(o instanceof Role) ) { return false; }
+//        return Objects.equals(this.name, ((Role) o).name);
+//    }
 }

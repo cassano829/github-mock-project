@@ -5,18 +5,22 @@
  */
 package com.mockproject.security;
 
+import com.mockproject.model.Role;
 import com.mockproject.model.User;
 import com.mockproject.repository.UserRepository;
 import com.mockproject.service.MailService;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 /**
  *
@@ -42,6 +46,48 @@ public class UserDetailServiceImp implements UserDetailsService {
         return new CustomUserDetail(user);
     }
 
+    public List<User> loadAllUsers(){
+        return repo.findAll();
+    }
+
+    public User loadUserByIdUser(int idUser) {
+        User user = repo.findUsersByIdUser(idUser);
+        if (user == null || !user.isStatus()) {
+            throw new UsernameNotFoundException(Integer.toString(idUser));
+        }
+        return user;
+    }
+
+    public User loadUserByIdUserNonFilter(int idUser) {
+        User user = repo.findUsersByIdUser(idUser);
+        if (user == null) {
+            throw new UsernameNotFoundException(Integer.toString(idUser));
+        }
+        return user;
+    }
+
+    public void updateAdminAcount(User user){
+        encodePassword(user);
+
+        User tmp = loadUserByIdUser(user.getIdUser());
+        if(tmp != null){
+            tmp.setFullName(user.getFullName());
+            tmp.setEmail(user.getEmail());
+            tmp.setPassword(user.getPassword());
+        }
+        repo.save(tmp);
+    }
+
+    public void updateUserAccount(User user){
+        User tmp = loadUserByIdUserNonFilter(user.getIdUser());
+        if(tmp != null) {
+            tmp.setFullName(user.getFullName());
+            tmp.setEmail(user.getEmail());
+            tmp.setStatus(user.isStatus());
+        }
+        repo.save(tmp);
+    }
+
     public void register(User user) {
         encodePassword(user);
         user.setCreateDate(df.format(new Date()));
@@ -56,6 +102,14 @@ public class UserDetailServiceImp implements UserDetailsService {
 
         repo.save(user);
         mailSender.sendMail(user, rdn);
+    }
+
+    public void registerTeacher(User teacher){
+        encodePassword(teacher);
+        teacher.setCreateDate(df.format(new Date()));
+        teacher.setStatus(false);
+
+        repo.save(teacher);
     }
 
     public void encodePassword(User user) {
@@ -74,13 +128,22 @@ public class UserDetailServiceImp implements UserDetailsService {
         return existedUser == null; 
     }
 
+    public boolean isEmailUniqueUpdate(String email,int idUser) {
+        User existedUser = repo.findUserByEmail(email);
+        if(existedUser == null){
+            return true;
+        }
+        return idUser == existedUser.getIdUser();
+
+    }
+
     public boolean isValidEmail(String email) {
         String regex = "[a-z][a-z0-9_.]{4,32}@[a-z0-9]{2,}([.][a-z0-9]{2,4}){1,2}";
         return email.matches(regex);
     }
 
     public boolean verify(String verificationCode) {
-        User user = repo.findByVerificationCode(verificationCode);
+        User user = repo.findUserByVerificationCode(verificationCode);
         if (user == null || user.isStatus()) {
             return false;
         } else {
@@ -89,4 +152,6 @@ public class UserDetailServiceImp implements UserDetailsService {
             return true;
         }
     }
+
+    public List<User> searchUser(String email,Role role,boolean status){ return repo.findAllByEmailContainsAndRolesAndStatus(email,role,status);}
 }

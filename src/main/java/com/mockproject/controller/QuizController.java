@@ -10,22 +10,20 @@ import com.mockproject.model.QuizCart;
 import com.mockproject.model.QuizDetail;
 import com.mockproject.model.QuizOfStudent;
 import com.mockproject.security.CustomUserDetail;
-import com.mockproject.service.MailService;
 import com.mockproject.service.QuestionService;
 import com.mockproject.service.QuizDetailService;
 import com.mockproject.service.QuizOfStudentService;
-import java.security.Principal;
-import java.sql.Timestamp;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.sql.Timestamp;
+import java.util.List;
 
 /**
  *

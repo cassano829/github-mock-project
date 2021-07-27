@@ -5,10 +5,11 @@
  */
 package com.mockproject.model;
 
+import lombok.Data;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import lombok.Data;
 
 /**
  *
@@ -19,7 +20,16 @@ import lombok.Data;
 @Table(name = "RolesOfUser")
 public class User_Role {
 
+    public User_Role() {
+    }
+
+    public User_Role(Integer idUser, int idRole) {
+        this.idUser = idUser;
+        this.idRole = idRole;
+    }
+
+
     @Id
-    private Integer idUser;
+    private int idUser;
     private int idRole;
 }
