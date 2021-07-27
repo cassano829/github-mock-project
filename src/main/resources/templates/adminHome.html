@@ -72,13 +72,13 @@
                                         <div class="d-flex flex-column w-100">
                                             <div class="delete">
                                                 <div th:if="${news.status == true}">
-                                                    <a th:href="@{'/admin/editNews/' + ${news.idNews}}" type="submit" class="btn fas fa-edit"></a>
-                                                    <a th:href="@{'/admin/deleteNews/' + ${news.idNews}}" type="submit" class="btn far fa-trash-alt"
+                                                    <a th:href="@{'/admin/editNews/' + ${news.idNews}}" class="btn fas fa-edit"></a>
+                                                    <a th:href="@{'/admin/deleteNews/' + ${news.idNews}}" class="btn far fa-trash-alt"
                                                        onclick="return confirm('Are you sure you want to delete?')"></a>
                                                 </div>
                                                 <div th:unless="${news.status == true}">
-                                                    <a th:href="@{'/admin/editNews/' + ${news.idNews}}" type="submit" class="btn fas fa-edit"></a>
-                                                    <a th:href="@{'/admin/restoreNews/' + ${news.idNews}}" type="submit" class="btn fas fa-undo"
+                                                    <a th:href="@{'/admin/editNews/' + ${news.idNews}}" class="btn fas fa-edit"></a>
+                                                    <a th:href="@{'/admin/restoreNews/' + ${news.idNews}}" class="btn fas fa-undo"
                                                        onclick="return confirm('Are you sure you want to restore?')"></a>
                                                 </div>
 
