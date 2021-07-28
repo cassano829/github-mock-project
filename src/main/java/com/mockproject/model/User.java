@@ -30,9 +30,6 @@ import java.util.Set;
 @Data
 @Table(name = "Users")
 @SQLDelete(sql = "UPDATE Users SET status = 'false' WHERE idUser=?")
-@FilterDef(name = "userStatusFilter",
-            parameters = @ParamDef(name = "status", type = "boolean"))
-@Filter(name = "deletedProductFilter", condition = "status = :isDeleted")
 public class User implements Serializable {
 
     @Id
@@ -45,12 +42,10 @@ public class User implements Serializable {
 
     @Column(nullable = false, unique = true)
     @Email(message = "Email format incorrect",
-            regexp = "[a-z][a-z0-9_.]{4,32}@[a-z0-9]{2,}([.][a-z0-9]{2,4}){1,2}")
+            regexp = "[a-z][a-zA-Z0-9_.]{4,32}@[a-z0-9]{2,}([.][a-z0-9]{2,4}){1,2}")
     private String email;
-    
-    @Column(nullable = false, unique = true, updatable = false)
-    private String verificationCode;
 
+    private String verificationCode;
 
     @NotBlank(message = "Password can't be empty")
     @NotEmpty(message = "Password can't be empty")

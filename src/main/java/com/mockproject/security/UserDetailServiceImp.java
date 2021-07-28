@@ -104,12 +104,14 @@ public class UserDetailServiceImp implements UserDetailsService {
         mailSender.sendMail(user, rdn);
     }
 
-    public void registerTeacher(User teacher){
+    public int registerTeacher(User teacher){
         encodePassword(teacher);
         teacher.setCreateDate(df.format(new Date()));
-        teacher.setStatus(false);
+        teacher.setStatus(true);
+        teacher = repo.save(teacher);
+        repo.flush();
 
-        repo.save(teacher);
+        return teacher.getIdUser();
     }
 
     public void encodePassword(User user) {

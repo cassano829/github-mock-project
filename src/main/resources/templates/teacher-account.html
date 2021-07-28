@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>LMS - Accounts</title>
+    <title>Teacher Account Page</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -38,18 +38,18 @@
         <!-- Sidebar -->
         <nav id="sidebar">
             <ul class="list-unstyled components">
-                <li>
-                    <a href="#" th:href="@{/admin/home}" ><i class="fas fa-tachometer-alt"></i>Dashboard</a>
-                </li>
-                <li class="active">
-                    <a href="#" th:href="@{/admin/account}"><i class="fas fa-id-card"></i>Account</a>
-                </li>
-                <li>
-                    <a href="#" th:href="@{/admin/user}"><i class="fas fa-user-tag"></i>Users</a>
-                </li>
-                <li>
-                    <a href="#" th:href="@{/subject/admin/}"><i class="fas fa-book-open"></i>Subjects</a>
-                </li>
+                <ul class="list-unstyled components">
+                    <li>
+                        <a href="#" th:href="@{/teacher/home}"><i class="fas fa-id-card"></i>Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <a href="#" th:href="@{/teacher/account}"><i class="fas fa-id-card"></i>Account</a>
+                    </li>
+                    <li>
+                        <a href="#" th:href="@{/subject/teacher}"><i class="fas fa-id-card"></i>Subject</a>
+                    </li>
+                </ul>
+
             </ul>
         </nav>
         <!-- Page Content -->
@@ -61,7 +61,7 @@
                         <span th:text="${message}"
                               th:if="${message ne null and message ne null}"
                               style="color:blue;"></span>
-                        <form action="#" th:action="@{/admin/update-account-page}" th:method="post" id="login-form" class="form-group">
+                        <form action="#" th:action="@{/teacher/update-account-page}" th:method="post" id="login-form" class="form-group">
                             <div class="form-group">
                                 <label>ID</label>
                                 <input type="number" th:value="${user.idUser}"  class="form-control" disabled>
@@ -88,10 +88,14 @@
             </div>
         </div>
     </div>
+
         <!-- jQuery CDN - Slim version (=without AJAX) -->
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <!-- Popper.JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
         <!-- Bootstrap JS -->
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+
 </body>
 
 </html>

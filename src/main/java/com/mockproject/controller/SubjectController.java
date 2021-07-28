@@ -38,15 +38,21 @@ public class SubjectController {
     private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     private final Validator validator = factory.getValidator();
 
-    @RequestMapping(value = "/user/")
-    public String subjectUserPage( Model model){
+    @RequestMapping(value = "/teacher")
+    public String subjectTeacherPage(Model model){
         List<Subject> subjectList = service.searchByName("");
-
+        for (Subject s : subjectList) {
+            try {
+                s.setCreateDate(new SimpleDateFormat("dd-MMM-yyyy").format(new SimpleDateFormat("yyyy-MM-dd").parse(s.getCreateDate())));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
         model.addAttribute("subject_list", subjectList);
-        return "subject";
+        return "teacher-subject";
     }
 
-    @RequestMapping("/admin/")
+    @RequestMapping(value = "/admin")
     public String subjectAdminPage(@RequestParam(name = "error", required = false) HashMap<String, String> error
             , @RequestParam(name = "subject_add", required = false) Subject addSubject
             , @RequestParam(name = "message", required = false) String message
@@ -66,7 +72,6 @@ public class SubjectController {
             model.addAttribute("subject_add", addSubject);
         }
         model.addAttribute("message", message);
-        System.out.println(message);
         model.addAttribute("subject_list", list);
 
         return "admin-subject";
@@ -137,11 +142,30 @@ public class SubjectController {
         return "redirect:/subject/admin/";
     }
 
-    @GetMapping("/user/search")
-    public String searchSubjectByName(@RequestParam("searchName") String subjectName, Model model) {
-
+    @GetMapping("/admin/search")
+    public String adminSearchSubjectByName(@RequestParam("searchName") String subjectName, Model model) {
         List<Subject> list = service.searchByName(subjectName);
-        if (list.isEmpty()) {
+        if (!list.isEmpty()) {
+            for (Subject s : list) {
+                System.out.println("before  : " +s.getCreateDate());
+                try {
+                    s.setCreateDate(new SimpleDateFormat("dd-MMM-yyyy").format(new SimpleDateFormat("yyyy-MM-dd").parse(s.getCreateDate())));
+                    System.out.println("after  : " +s.getCreateDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+            model.addAttribute("subject_list", list);
+        } else {
+            model.addAttribute("message", "Sorry, can't find any subject");
+        }
+        return "admin-subject";
+    }
+
+    @GetMapping("/teacher/search")
+    public String teacherSearchSubjectByName(@RequestParam("searchName") String subjectName, Model model) {
+        List<Subject> list = service.searchByName(subjectName);
+        if (!list.isEmpty()) {
             for (Subject s : list) {
                 try {
                     s.setCreateDate(new SimpleDateFormat("dd-MMM-yyyy").format(new SimpleDateFormat("yyyy-MM-dd").parse(s.getCreateDate())));
@@ -149,12 +173,14 @@ public class SubjectController {
                     e.printStackTrace();
                 }
             }
-            model.addAttribute("message", "Sorry, can't find any subject");
-        } else {
             model.addAttribute("subject_list", list);
+        } else {
+
+            model.addAttribute("message", "Sorry, can't find any subject");
         }
-        return "admin-subject";
+        return "teacher-subject";
     }
+
 
     @GetMapping("/admin/delete")
     public String deleteById(String idSubject, Model model) {

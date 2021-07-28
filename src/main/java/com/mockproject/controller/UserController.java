@@ -62,17 +62,16 @@ public class UserController {
         return "adminHome";
     }
 
-    @GetMapping("/admin/subject")
-    public String adminSubjectPage() {
-        return "adminSubject";
-    }
+//    @GetMapping("/admin/subject")
+//    public String adminSubjectPage() {
+//        return "adminSubject";
+//    }
+
 
     @RequestMapping("/admin/account")
     public String adminAccountPage(Model model) {
         CustomUserDetail user = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        model.addAttribute("admin", user.getUser());
-
+        model.addAttribute("user", user.getUser());
         return "admin-account";
     }
 
@@ -89,22 +88,16 @@ public class UserController {
     }
 
     //redirect to register teacher page
-    @RequestMapping("/admin/register-teacher-page")
-    public String registerTeacherPage(@RequestParam(name = "user", required = false) User teacher
-            , @RequestParam(name = "error", required = false) HashMap<String, String> error
-            , @RequestParam(name = "message", required = false) String message
-            , Model model) {
-
-        model.addAttribute("error", error);
-        model.addAttribute("message", message);
-        model.addAttribute("user", teacher);
-
-        return "admin-add-teacher";
+    @GetMapping("/admin/register-teacher-page")
+    public String registerTeacherPage(Model model) {
+        return "admin-create-teacher";
     }
 
     //handle register teacher request from client
     @PostMapping(value = "/admin/register-teacher")
-    public String registerTeacher(@ModelAttribute(name = "user") User teacher, Model model) {
+    public String registerTeacher(@ModelAttribute(name = "user") User teacher
+            , @RequestParam(name = "confirm_password") String confirmPassword
+            , Model model) {
 
         //Validate data from attribute
         Set<ConstraintViolation<User>> violations = validator.validate(teacher);
@@ -116,22 +109,24 @@ public class UserController {
         if (!isEmailUnique) {
             error.put("emailError", "This email address was already being used");
         }
-
-        if (violations.isEmpty() && error.isEmpty()) {
+        //check match password confirm
+        boolean isPasswordMatch = teacher.getPassword().equalsIgnoreCase(confirmPassword);
+        if (!isPasswordMatch) {
+            error.put("confirmPasswordError", "Confirm password not match");
+        }
+        if (violations.isEmpty() && error.isEmpty() && isPasswordMatch) {
             Optional<Role> teacherRole = roleService.findByName("TEACHER");
-
-            System.out.println(teacherRole.get().getId() + " : " + teacherRole.get().getName());
-
             if (teacherRole.isPresent()) {
                 try {
-                    service.registerTeacher(teacher);
+                    teacher.setIdUser(service.registerTeacher(teacher));
+                    System.out.println("Insert value : " + teacher.getIdUser() + " roleId : " + teacherRole.get().getId());
                     user_roleService.save(new User_Role(teacher.getIdUser(), teacherRole.get().getId()));
 
                     message = "Complete register new user : " + teacher.getFullName();
                     System.out.println(message);
 
                     model.addAttribute("message", message);
-                    return "admin-user";
+                    return "forward:/admin/user";
                 } catch (Exception e) {
                     e.printStackTrace();
                     message = "Error occured while registering this teacher";
@@ -147,45 +142,41 @@ public class UserController {
         model.addAttribute("message", message);
         model.addAttribute("user", teacher);
 
-        return "forward:/user/register-teacher-page";
+        return "admin-create-teacher";
     }
 
     //redirect to update account PAGE
     @RequestMapping(value = "/admin/update-account-page")
-    public String updateAccountPage(@RequestParam(name = "idUser") int idUser, Model model) {
+    public String updateAdminAccountPage(@RequestParam(name = "idUser") int idUser, Model model) {
         //update account page
         User user = service.loadUserByIdUser(idUser);
-
         if (user != null) {
             model.addAttribute("user", user);
         }
-
         return "admin-update-account";
     }
 
     //handle update ADMIN'S account request
     @PostMapping(value = "/admin/update-account")
-    public String updateAccount(@ModelAttribute(name = "user") User user
+    public String updateAdminAccount(@ModelAttribute(name = "user") User user
             , @RequestParam(name = "confirm_password") String confirmPassword
             , Model model) {
+
         //Validate data from attribute
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         //Error map
         HashMap<String, String> error = new HashMap<>();
         String message = null;
-
         //check unique email
         boolean isEmailUnique = service.isEmailUniqueUpdate(user.getEmail(), user.getIdUser());
         if (!isEmailUnique) {
             error.put("emailError", "This email address was already being used");
         }
-
         //check match password confirm
         boolean isPasswordMatch = user.getPassword().equalsIgnoreCase(confirmPassword);
         if (!isPasswordMatch) {
             error.put("confirmPasswordError", "Confirm password not match");
         }
-
         if (violations.isEmpty() && error.isEmpty() && isPasswordMatch) {
             try {
                 service.updateAdminAcount(user);
@@ -200,12 +191,11 @@ public class UserController {
                 error.put(violation.getPropertyPath() + "Error", violation.getMessageTemplate());
             }
         }
-
         model.addAttribute("error", error);
         model.addAttribute("message", message);
         model.addAttribute("user", user);
 
-        return "forward:/admin/update-account-page";
+        return "admin-update-account";
     }
 
 
@@ -284,11 +274,9 @@ public class UserController {
         return "admin-user-update";
     }
 
-
     //*****************************************************************************************
     // ****************************************  TEACHER **************************************
     //*****************************************************************************************
-
 
     @GetMapping("/teacher/home")
     public String teacherHomePage() {
@@ -301,10 +289,69 @@ public class UserController {
     }
 
     @GetMapping("/teacher/account")
-    public String teacherAccountPage() {
-        return "teacherAccount";
+    public String teacherAccountPage(Model model) {
+        CustomUserDetail user = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("user", user.getUser());
+
+        return "teacher-account";
     }
 
+    //redirect to update account PAGE
+    @RequestMapping(value = "/teacher/update-account-page")
+    public String updateTeacherAccountPage(@RequestParam(name = "idUser") int idUser, Model model) {
+        //update account page
+        User user = service.loadUserByIdUser(idUser);
+
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
+        return "teacher-update-account";
+    }
+
+    //handle update TEACHER'S account request
+    @PostMapping(value = "/teacher/update-account")
+    public String updateTeacherAccount(@ModelAttribute(name = "user") User user
+            , @RequestParam(name = "confirm_password") String confirmPassword
+            , Model model) {
+        //Validate data from attribute
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        //Error map
+        HashMap<String, String> error = new HashMap<>();
+        String message = null;
+
+        //check unique email
+        boolean isEmailUnique = service.isEmailUniqueUpdate(user.getEmail(), user.getIdUser());
+        if (!isEmailUnique) {
+            error.put("emailError", "This email address was already being used");
+        }
+
+        //check match password confirm
+        boolean isPasswordMatch = user.getPassword().equalsIgnoreCase(confirmPassword);
+        if (!isPasswordMatch) {
+            error.put("confirmPasswordError", "Confirm password not match");
+        }
+
+        if (violations.isEmpty() && error.isEmpty() && isPasswordMatch) {
+            try {
+                service.updateAdminAcount(user);
+                model.addAttribute("message", "Successfully update account : " + user.getEmail());
+                return "forward:/teacher/account";
+            } catch (Exception e) {
+                e.printStackTrace();
+                message = "Error while update this account";
+            }
+        } else {
+            for (ConstraintViolation<User> violation : violations) {
+                error.put(violation.getPropertyPath() + "Error", violation.getMessageTemplate());
+            }
+        }
+
+        model.addAttribute("error", error);
+        model.addAttribute("message", message);
+        model.addAttribute("user", user);
+
+        return "forward:/teacher/update-account-page";
+    }
 
     //*****************************************************************************************
     //***************************************** STUDENT ***************************************
@@ -322,8 +369,11 @@ public class UserController {
     }
 
     @RequestMapping("/student/account")
-    public String studentAccountPage() {
-        return "studentAccount";
+    public String studentAccountPage(Model model) {
+        CustomUserDetail user = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("user", user.getUser());
+
+        return "student-account";
     }
 
     @GetMapping("/student/create")
@@ -351,7 +401,10 @@ public class UserController {
             boolean checkCorrect = true;
             boolean checkEmail = service.isValidEmail(user.getEmail());
             boolean checkRePwd = rePwd.matches(user.getPassword());
-
+            if(user.getPassword().length() < 8 || user.getPassword().length() > 16){
+                checkCorrect = false;
+                error = "Password length must between 8-16 characters";
+            }
             if (!checkEmail) {
                 checkCorrect = false;
                 error = "Wrong email format! (ex: alpha123@gmail.com)";
@@ -394,6 +447,63 @@ public class UserController {
             model.addAttribute("messageError", "Invalid code verify!");
             return "verify";
         }
+    }
+
+    //redirect to update account PAGE
+    @RequestMapping(value = "/student/update-account-page")
+    public String updateStudentAccountPage(@RequestParam(name = "idUser") int idUser, Model model) {
+        //update account page
+        User user = service.loadUserByIdUser(idUser);
+
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
+        return "student-update-account";
+    }
+
+    //handle update STUDENT'S account request
+    @PostMapping(value = "/student/update-account")
+    public String updateStudentAccount(@ModelAttribute(name = "user") User user
+            , @RequestParam(name = "confirm_password") String confirmPassword
+            , Model model)  {
+        //Validate data from attribute
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        //Error map
+        HashMap<String, String> error = new HashMap<>();
+        String message = null;
+
+        //check unique email
+        boolean isEmailUnique = service.isEmailUniqueUpdate(user.getEmail(), user.getIdUser());
+        if (!isEmailUnique) {
+            error.put("emailError", "This email address was already being used");
+        }
+
+        //check match password confirm
+        boolean isPasswordMatch = user.getPassword().equalsIgnoreCase(confirmPassword);
+        if (!isPasswordMatch) {
+            error.put("confirmPasswordError", "Confirm password not match");
+        }
+
+        if (violations.isEmpty() && error.isEmpty() && isPasswordMatch) {
+            try {
+                service.updateAdminAcount(user);
+                model.addAttribute("message", "Successfully update account : " + user.getEmail());
+                return "forward:/student/account";
+            } catch (Exception e) {
+                e.printStackTrace();
+                message = "Error while update this account";
+            }
+        } else {
+            for (ConstraintViolation<User> violation : violations) {
+                error.put(violation.getPropertyPath() + "Error", violation.getMessageTemplate());
+            }
+        }
+
+        model.addAttribute("error", error);
+        model.addAttribute("message", message);
+        model.addAttribute("user", user);
+
+        return "forward:/student/update-account-page";
     }
 
 

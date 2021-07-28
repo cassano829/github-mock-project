@@ -59,49 +59,54 @@
                 <h3><i class="fas fa-user-tag"></i> Account</h3>
                 <div class="main-container">
                     <div class="row-12 pb-5 mb-4">
-                        <form action="#" th:action="@{/admin/update-account}" th:object="${user}" method="POST" id="login-form" class="form-group">
+                        <form action="#" th:action="@{/admin/update-account}" th:object="${user}" method="POST"
+                              id="login-form" class="form-group">
                             <div class="form-group">
                                 <label>ID</label>
                                 <input type="text" th:value="${user.idUser}" class="form-control" disabled>
-                                <input type="hidden" name="idUser" id="idUser" th:value="${user.idUser}" >
-                                <input type="hidden" name="verificationCode" id="verificationCode" >
+                                <input type="hidden" name="idUser" id="idUser" th:value="${user.idUser}">
+                                <input type="hidden" name="verificationCode" id="verificationCode">
                                 <input type="hidden" name="status" id="status" th:value="${user.status}">
-                                <input type="hidden" name="createDate" id="createDate" >
+                                <input type="hidden" name="createDate" id="createDate">
                             </div>
                             <div class="form-group">
                                 <label>Full Name
                                     <span th:text="${'*' + error.get('fullNameError')}"
                                           th:if="${error ne null and error.get('fullNameError') ne null}"
-                                    style="color:red;"></span>
+                                          style="color:red;"></span>
                                 </label>
-                                <input type="text" name="fullName" id="fullName" th:value="${user.fullName}" class="form-control">
+                                <input type="text" name="fullName" id="fullName" th:value="${user.fullName}"
+                                       class="form-control">
                             </div>
                             <div class="form-group">
                                 <label>Email
-<!--                                    <span th:text="${'*' + error.emailError}" th:if="${error.emailError ne null and error.fullNameError ne ''}" ></span>-->
+                                    <!--                                    <span th:text="${'*' + error.emailError}" th:if="${error.emailError ne null and error.fullNameError ne ''}" ></span>-->
                                     <span th:text="${'*' + error.get('emailError')}"
                                           th:if="${error ne null and error.get('emailError') ne null}"
                                           style="color:red;"></span>
                                 </label>
-                                <input type="text" name="email" id="email" th:value="${user.email}" class="form-control">
+                                <input type="text" name="email" id="email" th:value="${user.email}"
+                                       class="form-control">
                             </div>
                             <div class="form-group">
                                 <label>New Password
-<!--                                    <span th:text="${'*' + error.passwordError}" th:if="${error.passwordError ne null and error.fullNameError ne ''}" ></span>-->
+                                    <!--                                    <span th:text="${'*' + error.passwordError}" th:if="${error.passwordError ne null and error.fullNameError ne ''}" ></span>-->
                                     <span th:text="${'*' + error.get('passwordError')}"
                                           th:if="${error ne null and error.get('passwordError') ne null}"
                                           style="color:red;"></span>
                                 </label>
-                                <input type="password" name="password" id="password" class="form-control" placeholder="Password"  required>
+                                <input type="password" name="password" id="password" class="form-control"
+                                       placeholder="Password" required>
                             </div>
                             <div class="form-group">
                                 <label>Confirm Password
-<!--                                    <span th:text="${'*' + error.confirmPasswordError}" th:if="${error.confirmPasswordError ne null and error.fullNameError ne ''}" ></span>-->
+                                    <!--                                    <span th:text="${'*' + error.confirmPasswordError}" th:if="${error.confirmPasswordError ne null and error.fullNameError ne ''}" ></span>-->
                                     <span th:text="${'*' + error.get('confirmPasswordError')}"
                                           th:if="${error ne null and error.get('confirmPasswordError') ne null}"
                                           style="color:red;"></span>
                                 </label>
-                                <input type="password" name="confirm_password" class="form-control" placeholder="Confirm Password" id="confirm_password" required>
+                                <input type="password" name="confirm_password" class="form-control"
+                                       placeholder="Confirm Password" id="confirm_password" required>
                             </div>
                             <div class="form-group">
                                 <label>Create Date</label>
