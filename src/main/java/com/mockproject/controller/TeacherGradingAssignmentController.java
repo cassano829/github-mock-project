@@ -66,7 +66,7 @@ public class TeacherGradingAssignmentController {
         model.addAttribute("mapClasses", map);
         model.addAttribute("assignmentData", assignmentRepository.findById(idAssignment).get());
         model.addAttribute("listAssignmentOfClass", assignmentOfClassRepository.findByIdAssignment(idAssignment));
-        return "teacherCountAssignmentPage";
+        return "teacherAssignmentCountPage";
     }
     
     @GetMapping("/class")
@@ -85,7 +85,7 @@ public class TeacherGradingAssignmentController {
         model.addAttribute("assignmentData", assignmentRepository.findById(idAssignment).get());
         model.addAttribute("listAssignmentOfClass", assignmentOfClassRepository.findByIdAssignment(idAssignment));
         model.addAttribute("assignmentOfUsers", assignmentsOfUserRepository.findByIdAssignmentAndIdClass(idAssignment, assignmentsOfClass.getIdClass(), PageRequest.of(0, 5)));
-        return "teacherCountAssignmentPage";
+        return "teacherAssignmentCountPage";
     }
     
     @GetMapping("/class/page/{id}")
@@ -104,7 +104,7 @@ public class TeacherGradingAssignmentController {
         model.addAttribute("assignmentData", assignmentRepository.findById(idAssignment).get());
         model.addAttribute("listAssignmentOfClass", assignmentOfClassRepository.findByIdAssignment(idAssignment));
         model.addAttribute("assignmentOfUsers", assignmentsOfUserRepository.findByIdAssignmentAndIdClass(idAssignment, idClass, PageRequest.of(page - 1, 5)));
-        return "teacherCountAssignmentPage";
+        return "teacherAssignmentCountPage";
     }
     
     @GetMapping("/detail/{id}")
@@ -114,7 +114,7 @@ public class TeacherGradingAssignmentController {
         model.addAttribute("assignmentReportData", assignmentReportRepository.findByIdAssignmentAndIdClassAndIdUser(aou.getIdAssignment(), aou.getIdClass(), aou.getIdUser()));
         model.addAttribute("userFullName", userRepository.findById(aou.getIdUser()).get().getFullName());
         model.addAttribute("assignmentOfUserData", aou);
-        return "teacherGradeAssignmentPage";
+        return "teacherAssignmentGradePage";
     }
     
     @GetMapping("/detail/submit/{id}")

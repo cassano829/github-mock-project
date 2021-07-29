@@ -3,7 +3,7 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Teacher Assignment List Page</title>
+        <title>Student Assignment List Page</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
               integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -15,15 +15,14 @@
 
     <body>
 
-        <header th:replace="~{/teacherAssignmentHeaderPage}"></header>
+        <header th:replace="~{/studentAssignmentHeaderPage}"></header>
         <!-- Page Content -->
         <div id="content">
             <div class="container-fluid">
                 <h3><i class="fas fa-book-open"></i> Assignment</h3>
                 <a><strong>Assignments</a></strong>
                 <ul class="as">
-                    <li class="act"><a th:href="@{/teacher/assignment/list}">List Assignment</a></li>
-                    <li><a th:href="@{/teacher/assignment/create}">Create</a></li>
+                    <li class="act"><a th:href="@{/student/assignment/page/1}">List Assignment</a></li>
                 </ul>
                 <div class="main-container">
                     <!--  -->
@@ -39,31 +38,34 @@
                                         <th>Open date</th>
                                         <th>Due date</th>
                                         <th>View Classes</th>
-                                        <th>Remove</th>
-                                        <th>Grading</th>
                                     </tr>
                                     <tr th:each="assignment : ${assignments}">
                                         <td>
                                             <strong>
                                                 <span class="sub" th:text="${assignment.idAssignment}"></span>
-                                            </strong></br>
-                                            <a th:if="${assignment.idUser == #authentication.getPrincipal().getUser().getIdUser()}" th:href="@{'/teacher/assignment/update/' + ${assignment.idAssignment}}" class="edit">Update</a>
+                                            </strong>
                                         </td>
                                         <td th:text="${mapUser.get(assignment.idUser).fullName}"></td>
                                         <td th:text="${assignment.status}"></td>
                                         <td th:text="${assignment.createDate}"></td>
-                                        <td th:text="${assignment.deadline}"><span class="text-danger "></span></td>
                                         <td>
-                                            <a th:href="@{'/teacher/assignment/class/' + ${assignment.idAssignment}}">View</a>
+                                            <span th:if="${assignment.deadline.after(#dates.createNow())}" th:text="${assignment.deadline}"></span>
+                                            <span  class="text-danger" th:if="${assignment.deadline.before(#dates.createNow())}" th:text="${assignment.deadline}"></span>
                                         </td>
                                         <td>
-                                            <div th:if="${assignment.idUser == #authentication.getPrincipal().getUser().getIdUser()}"  >
-                                                <a th:if="${assignment.status == true}" th:href="@{'/teacher/assignment/remove/' + ${assignment.idAssignment} + '?page=' + ${page}}" onclick="return confirm('Delete this assignment?')">Remove</a>
-                                                <a th:unless="${assignment.status == true}" th:href="@{'/teacher/assignment/remove/' + ${assignment.idAssignment} + '?page=' + ${page}}">Restore</a>
+                                            <div th:if="${mapAssignment.containsKey(assignment.idAssignment) and assignment.deadline.after(#dates.createNow())}">
+                                                <a th:href="@{'/student/assignment/update/' + ${assignment.idAssignment}}">Update</a>
                                             </div>
-                                        </td>
-                                        <td>
-                                            <a th:if="${assignment.idUser == #authentication.getPrincipal().getUser().getIdUser()}" th:href="@{'/teacher/assignment/grade/' + ${assignment.idAssignment}}">Grading</a>
+                                            <div th:if="${!mapAssignment.containsKey(assignment.idAssignment) and assignment.deadline.after(#dates.createNow())}">
+                                                <a th:href="@{'/student/assignment/create/' + ${assignment.idAssignment}}">Add</a>
+                                            </div>
+                                            
+                                            <div th:if="${mapAssignment.containsKey(assignment.idAssignment) and assignment.deadline.before(#dates.createNow())}">
+                                                <a th:href="@{'/student/assignment/view/' + ${assignment.idAssignment}}">View</a>
+                                            </div>
+                                            <div th:if="${!mapAssignment.containsKey(assignment.idAssignment) and assignment.deadline.before(#dates.createNow())}">
+                                                <span class="text-danger">Not Submitted</span>
+                                            </div>
                                         </td>
                                     </tr>
 
@@ -71,7 +73,7 @@
                             </div>
                         </form>
                         <strong>
-                            <a class="sub" th:if="${assignments.getTotalPages() > 1}" th:each="i : ${#numbers.sequence(1, assignments.getTotalPages())}" th:href="@{'/teacher/assignment/list/page/' + ${i}}" th:text="${i + '  '}"></a>
+                            <a class="sub" th:if="${assignments.getTotalPages() > 1}" th:each="i : ${#numbers.sequence(1, assignments.getTotalPages())}" th:href="@{'/student/assignment/page/' + ${i}}" th:text="${i + '  '}"></a>
                         </strong>
                     </fieldset>
                     <!--  -->

@@ -20,5 +20,4 @@ public interface AssignmentOfClassRepository extends CrudRepository<AssignmentsO
     
     public AssignmentsOfClass findByIdAssignmentAndIdClass(Integer idAssignment, Integer idClass);
     
-    
 }

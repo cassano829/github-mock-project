@@ -104,33 +104,40 @@ public class AssignmentTeacherController {
     }
 
     @GetMapping("/create")
-    public String createAssignment() {
-        return "teacherCreateAssignmentPage";
+    public String createAssignment(@RequestParam(required = false) String success, Model model) {
+        if(success != null){
+            model.addAttribute("message", "Create success");
+        }
+        return "teacherAssignmentCreatePage";
     }
 
     @PostMapping("/create/save")
-    public String createAssignmentSave(Assignment assignment) {
+    public String createAssignmentSave(Assignment assignment, Model model) {
         assignment.setCreateDate(new Date());
         assignmentRepository.save(assignment);
-        return "redirect:/teacher/assignment/create";
+        return "redirect:/teacher/assignment/create?success=1";
     }
 
     @GetMapping("/update/{id}")
-    public String updateAssignment(@PathVariable("id") Integer id, Model model) {
+    public String updateAssignment(@PathVariable("id") Integer id, @RequestParam(required = false) String success, Model model) {
         Optional<Assignment> assignmentData = assignmentRepository.findById(id);
         if (assignmentData.isPresent()) {
             model.addAttribute("assignmentData", assignmentData.get());
         }
-        return "teacherEditAssignmentPage";
+        
+        if(success != null){
+            model.addAttribute("message", "Update success");
+        }
+        return "teacherAssignmentEditPage";
     }
 
     @PostMapping("/update/save")
-    public String updateAssignmentSave(Assignment assignment) {
+    public String updateAssignmentSave(Assignment assignment, Model model) {
         Optional<Assignment> assignmentData = assignmentRepository.findById(assignment.getIdAssignment());
         if (assignmentData.isPresent()) {
             assignmentRepository.save(assignment);
         }
-        return "redirect:/teacher/assignment/update/" + assignment.getIdAssignment();
+        return "redirect:/teacher/assignment/update/" + assignment.getIdAssignment() + "?success=1";
     }
 
     @GetMapping("/class/{id}")
