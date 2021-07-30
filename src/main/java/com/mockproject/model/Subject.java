@@ -4,8 +4,7 @@ package com.mockproject.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,6 +20,8 @@ import java.io.Serializable;
 @Table(name = "Subjects")
 @SQLDelete(sql = "UPDATE Subjects SET status = 'false' WHERE idSubject=?")
 @Where(clause = "status=true")
+@FilterDef(name = "deletedSubjectFilter", parameters = @ParamDef(name = "status", type = "boolean"))
+@Filter(name = "deletedSubjectFilter", condition = "status = :status")
 public class Subject implements Serializable {
 
     @Id

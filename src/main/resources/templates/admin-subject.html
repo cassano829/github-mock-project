@@ -116,11 +116,17 @@
                                     <th scope="row"><span th:utext="${subject.idSubject}"></span></th>
                                     <td><span th:text="${subject.nameSubject}"></span></td>
                                     <td><span th:text="${subject.createDate}"></span></td>
-                                    <td>
-                                        <a th:href="@{/subject/admin/update?idSubject={id}(id=${subject.idSubject})}"
+                                    <td th:switch="${subject.status}">
+                                        <div th:case="${true}">
+                                            <a th:href="@{/subject/admin/update?idSubject={id}(id=${subject.idSubject})}"
                                            class="btn btn-success">Update</a>
-                                        <a th:href="@{/subject/admin/delete?idSubject={id}(id=${subject.idSubject})}"
+                                            <a th:href="@{/subject/admin/delete?idSubject={id}(id=${subject.idSubject})}"
                                            class="btn btn-danger">Delete</a>
+                                        </div>
+                                        <div th:case="${false}">
+                                            <a th:href="@{/subject/admin/restore?idSubject={id}(id=${subject.idSubject})}"
+                                               class="btn btn-danger">Restore</a>
+                                        </div>
                                     </td>
                                 </tr>
                                 </tbody>

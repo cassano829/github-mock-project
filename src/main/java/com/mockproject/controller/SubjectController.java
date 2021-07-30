@@ -58,7 +58,7 @@ public class SubjectController {
             , @RequestParam(name = "message", required = false) String message
             , Model model) {
 
-        List<Subject> list = service.searchByName("");
+        List<Subject> list = service.findAllNonFilter();
         for (Subject s : list) {
             try {
                 s.setCreateDate(new SimpleDateFormat("dd-MMM-yyyy").format(new SimpleDateFormat("yyyy-MM-dd").parse(s.getCreateDate())));
@@ -162,6 +162,18 @@ public class SubjectController {
         return "admin-subject";
     }
 
+    @GetMapping("/admin/delete")
+    public String deleteById(String idSubject, Model model) {
+        try {
+            service.delete(idSubject);
+            return "forward:/subject/admin/?message=Deleted subject : " + idSubject;
+        } catch (EmptyResultDataAccessException e) {
+            e.printStackTrace();
+            return "forward:/subject/admin/?message=Failed to delete - Subject ID not found : " + idSubject;
+
+        }
+    }
+
     @GetMapping("/teacher/search")
     public String teacherSearchSubjectByName(@RequestParam("searchName") String subjectName, Model model) {
         List<Subject> list = service.searchByName(subjectName);
@@ -181,17 +193,15 @@ public class SubjectController {
         return "teacher-subject";
     }
 
-
-    @GetMapping("/admin/delete")
-    public String deleteById(String idSubject, Model model) {
+    @GetMapping("/admin/restore")
+    public String restoreById(String idSubject, Model model) {
         try {
-            service.delete(idSubject);
-            return "forward:/subject/admin/?message=Deleted subject : " + idSubject;
+            service.restore(idSubject);
+            return "forward:/subject/admin/?message=Restored subject : " + idSubject;
         } catch (EmptyResultDataAccessException e) {
             e.printStackTrace();
-            return "forward:/subject/admin/?message=Failed to delete - Subject ID not found : " + idSubject;
+            return "forward:/subject/admin/?message=Failed to restore - Subject ID not found : " + idSubject;
 
         }
     }
-
 }

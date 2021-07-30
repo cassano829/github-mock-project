@@ -4,7 +4,11 @@ package com.mockproject.service;
 
 import com.mockproject.model.Subject;
 import com.mockproject.repository.SubjectRepository;
+
+
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -33,6 +37,12 @@ public class SubjectService  {
         repo.deleteById(idSubj);
     }
 
+    public void restore(String idSubj){
+        Subject s = repo.getByIdNonFilter(idSubj);
+        s.setStatus(true);
+        repo.save(s);
+    }
+
     public Optional<Subject> findByIdSubject(String idSubject) {
         return repo.findById(idSubject);
     }
@@ -42,6 +52,9 @@ public class SubjectService  {
         return repo.findByNameSubjectContains(name);
     }
 
+    public List<Subject> findAllNonFilter(){
+        return repo.findAll();
+    }
 
     public List<Subject> searchByIdUser(int idUser) {
         return repo.findAllByIdUser(idUser);
