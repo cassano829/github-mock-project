@@ -45,6 +45,11 @@ public class UserController {
         return "login";
     }
 
+    @GetMapping("/loginError")
+    public String errorPage() {
+        return "redirect:/?error";
+    }
+
     @GetMapping("/403")
     public String handleError() {
         return "403";
@@ -62,7 +67,7 @@ public class UserController {
         }
         return null;
     }
-    
+
     @GetMapping("/page/{pageNumber}")
     public String listByPage(Model model, @PathVariable(name = "pageNumber") Integer currentPage) {
         CustomUserDetail user = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

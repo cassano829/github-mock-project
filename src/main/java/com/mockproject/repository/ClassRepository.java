@@ -21,6 +21,9 @@ import org.springframework.stereotype.Repository;
 public interface ClassRepository extends JpaRepository<Class, Integer> {
 
     @Query("SELECT c FROM Class c WHERE c.idUser = :idUser AND c.idSubject = :idSubject")
-    Page<Class> findAllWithStatus(Pageable page, @Param("idUser") Integer idUser, @Param("idSubject") String idSubject);
+    Page<Class> findAllClassWithTeacher(Pageable page, @Param("idUser") Integer idUser, @Param("idSubject") String idSubject);
+
+    @Query("SELECT c FROM Class c WHERE c.nameClass like %:nameClass%")
+    Page<Class> findClassWithName(Pageable page, @Param("nameClass") String name);
 
 }

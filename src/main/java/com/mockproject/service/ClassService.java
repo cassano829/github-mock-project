@@ -29,11 +29,20 @@ public class ClassService {
     @Autowired
     ClassRepository repo;
 
-    public Page<Class> getListClass(int pageNumber, String idSubject) {
+    public Page<Class> getListClassRoleTeacher(int pageNumber, String idSubject) {
         CustomUserDetail user = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Pageable pageable = PageRequest.of(pageNumber - 1, 4);
-        return repo.findAllWithStatus(pageable, user.getUser().getIdUser(), idSubject);
+        return repo.findAllClassWithTeacher(pageable, user.getUser().getIdUser(), idSubject);
     }
+    
+    public Page<Class> findClassWithName(int pageNumber, String keyword) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, 8);
+        if(keyword != null){
+            return repo.findClassWithName(pageable, keyword);
+        }
+        return repo.findAll(pageable);
+    }
+    
 
     public void save(Class c) {
         CustomUserDetail user = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

@@ -98,30 +98,30 @@
                                 Page [[${currentPage}]] of [[${totalPages}]]
                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 
-                                <a th:if="${currentPage > 1}" th:href="@{'/teacher/classPage/1' + '/' + ${idSubject}}">First</a>
+                                <a class="text-primary" th:if="${currentPage > 1}" th:href="@{'/teacher/classPage/1' + '/' + ${idSubject}}">First</a>
                                 <b><span th:unless="${currentPage > 1}">First</span></b>
                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 
-                                <a th:if="${currentPage > 1}" th:href="@{'/teacher/classPage/' + ${currentPage - 1} + '/' + ${idSubject}}">Previous</a>
+                                <a class="text-primary" th:if="${currentPage > 1}" th:href="@{'/teacher/classPage/' + ${currentPage - 1} + '/' + ${idSubject}}">Previous</a>
                                 <b><span th:unless="${currentPage > 1}">Previous</span></b>
                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 
                                 <span th:each="i : ${#numbers.sequence(1, totalPages)}">
-                                    <a th:if="${i != currentPage}" th:href="@{'/teacher/classPage/' + ${i} + '/' + ${idSubject}}">[[${i}]]</a>
+                                    <a class="text-primary" th:if="${i != currentPage}" th:href="@{'/teacher/classPage/' + ${i} + '/' + ${idSubject}}">[[${i}]]</a>
                                     <b><span th:unless="${i != currentPage}">[[${i}]]</span></b>
                                     &nbsp;&nbsp;&nbsp;
                                 </span>
                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 
-                                <a th:if="${currentPage < totalPages}" th:href="@{'/teacher/classPage/' + ${currentPage + 1} + '/' + ${idSubject}}">Next</a>
+                                <a class="text-primary" th:if="${currentPage < totalPages}" th:href="@{'/teacher/classPage/' + ${currentPage + 1} + '/' + ${idSubject}}">Next</a>
                                 <b><span th:unless="${currentPage < totalPages}">Next</span></b>
                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 
-                                <a th:if="${currentPage < totalPages}" th:href="@{'/teacher/classPage/' + ${totalPages} + '/' + ${idSubject}}">Last</a>
+                                <a class="text-primary" th:if="${currentPage < totalPages}" th:href="@{'/teacher/classPage/' + ${totalPages} + '/' + ${idSubject}}">Last</a>
                                 <b><span th:unless="${currentPage < totalPages}">Last</span></b>
                             </div>
                         </div>

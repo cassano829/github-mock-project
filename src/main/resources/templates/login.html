@@ -18,6 +18,13 @@
                     <img th:src="@{/images/login-img.jpg}" alt="login-img">
                 </div>
                 <div class="col-md-6 login_form">
+                    <div th:if="${param.error}">
+                        <h3 id="error" style="color: red">Invalid email or password!</h3>
+                    </div>
+
+                    <div th:if="${param.logout}">
+                        <h3 id="logout" style="color: green">You have been logged out!</h3>
+                    </div>
                     <div class="container" style=" padding: 30px;margin-top: 50px; ">
                         <form th:action="@{/login}" method="POST" id="login-form" class="form-group">
                             <p class="text-danger">Please sign in</p>
@@ -35,7 +42,7 @@
                                         </button>
                                     </div>
                                     <div class="col-md-6 text-right">
-                                        <a th:href="@{/create}">Sign-up</a>
+                                        <p>Don't have account? Please <a th:href="@{/create}">Sign-up</a></p>
                                     </div>
                                 </div>
                             </div>

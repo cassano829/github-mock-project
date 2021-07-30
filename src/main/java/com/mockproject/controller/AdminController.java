@@ -38,19 +38,19 @@ public class AdminController {
     NewsService newService;
 
     @GetMapping("/deleteNews/{id}")
-    public String adminDeleteNews(@PathVariable(name = "id") Integer id) {
+    public String deleteNews(@PathVariable(name = "id") Integer id) {
         newService.delete(id);
         return "redirect:/admin/home";
     }
 
     @GetMapping("/restoreNews/{id}")
-    public String adminRestoreNews(@PathVariable(name = "id") Integer id) {
+    public String restoreNews(@PathVariable(name = "id") Integer id) {
         newService.restore(id);
         return "redirect:/admin/home";
     }
 
     @GetMapping("/editNews/{id}")
-    public ModelAndView adminEditNewsForm(@PathVariable(name = "id") Integer id) {
+    public ModelAndView editNewsForm(@PathVariable(name = "id") Integer id) {
         ModelAndView mav = new ModelAndView("adminEditNews");
         News news = newService.getNewsById(id);
         mav.addObject("news", news);
@@ -58,7 +58,7 @@ public class AdminController {
     }
 
     @PostMapping("/editNews")
-    public String adminEditNews(@ModelAttribute("news") News news, Model model) {
+    public String editNews(@ModelAttribute("news") News news, Model model) {
         boolean checkEmpty = true;
         String error = "";
         if ("".trim().equals(news.getTitle())) {
@@ -79,7 +79,7 @@ public class AdminController {
     }
 
     @PostMapping("/createNews")
-    public String adminCreateNewsPage(@ModelAttribute("news") News news, Model model) {
+    public String createNews(@ModelAttribute("news") News news, Model model) {
         boolean checkEmpty = true;
         String error = "";
         if ("".trim().equals(news.getTitle())) {
@@ -101,19 +101,18 @@ public class AdminController {
     }
 
     @GetMapping("/createNews")
-    public String adminCreateNewsFormPage(Model model) {
+    public String createNewsForm(Model model) {
         model.addAttribute("news", new News());
         return "adminCreateNews";
     }
 
     @GetMapping("/home")
-    public String adminHomePage(Model model) {
+    public String showHome(Model model) {
         return listByPageAdmin(model, 1);
     }
 
     @GetMapping("/pageAdmin/{pageNumber}")
     public String listByPageAdmin(Model model, @PathVariable(name = "pageNumber") Integer currentPage) {
-        CustomUserDetail user = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User u = new User();
         Page<News> page = newService.getListNews(currentPage);
         int totalPages = page.getTotalPages();
@@ -135,17 +134,17 @@ public class AdminController {
     }
 
     @GetMapping("/subject")
-    public String adminSubjectPage() {
+    public String showSubject() {
         return "adminSubject";
     }
 
     @GetMapping("/account")
-    public String adminAccountPage() {
+    public String showAccount() {
         return "adminAccount";
     }
 
     @GetMapping("/user")
-    public String adminUserPage() {
+    public String showUsers() {
         return "adminUser";
     }
 }
