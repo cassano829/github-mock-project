@@ -5,9 +5,11 @@
  */
 package com.mockproject.repository;
 
-import com.mockproject.model.User;
+import com.mockproject.model.UsersOfClass;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -15,13 +17,8 @@ import org.springframework.stereotype.Repository;
  * @author ACER
  */
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface UsersOfClassRepository extends JpaRepository<UsersOfClass, Integer> {
 
-    User findUserByEmail(String email);
-    
-    @Query("SELECT u FROM User u WHERE u.verificationCode = ?1")
-    public User findByVerificationCode(String code);
-    
-    User findUserByIdUser(int id);
-    
+    @Query("SELECT uol FROM UsersOfClass uol WHERE uol.idUser = :idUser")
+    List<UsersOfClass> findUserByIdUser(@Param("idUser") Integer idUser);
 }
