@@ -53,11 +53,11 @@
                                     <strong>Content</strong>
                                 </label>
                                 <div>
-                                    <textarea  id="editor" th:name="content" cols="90" rows="5"></textarea>
+                                    <textarea  id="editors" th:name="content" cols="90" rows="5"></textarea>
                                 </div>
                             </div>
                             <div>
-                                <div><input type="file" onchange="convertFile()"></div>
+                                <div><input id="filess" type="file" onchange="convertFile()"></div>
                                 <input id="base64Code" th:name="attachments" type="hidden"/>
                             </div>
 
@@ -88,7 +88,8 @@
         <script>
             function convertFile() {
                 const preview = document.getElementById("base64Code");
-                const file = document.querySelector('input[type=file]').files[0];
+                //const file = document.querySelector('input[type=file]').files[0];
+                const file = document.querySelector('#filess').files[0];
                 const reader = new FileReader();
 
                 var base64 = "";
@@ -106,7 +107,7 @@
 
         <script>
             ClassicEditor
-                    .create(document.querySelector('#editor'))
+                    .create(document.querySelector('#editors'))
                     .then(newEditor => {
                         editor = newEditor;
                     })

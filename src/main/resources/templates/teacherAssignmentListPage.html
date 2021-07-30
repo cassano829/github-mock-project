@@ -26,54 +26,51 @@
                     <li><a th:href="@{/teacher/assignment/create}">Create</a></li>
                 </ul>
                 <div class="main-container">
-                    <!--  -->
-                    <fieldset class="fs">
-                        <legend><strong>List Assignments</strong></legend>
-                        <form class="form-add-product">
-                            <div>
-                                <table class="tblinfo ">
-                                    <tr>
-                                        <th>Id Assignment</th>
-                                        <th>Create by</th>
-                                        <th>Status</th>
-                                        <th>Open date</th>
-                                        <th>Due date</th>
-                                        <th>View Classes</th>
-                                        <th>Remove</th>
-                                        <th>Grading</th>
-                                    </tr>
-                                    <tr th:each="assignment : ${assignments}">
-                                        <td>
-                                            <strong>
-                                                <span class="sub" th:text="${assignment.idAssignment}"></span>
-                                            </strong></br>
-                                            <a th:if="${assignment.idUser == #authentication.getPrincipal().getUser().getIdUser()}" th:href="@{'/teacher/assignment/update/' + ${assignment.idAssignment}}" class="edit">Update</a>
-                                        </td>
-                                        <td th:text="${mapUser.get(assignment.idUser).fullName}"></td>
-                                        <td th:text="${assignment.status}"></td>
-                                        <td th:text="${assignment.createDate}"></td>
-                                        <td th:text="${assignment.deadline}"><span class="text-danger "></span></td>
-                                        <td>
-                                            <a th:href="@{'/teacher/assignment/class/' + ${assignment.idAssignment}}">View</a>
-                                        </td>
-                                        <td>
-                                            <div th:if="${assignment.idUser == #authentication.getPrincipal().getUser().getIdUser()}"  >
-                                                <a th:if="${assignment.status == true}" th:href="@{'/teacher/assignment/remove/' + ${assignment.idAssignment} + '?page=' + ${page}}" onclick="return confirm('Delete this assignment?')">Remove</a>
-                                                <a th:unless="${assignment.status == true}" th:href="@{'/teacher/assignment/remove/' + ${assignment.idAssignment} + '?page=' + ${page}}">Restore</a>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <a th:if="${assignment.idUser == #authentication.getPrincipal().getUser().getIdUser()}" th:href="@{'/teacher/assignment/grade/' + ${assignment.idAssignment}}">Grading</a>
-                                        </td>
-                                    </tr>
 
-                                </table>
+                    <form class="form-add-product">
+                        <div class="row pb-5 mb-4">
+
+                            <div class="col-3 mt-4"  th:each="assignment : ${assignments}">
+                                <!-- Card-->
+                                <div class="card rounded shadow-sm border-0">
+                                    <div class="text-right">
+                                        <!--update-->
+                                        <a th:if="${assignment.idUser == #authentication.getPrincipal().getUser().getIdUser()}" th:href="@{'/teacher/assignment/update/' + ${assignment.idAssignment}}" ><i class="fas fa-edit"></i></a>
+                                        <!--delete-->                                        
+                                        <a th:if="${assignment.status == true}" th:href="@{'/teacher/assignment/remove/' + ${assignment.idAssignment} + '?page=' + ${page}}" onclick="return confirm('Delete this assignment?')"><i class="far fa-trash-alt"></i></a>
+                                        <a th:unless="${assignment.status == true}" th:href="@{'/teacher/assignment/remove/' + ${assignment.idAssignment} + '?page=' + ${page}}"><i class="far fa-trash-alt"></i></a>
+                                    </div>
+                                    <div class="card-body">
+                                        <h5>Id Assignment: <span th:text="${assignment.idAssignment}"></span></h5>
+                                        <div>
+                                            <label>Status: </label>
+                                            <span class="text-primary"  th:text="${assignment.status}"></span>
+                                        </div>
+                                        <div>
+                                            <label>Create Date:</label><br>
+                                            <span th:text="${assignment.createDate}"></span>
+                                        </div>
+                                        <div>
+                                            <label>Deadline:</label><br>
+                                            <span th:text="${assignment.deadline}"></span>
+                                        </div>
+                                        <div>
+                                            <label>View Classes: </label>
+                                            <a class="text-primary" th:href="@{'/teacher/assignment/class/' + ${assignment.idAssignment}}">View</a>
+                                        </div>
+                                        <div>
+                                            <label>Grading:</label>
+                                            <a class="text-primary"  th:if="${assignment.idUser == #authentication.getPrincipal().getUser().getIdUser()}" th:href="@{'/teacher/assignment/grade/' + ${assignment.idAssignment}}">Grading</a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </form>
-                        <strong>
-                            <a class="sub" th:if="${assignments.getTotalPages() > 1}" th:each="i : ${#numbers.sequence(1, assignments.getTotalPages())}" th:href="@{'/teacher/assignment/list/page/' + ${i}}" th:text="${i + '  '}"></a>
-                        </strong>
-                    </fieldset>
+
+                        </div>
+                    </form>
+                    <strong>
+                        <a class="sub" th:if="${assignments.getTotalPages() > 1}" th:each="i : ${#numbers.sequence(1, assignments.getTotalPages())}" th:href="@{'/teacher/assignment/list/page/' + ${i}}" th:text="${i + '  '}"></a>
+                    </strong>
                     <!--  -->
                 </div>
             </div>

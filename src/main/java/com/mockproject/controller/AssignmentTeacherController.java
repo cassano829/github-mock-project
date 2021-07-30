@@ -59,7 +59,7 @@ public class AssignmentTeacherController {
 
         model.addAttribute("page", 1);
         model.addAttribute("mapUser", mapUser);
-        model.addAttribute("assignments", assignmentRepository.findByIdSubject(idSubject, PageRequest.of(0, 5)));
+        model.addAttribute("assignments", assignmentRepository.findByIdSubject(idSubject, PageRequest.of(0, 4)));
         //model.addAttribute("assignments", assignmentRepository.findAllByIdSubjectAndIdUser(idSubject, ((CustomUserDetail) authentication.getPrincipal()).getUser().getIdUser(), PageRequest.of(0, 5)));
 
         return "teacherAssignmentListPage";
@@ -73,7 +73,7 @@ public class AssignmentTeacherController {
 
         model.addAttribute("page", 1);
         model.addAttribute("mapUser", mapUser);
-        model.addAttribute("assignments", assignmentRepository.findByIdSubject(idSubject, PageRequest.of(0, 5)));
+        model.addAttribute("assignments", assignmentRepository.findByIdSubject(idSubject, PageRequest.of(0, 4)));
         //model.addAttribute("assignments", assignmentRepository.findAllByIdSubjectAndIdUser(idSubject, ((CustomUserDetail) authentication.getPrincipal()).getUser().getIdUser(), PageRequest.of(0, 5)));
         return "teacherAssignmentListPage";
 
@@ -87,7 +87,7 @@ public class AssignmentTeacherController {
 
         model.addAttribute("page", page);
         model.addAttribute("mapUser", mapUser);
-        model.addAttribute("assignments", assignmentRepository.findByIdSubject(idSubject, PageRequest.of(page - 1 , 5)));
+        model.addAttribute("assignments", assignmentRepository.findByIdSubject(idSubject, PageRequest.of(page - 1 , 4)));
         //model.addAttribute("assignments", assignmentRepository.findAllByIdSubjectAndIdUser(idSubject, ((CustomUserDetail) authentication.getPrincipal()).getUser().getIdUser(), PageRequest.of(page - 1, 5)));
         return "teacherAssignmentListPage";
     }

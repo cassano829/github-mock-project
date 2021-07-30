@@ -9,6 +9,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <link rel="stylesheet" th:href="@{/css/adminViewStuAssign.css}">
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+        <script src="https://cdn.ckeditor.com/ckeditor5/29.0.0/classic/ckeditor.js"></script>
     </head>
 
     <body>
@@ -32,40 +33,40 @@
                                 <label><strong>Id Assignment:</strong></label>
                                 <span th:text="${assignmentOfUserData.idAssignment}"></span>
                             </div>
-                            
+
                             <div>
                                 <label><strong>Id Class</strong></label>
                                 <span th:text="${assignmentOfUserData.idClass}"></span>
                             </div>
-                            
+
                             <div>
                                 <label><strong>Id User</strong></label>
                                 <span th:text="${assignmentOfUserData.idUser}"></span>
                             </div>
-                            
+
                             <div>
                                 <label><strong>Content</strong></label>
                                 <div>
-                                    <textarea cols="90" rows="5" readonly th:text="${assignmentOfUserData.content}"></textarea>
+                                    <textarea id="editors" cols="90" rows="5" th:utext="${assignmentOfUserData.content}"></textarea>
                                 </div>
                             </div>
 
                             <div>
                                 <label><strong>Attachments:</strong></label>
-                                <a th:if="${assignmentOfUserData.attachments != null and !assignmentOfUserData.attachments.empty}" th:href="@{assignmentOfUserData.attachments}" download>Download</a>
+                                <a th:if="${assignmentOfUserData.attachments != null and !assignmentOfUserData.attachments.empty}" th:href="@{${assignmentOfUserData.attachments}}" download>Download</a>
                                 <span th:unless="${assignmentOfUserData.attachments != null and !assignmentOfUserData.attachments.empty}" th:href="@{assignmentOfUserData.attachments}">No Files to download</span>
                             </div>
-                            
+
                             <div>
                                 <span class="text-danger" th:if="${assignmentReportData == null}" >Not Graded</span>
                                 <span class="text-success" th:if="${assignmentReportData != null}" >Graded</span>
                             </div>
-                            
+
                             <div>
                                 <input type="number" min="0" max="10" th:name="mark" value="0" th:if="${assignmentReportData == null}" >
                                 <input type="number" min="0" max="10" th:name="mark"  th:if="${assignmentReportData != null}" th:value="${assignmentReportData.grade}">
                             </div>
-                            
+
                             <div class="btt">
                                 <button type="submit" class="btn">Grade</button>
                                 <a th:href="@{/teacher/assignment/grade/class/page/1}">Cancel</a>
@@ -77,6 +78,17 @@
             </div>
         </div>
     </div>
+
+    <script>
+        ClassicEditor
+                .create(document.querySelector('#editors'))
+                .then(newEditor => {
+                    editor = newEditor;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+    </script>
 
 
     <!-- jQuery CDN - Slim version (=without AJAX) -->

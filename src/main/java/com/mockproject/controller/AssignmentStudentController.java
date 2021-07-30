@@ -52,7 +52,7 @@ public class AssignmentStudentController {
 
         model.addAttribute("mapAssignment", list.stream().collect(Collectors.toMap(AssignmentsOfUser::getIdAssignment, user -> user.getIdAssignment())));
         model.addAttribute("mapUser", userRepository.findAll().stream().collect(Collectors.toMap(User::getIdUser, user -> user)));
-        model.addAttribute("assignments", assignmentRepository.getListAssignmentOfClass(idClass, PageRequest.of(0, 5)));
+        model.addAttribute("assignments", assignmentRepository.getListAssignmentOfClass(idClass, PageRequest.of(0, 4)));
         return "studentAssignmentListPage";
     }
 
@@ -64,7 +64,7 @@ public class AssignmentStudentController {
 
         model.addAttribute("mapAssignment", list.stream().collect(Collectors.toMap(AssignmentsOfUser::getIdAssignment, user -> user.getIdAssignment())));
         model.addAttribute("mapUser", userRepository.findAll().stream().collect(Collectors.toMap(User::getIdUser, user -> user)));
-        model.addAttribute("assignments", assignmentRepository.getListAssignmentOfClass(idClass, PageRequest.of(page - 1, 5)));
+        model.addAttribute("assignments", assignmentRepository.getListAssignmentOfClass(idClass, PageRequest.of(page - 1, 4)));
         return "studentAssignmentListPage";
     }
 

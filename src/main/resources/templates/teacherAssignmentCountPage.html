@@ -52,12 +52,16 @@
                                 <div>
                                     <label><strong>Content</strong></label>
                                     <div>
-                                        <textarea id="editor" readonly cols="90" rows="5" th:utext="${assignmentData.content}"></textarea>
+                                        <textarea id="editors" readonly cols="90" rows="5" th:utext="${assignmentData.content}"></textarea>
                                     </div>
                                 </div>
-
-                                <div>
-                                    <div><input type="file"></div>
+                                
+                                <div th:if="${assignmentData.attachments != null and assignmentData.attachments != ''}">
+                                    <a th:href="@{${assignmentData.attachments}}" download>download</a>
+                                </div>
+                                
+                                <div th:unless="${assignmentData.attachments != null and assignmentData.attachments != ''}">
+                                    <span>No files to download</span>
                                 </div>
 
                                 <div class="form-group">
@@ -127,7 +131,7 @@
 
     <script>
         ClassicEditor
-                .create(document.querySelector('#editor'))
+                .create(document.querySelector('#editors'))
                 .then(newEditor => {
                     editor = newEditor;
                 })
