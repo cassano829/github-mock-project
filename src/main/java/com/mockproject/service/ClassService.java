@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.mockproject.model.Class;
 import com.mockproject.security.CustomUserDetail;
 import java.util.Date;
+import java.util.List;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
@@ -34,15 +35,14 @@ public class ClassService {
         Pageable pageable = PageRequest.of(pageNumber - 1, 4);
         return repo.findAllClassWithTeacher(pageable, user.getUser().getIdUser(), idSubject);
     }
-    
+
     public Page<Class> findClassWithName(int pageNumber, String keyword) {
         Pageable pageable = PageRequest.of(pageNumber - 1, 8);
-        if(keyword != null){
+        if (keyword != null) {
             return repo.findClassWithName(pageable, keyword);
         }
-        return repo.findAll(pageable);
+        return repo.findAllClass(pageable);
     }
-    
 
     public void save(Class c) {
         CustomUserDetail user = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
