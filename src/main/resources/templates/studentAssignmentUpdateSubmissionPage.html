@@ -21,11 +21,12 @@
 
         <div id="content">
             <div class="container-fluid">
-                <h3><i class="fas fa-book-open"></i> Classes</h3>
-                <a><strong>Classes</a></strong>
-                <ul class="as">
-                    <li class="act"><a th:href="@{/student/assignment/page/1}">List Assignment</a></li>
+                <h3><i class="fas fa-book-open"></i> Assignment</h3>
+                
+                <ul class="as rounded">
+                    <li class="bg-secondary"><a th:href="@{/student/assignment/page/1}">List Assignment</a></li>
                 </ul>
+                
                 <div class="main-container">
                     <!--  -->
                     <fieldset class="fs">
@@ -122,7 +123,7 @@
                                 <h3 class="text-success" th:text="${message}"></h3>
                             </div>
 
-                            <button th:if="${!viewOnly}" type="submit">Submit</button>
+                            <button class="btn btn-primary mt-3 mb-3" th:if="${!viewOnly}" type="submit">Update</button>
                             <a th:href="@{/student/assignment/page/1}">Cancel</a>
                         </form>
 

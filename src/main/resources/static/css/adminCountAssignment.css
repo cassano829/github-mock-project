@@ -258,7 +258,7 @@ body {
     text-align: left;
 }
 
-.form-add-product button {
+/*.form-add-product button {
     background-color: #0b1660;
     color: white;
     padding: 9px 12px;
@@ -268,7 +268,7 @@ body {
     width: fit-content;
     padding-top: 5px;
     padding-bottom: 5px;
-}
+}*/
 
 .btt {
     padding-top: 10px;
@@ -283,10 +283,10 @@ form {
     padding: 0 2em;
 }
 
-.btn:hover,
+/*.btn:hover,
 .btn:focus {
     background-color: green;
-}
+}*/
 
 a:hover {
     text-decoration: none;

@@ -11,6 +11,13 @@
         <link rel="stylesheet" th:href="@{/css/adminListAssignment.css}">
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
               integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+
+        <style>
+            td:nth-child(odd) {
+                font-weight: normal;
+            }
+        </style>
+
     </head>
 
     <body>
@@ -20,51 +27,54 @@
         <div id="content">
             <div class="container-fluid">
                 <h3><i class="fas fa-book-open"></i> Classes</h3>
-                <a><strong>Classes</a></strong>
-                <ul class="as">
-                    <li class="act"><a th:href="@{/teacher/assignment/list}">List Assignment</a></li>
+
+                <ul class="as rounded">
+                    <li class="bg-secondary"><a th:href="@{/teacher/assignment/list}">List Assignment</a></li>
                     <li><a th:href="@{/teacher/assignment/create}">Create</a></li>
                 </ul>
-                <div class="main-container">
-                    <!--  -->
-                    <fieldset class="fs">
-                        <legend><strong>List Classes(add assignment to Class)</strong></legend>
-                        <form class="form-add-product">
-                            <div>
-                                <table class="tblinfo ">
-                                    <tr>
-                                        <th>Id Class</th>
-                                        <th>Id Subject</th>
-                                        <th>Id User</th>
-                                        <th>Name Class</th>
-                                        <th>Create Date</th>
-                                        <th>Add Status</th>
-                                        <th>Add</th>
-                                    </tr>
-                                    <tr th:each="class : ${classes}">
-                                        <td th:text="${class.idClass}"></td>
-                                        <td th:text="${class.idSubject}"></td>
-                                        <td th:text="${class.idUser}"></td>
-                                        <td th:text="${class.nameClass}"></td>
-                                        <td th:text="${class.createDate}"></td>
-                                        <td>
-                                            <span class="text-success" th:if="${#maps.containsKey(addedClassesMap, class.idClass)}">Added</span>
-                                            <span class="text-danger" th:unless="${#maps.containsKey(addedClassesMap, class.idClass)}">not add</span>
-                                        </td>
-                                        <td>
-                                            <a th:if="${#maps.containsKey(addedClassesMap, class.idClass)}" th:href="@{'/teacher/assignment/class/add/' + ${class.idClass} + '?page=' + ${page}}">Undo</a>
-                                            <a th:unless="${#maps.containsKey(addedClassesMap, class.idClass)}" th:href="@{'/teacher/assignment/class/add/' + ${class.idClass} + '?page=' + ${page}}">Add</a>
-                                        </td>
-                                    </tr>
 
-                                </table>
-                            </div>
-                        </form>
-                        <strong>
-                            <a class="sub" th:if="${classes.getTotalPages() > 1}" th:each="i : ${#numbers.sequence(1, classes.getTotalPages())}" th:href="@{'/teacher/assignment/class/page/' + ${i}}" th:text="${i + '  '}"></a>
-                        </strong>
-                    </fieldset>
-                    <!--  -->
+                <div class="main-container">
+
+                    <form class="form-add-product">
+                        
+                        <div class="bg-white border rounded mt-3 mb-3 p-2">
+                            <legend><strong>List Classes(add assignment to Class)</strong></legend>
+                        </div>
+                        
+                        <div>
+                            <table class="table bg-white border rounded">
+                                <tr>
+                                    <th>Id Class</th>
+                                    <th>Id Subject</th>
+                                    <th>Id User</th>
+                                    <th>Name Class</th>
+                                    <th>Create Date</th>
+                                    <th>Add Status</th>
+                                    <th>Add</th>
+                                </tr>
+                                <tr th:each="class : ${classes}">
+                                    <td th:text="${class.idClass}"></td>
+                                    <td th:text="${class.idSubject}"></td>
+                                    <td th:text="${class.idUser}"></td>
+                                    <td th:text="${class.nameClass}"></td>
+                                    <td th:text="${class.createDate}"></td>
+                                    <td>
+                                        <span class="text-success" th:if="${#maps.containsKey(addedClassesMap, class.idClass)}">Added</span>
+                                        <span class="text-danger" th:unless="${#maps.containsKey(addedClassesMap, class.idClass)}">not add</span>
+                                    </td>
+                                    <td>
+                                        <a class="text-primary" th:if="${#maps.containsKey(addedClassesMap, class.idClass)}" th:href="@{'/teacher/assignment/class/add/' + ${class.idClass} + '?page=' + ${page}}">Undo</a>
+                                        <a class="text-primary" th:unless="${#maps.containsKey(addedClassesMap, class.idClass)}" th:href="@{'/teacher/assignment/class/add/' + ${class.idClass} + '?page=' + ${page}}">Add</a>
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </div>
+                    </form>
+                    <strong>
+                        <a class="sub" th:if="${classes.getTotalPages() > 1}" th:each="i : ${#numbers.sequence(1, classes.getTotalPages())}" th:href="@{'/teacher/assignment/class/page/' + ${i}}" th:text="${i + '  '}"></a>
+                    </strong>
+
                 </div>
             </div>
         </div>
