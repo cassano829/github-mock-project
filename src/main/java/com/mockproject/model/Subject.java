@@ -1,5 +1,3 @@
-/* LiemNguyen created on 16/07/2021*/
-
 package com.mockproject.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;

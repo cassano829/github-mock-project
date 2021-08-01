@@ -5,29 +5,30 @@
  */
 package com.mockproject.model;
 
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Data;
 
 import javax.persistence.*;
 
 /**
  *
- * @author Asus
+ * @author ACER
  */
 @Entity
 @Data
-@Table(name = "QuizesOfUser")
-public class QuizOfStudent {
-    
+@Table(name = "UsersOfClass")
+public class UsersOfClass implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idQuizOfUser;
-    
+    private Integer idUserOfClass;
+
+    private int idClass;
     private int idUser;
-    
-    private boolean isPass;
-    
-    private int totalCorrect;
-    
-    private int idQuiz;
-    
+
 }

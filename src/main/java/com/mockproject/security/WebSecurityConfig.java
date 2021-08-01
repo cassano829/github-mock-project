@@ -54,10 +54,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/student/create", "/student/save", "/student/verify").permitAll()
-                .antMatchers("/student/home", "/student/class", "/student/account").hasAuthority("STUDENT")
-                .antMatchers("/teacher/home", "/subject/teacher/*", "/teacher/account").hasAuthority("TEACHER")
-                .antMatchers("/admin/home", "/subject/admin/*", "/admin/account", "/admin/user").hasAuthority("ADMIN")
+//<<<<<<< HEAD
+//                .antMatchers("/", "/student/create", "/student/save", "/student/verify").permitAll()
+//                .antMatchers("/student/home", "/student/class", "/student/account").hasAuthority("STUDENT")
+//                .antMatchers("/teacher/home", "/subject/teacher/*", "/teacher/account").hasAuthority("TEACHER")
+//                .antMatchers("/admin/home", "/subject/admin/*", "/admin/account", "/admin/user").hasAuthority("ADMIN")
+//=======
+                .antMatchers("/", "/create", "/save", "/verify", "/handleException", "/loginError", "/page/**").permitAll()
+                .and().authorizeRequests().antMatchers("/student/**").hasAuthority("STUDENT")
+                .and().authorizeRequests().antMatchers("/admin/**").hasAuthority("ADMIN")
+                .and().authorizeRequests().antMatchers("/teacher/**").hasAuthority("TEACHER")
                 .anyRequest().authenticated()
                 .and()
                     .formLogin()
@@ -66,6 +72,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .passwordParameter("txtPassword")
                     .loginProcessingUrl("/login")
                     .successHandler(successHandler)
+                    .failureHandler(failHandler)
                 .and()
                 .logout().permitAll()
                 .and()
@@ -79,4 +86,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private LoginSuccessHandler successHandler;
+    
+    @Autowired
+    private LoginFailHandler failHandler;
 }

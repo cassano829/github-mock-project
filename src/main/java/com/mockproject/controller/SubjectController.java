@@ -96,7 +96,7 @@ public class SubjectController {
         if (violations.isEmpty() && !test.isPresent()) {
             CustomUserDetail user = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             System.out.println(user.getUser().getEmail());
-            int id = userService.getUserByUsername(user.getUser().getEmail()).getIdUser();
+            int id = userService.getUserByEmail(user.getUser().getEmail()).getIdUser();
             subject.setIdUser(id);
             service.save(subject);
         } else {

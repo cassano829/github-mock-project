@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Teacher Home Page</title>
+        <title>Teacher Class Page</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-        <link  type="text/css" rel="stylesheet" th:href="@{/css/adminHome.css}">
+        <link rel="stylesheet" th:href="@{/css/styles.css}">
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
     </head>
 
@@ -16,7 +17,7 @@
             <nav class="navbar navbar-expand-lg navbar-light">
                 <h2><a exact="true" class="logo" th:href="@{#}">LMS</a></h2>
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
+                    <li class="nav-item">
                     </li>
                 </ul>
                 <div sec:authorize="isAuthenticated()">
@@ -39,57 +40,56 @@
             <!-- Sidebar -->
             <nav id="sidebar">
                 <ul class="list-unstyled components">
-                    <li class="active">
+                    <li>
                         <a th:href="@{/teacher/home}"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
                     </li>
-                    <li>
+                    <li class="active">
                         <a th:href="@{/subject/teacher}"><i class="fas fa-list-ul"></i>Subject</a>
                     </li>
                     <li>
                         <a th:href="@{/teacher/account}"><i class="fas fa-id-card"></i>Account</a>
                     </li>
+
+
                 </ul>
             </nav>
             <!-- Page Content -->
             <div id="content">
                 <div class="container-fluid">
-                    <h3><i class="fas fa-tachometer-alt"></i> Dashboard</h3>
+                    <div class="d-flex justify-content-between mt-4">
+                        <div>
+                            <h3><i class="fas fa-list-ul"></i> Subject: [[${idSubject}]]</h3>
+                        </div>
+                        <div>
+                            <a th:href="@{'/teacher/subject/createClass/' + ${idSubject}}" class="btn"><i class="fas fa-plus"></i></a>
+                        </div>
+                    </div>
+
                     <div class="main-container">
-                        <!--  -->
-                        <article>
-                            <div class="a">
-                                <form>
-                                    <div class="d-flex border p-2 mb-2 forumpost focus-target" th:each="news : ${listNews}">
-                                        <div class="d-flex flex-column w-100">
-                                            <header class="mb-2 row d-flex" style=" margin-left: 2%; margin-top: 1%;">
-                                                <div class="mr-2" style="width: 45px;">
-                                                    <img class="rounded-circle w-100" src="https://lms-hcmuni.fpt.edu.vn/pluginfile.php/39/user/icon/adaptable/f1?rev=62" alt="Picture of Nguyễn Xuân Hưng (FPTU HCM)" aria-hidden="true" title="Picture of Nguyễn Xuân Hưng (FPTU HCM)">
-                                                </div>
+                        <div class="row pb-5 mb-4">
+                            <div class="col-3 mt-4" th:each="class : ${listClass}">
+                                <!-- Card-->
+                                <div class="card rounded shadow-sm border-0">
 
-                                                <div class="d-flex flex-column">
-                                                    <h3 class="h6 font-weight-bold mb-0" th:text="${news.title}">Title</h3>
-                                                    <div class="mb-3" tabindex="-1">
-                                                        by <a href="https://lms-hcmuni.fpt.edu.vn/user/view.php?id=4&course=1" th:text="${mapNames.get(news.idUser)}"></a>
-                                                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Due: <time th:text="${news.createDate}">createDate</time>
-                                                    </div>
-                                                </div>
-                                            </header>
-
-
-                                            <div class="d-flex body-content-container">
-                                                <div class="mr-2 author-groups-container" style="width: 45px; flex-shrink: 0">
-                                                </div>
-                                                <div>
-                                                    <p th:utext="${news.infor}">Content</p>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div class="text-right" th:if="${class.status == true}">
+                                        <a th:href="@{'/teacher/subject/editClass/' + ${class.idClass}}" class="btn"><i class="fas fa-edit"></i></a>
+                                        <a th:href="@{'/teacher/subject/deleteClass/' + ${class.idClass}}" class="btn far fa-trash-alt" onclick="return confirm('Are you sure you want to delete?')"></a>
                                     </div>
-                                </form>
-                            </div>
-                        </article>
-                        <!--  -->
+                                    
+                                    <div class="text-right" th:unless="${class.status == true}">
+                                        <a th:href="@{'/teacher/subject/editClass/' + ${class.idClass}}" class="btn"><i class="fas fa-edit"></i></a>
+                                        <a th:href="@{'/teacher/subject/restoreClass/' + ${class.idClass}}" class="btn far fas fa-undo" onclick="return confirm('Are you sure you want to restore?')"></a>
+                                    </div>
 
+                                    <div class="card-body">
+                                        <h5> <a href="#" class="text-dark" th:text="${class.nameClass}">Class Name</a></h5>
+                                        <p>This is class for [[${class.nameClass}]] students</p>
+                                        <a class="btn btn-primary" href="teacher-assignment.html"><i class="fas fa-book"></i> Assignments</a>
+                                        <a class="btn btn-info" href="teacher-quiz.html"><i class="fas fa-puzzle-piece"></i> Quizzes</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div th:if="${currentPage == null || totalPages == null}">
                             <h3 th:text="${message}" style="color: green" text-center></h3>
                         </div>
@@ -98,30 +98,30 @@
                                 Page [[${currentPage}]] of [[${totalPages}]]
                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 
-                                <a th:if="${currentPage > 1}" th:href="@{/page/1}">First</a>
+                                <a class="text-primary" th:if="${currentPage > 1}" th:href="@{'/teacher/classPage/1' + '/' + ${idSubject}}">First</a>
                                 <b><span th:unless="${currentPage > 1}">First</span></b>
                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 
-                                <a th:if="${currentPage > 1}" th:href="@{'/page/' + ${currentPage - 1}}">Previous</a>
+                                <a class="text-primary" th:if="${currentPage > 1}" th:href="@{'/teacher/classPage/' + ${currentPage - 1} + '/' + ${idSubject}}">Previous</a>
                                 <b><span th:unless="${currentPage > 1}">Previous</span></b>
                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 
                                 <span th:each="i : ${#numbers.sequence(1, totalPages)}">
-                                    <a th:if="${i != currentPage}" th:href="@{'/page/' + ${i}}">[[${i}]]</a>
+                                    <a class="text-primary" th:if="${i != currentPage}" th:href="@{'/teacher/classPage/' + ${i} + '/' + ${idSubject}}">[[${i}]]</a>
                                     <b><span th:unless="${i != currentPage}">[[${i}]]</span></b>
                                     &nbsp;&nbsp;&nbsp;
                                 </span>
                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 
-                                <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${currentPage + 1}}">Next</a>
+                                <a class="text-primary" th:if="${currentPage < totalPages}" th:href="@{'/teacher/classPage/' + ${currentPage + 1} + '/' + ${idSubject}}">Next</a>
                                 <b><span th:unless="${currentPage < totalPages}">Next</span></b>
                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 
-                                <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${totalPages}}">Last</a>
+                                <a class="text-primary" th:if="${currentPage < totalPages}" th:href="@{'/teacher/classPage/' + ${totalPages} + '/' + ${idSubject}}">Last</a>
                                 <b><span th:unless="${currentPage < totalPages}">Last</span></b>
                             </div>
                         </div>
@@ -129,11 +129,17 @@
                 </div>
             </div>
         </div>
+
         <!-- jQuery CDN - Slim version (=without AJAX) -->
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <!-- Bootstrap JS -->
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
-
+        <script>
+                                               $('#create-subject-form').hide();
+                                               $('#create-subject-button').click(function () {
+                                                   $('#create-subject-form').toggle('slow');
+                                               });
+        </script>
     </body>
 
 </html>

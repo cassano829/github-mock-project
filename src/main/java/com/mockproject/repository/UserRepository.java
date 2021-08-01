@@ -23,7 +23,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     User findUserByEmail(String email);
 
-    User findUserByVerificationCode(String code);
+//    User findUserByVerificationCode(String code);
 
 //    @Query("SELECT * " +
 //            "FROM Users u JOIN RolesOfUser ru ON u.idUser = ru.idUser " +
@@ -33,4 +33,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> findAllByEmailContainsAndRolesAndStatus(String email, Role role, boolean status);
 
     User findUsersByIdUser(int idUser);
+    
+    @Query("SELECT u FROM User u WHERE u.verificationCode = ?1")
+    public User findByVerificationCode(String code);
+    
+    User findUserByIdUser(int id);
+    
 }
