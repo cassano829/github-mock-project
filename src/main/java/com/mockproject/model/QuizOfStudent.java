@@ -33,9 +33,8 @@ public class QuizOfStudent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idQuizOfUser;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="idUser")
-    private User user;
+    //Update
+    private int idUser;
     
     private boolean isPass;
     
@@ -45,11 +44,9 @@ public class QuizOfStudent {
     @Column(name = "submitDate")
     private String submitDate;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="idQuiz")
-    private Quiz quiz;
+    private int idQuiz;
     
-    @OneToMany(mappedBy = "quizOfStudent",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "quizOfStudent",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private Set<QuizDetail> quizDetails;
     
 }

@@ -82,7 +82,7 @@
                                 <div class="col-md-12 body-content bg-white">
                                     <h1 class="text-center text-danger">Subject ID - Subject Name</h1>
                                     <hr>
-                                    <h2 id="question" th:text="'Question '+${questionIndex + 1}+': '+${session.questions.get(questionIndex).content}">Question 1: How to use Spring boot?</h2>
+                                    <h2 id="question" th:text="'Question '+${questionIndex + 1}+': '+${session.questions.get(questionIndex).contentQuestion}">Question 1: How to use Spring boot?</h2>
                                     <div class="form-group" id="answer-form" method="get">
                                         <div class="quiz-header">
                                             <ol type="A">
@@ -117,7 +117,7 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <th:block th:unless="${questionIndex eq session.questions.size()}">
+                                        <th:block th:if="${questionIndex < session.questions.size()}">
                                             <button class="btn btn-paging" type="submit" name="questionIndex" th:value="${questionIndex + 1}">Next
                                                 &rarr;</button>
                                         </th:block>

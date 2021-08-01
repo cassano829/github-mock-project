@@ -23,6 +23,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  *
@@ -69,8 +71,5 @@ public class User implements Serializable {
             }
         }
         return false;
-    }
-
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user")
-    private Set<QuizOfStudent> quizOfStudents;
+    }   
 }

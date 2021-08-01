@@ -7,8 +7,9 @@ package com.mockproject.service;
 
 import com.mockproject.model.Subject;
 import com.mockproject.repository.SubjectRepository;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -21,7 +22,11 @@ public class SubjectService {
     @Autowired
     SubjectRepository repository;
     
-    public List<Subject> getAllSubject(){
-        return repository.findAll();
+    public Page<Subject> getAllSubject(Pageable pageable){
+        return repository.findAll(pageable);
+    }
+    
+    public Subject findById(String idSubject){
+        return repository.findByIdSubject(idSubject);
     }
 }

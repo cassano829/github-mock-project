@@ -45,7 +45,7 @@
                         <a href="teacherAccount.html"><i class="fas fa-id-card"></i>Account</a>
                     </li>
                     <li class="active">
-                        <a th:href="@{/teacher/subject/showAllSubjectOfTeacher}"><i class="fas fa-list-ul"></i>Subject</a>
+                        <a th:href="@{/teacher/subject/showAllSubjectOfTeacher/1}"><i class="fas fa-list-ul"></i>Subject</a>
                     </li>
                 </ul>
             </nav>
@@ -73,14 +73,26 @@
                                     <div class="card-body">
                                         <h5> <a href="#" class="text-dark" th:text="${class.nameClass}"></a></h5>
                                         <a class="btn btn-primary" href="teacher-assignment.html"><i class="fas fa-book"></i> Assignments</a>
-                                        <a class="btn btn-info" th:href="@{'/teacher/quiz/showListQuiz/'+${idSubject}+'/'+${class.idClass}}"><i class="fas fa-puzzle-piece"></i> Quizzes</a>
+                                        <a class="btn btn-info" th:href="@{'/teacher/quiz/showListQuiz/'+${class.idClass}}+'/1'"><i class="fas fa-puzzle-piece"></i> Quizzes</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="paging" th:if="${classesOfTeacher.getTotalPages() > 1}">
+                    <nav aria-label="Search Result Pages">
+                        <ul class="pagination justify-content-center" >
+                            <th:block th:each="i : ${#numbers.sequence(1, classesOfTeacher.getTotalPages())}">
+                                <li class="page-item " th:classappend="${i == page} ? 'active'">
+                                    <a class="page-link" th:href="@{'/teacher/class/showClassOfTeacher'+'/'+${session.idSubject}+'/'+${i}}" th:text="${i}"></a>
+                                </li>
+                            </th:block>
+                        </ul>
+                    </nav>
+                </div>
             </div>
+
         </div>
 
         <!-- jQuery CDN - Slim version (=without AJAX) -->

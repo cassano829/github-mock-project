@@ -45,13 +45,13 @@
                         <a href="teacherAccount.html"><i class="fas fa-id-card"></i>Account</a>
                     </li>
                     <li class="active">
-                        <a href="teacher-subject.html"><i class="fas fa-list-ul"></i>Subject</a>
+                        <a th:href="@{/teacher/subject/showAllSubjectOfTeacher/1}"><i class="fas fa-list-ul"></i>Subject</a>
                     </li>
                     <li>
                         <a href="teacher-assignment.html"><i class="fas fa-hand-point-right"></i>Assignment</a>
                     </li>
                     <li class="act">
-                        <a th:href="@{'/quiz/showListQuiz/'+${idClass}}"><i class="fas fa-hand-point-right"></i>Quiz</a>
+                        <a th:href="@{'/teacher/quiz/showListQuiz/'+${session.idClass}}+'/1'"><i class="fas fa-hand-point-right"></i>Quiz</a>
                     </li>
                 </ul>
             </nav>
@@ -60,9 +60,15 @@
                 <div class="container-fluid">
                     <h3><i class="fas fa-book-open" th:text="' '+${className}"></i></h3>
                     <ul class="as">
-                        <li class="act"><a href="adminListAssignment.html">List Quiz</a></li>
-                        <li><a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><i
-                                    class="material-icons">&#xE147;</i> <span>Add New Employee</span></a></li>
+                        <li class="act"><a th:href="@{'/teacher/quiz/showListQuiz/'+${session.idClass}}+'/'+${page}">List Quiz</a></li>
+                        <li class="act" style="float: right"><a th:href="@{/teacher/quiz/create}"><i class="fas fa-plus"> Add Quiz</i></a>
+                        </li>
+                        <li style="float: right">
+                            <form class="form form-group" th:action="@{'/teacher/quiz/showListQuiz/'+${session.idClass}+'/1'}" method="get">
+                                <input type="text" placeholder="Search.." name="txtSearch" th:value="${search != null} ? ${search}:''">
+                                <button type="submit"><i class="fa fa-search"></i></button>
+                            </form>
+                        </li>
                     </ul>
                     <div class="main-container">
                         <!--  -->
@@ -80,13 +86,16 @@
                                             <th>Duration</th>
                                             <th>Action</th>
                                         </tr>
-                                        <th:block th:if="${quizes != null}" th:each="quiz : ${quizes}">
+                                        <th:block th:if="${quizes != null}" th:each="quiz,state : ${quizes}">
                                             <tr>
-                                                <td>1</td>
+                                                <td th:text="${state.index}"></td>
                                                 <td th:text="${quiz.nameQuiz}">
                                                     Quiz 1
                                                 </td>
-                                                <td th:text="${quiz.status} ? 'Started' : 'Not Started'"></td>
+                                                <td>
+                                                    <span th:text="${quiz.status == 'started'} ? 'Started ' : (${quiz.status == 'not started '} ? 'Not Started' : 'End ')"></span>
+                                                    <a th:href="@{/teacher/quiz/editStatus}"><i class="fas fa-edit"></i></a>
+                                                </td>
                                                 <td th:text="${quiz.openDate}"></td>
                                                 <td th:text="${quiz.dueDate}"></td>
                                                 <td th:text="${quiz.numOfQues}"></td>
@@ -96,13 +105,27 @@
                                                         <input type="hidden" name="idQuiz" th:value="${quiz.idQuiz}">
                                                         <button type="submit" class="btn-primary" style="margin: 2px"><i class="fas fa-eye"></i></button>
                                                     </form>
-                                                    <button type="submit" class="btn-success"><i class="fas fa-edit"></i></button>
-                                                    <button type="submit" class="btn-danger"><i class="fas fa-trash"></i></button>
+                                                    <form th:action="@{/teacher/quiz/edit}" method="get">
+                                                        <input type="hidden" name="idQuiz" th:value="${quiz.idQuiz}">
+                                                        <button type="submit" class="btn-success"><i class="fas fa-edit"></i></button>
+                                                    </form>
+                                                    <!--                                                    <button type="submit" class="btn-danger"><i class="fas fa-trash"></i></button>-->
                                                 </td>
                                             </tr>
                                         </th:block>
                                     </table>
                                 </div>
+                            </div>
+                            <div class="paging" th:if="${quizes.getTotalPages() > 1}">
+                                <nav aria-label="Search Result Pages">
+                                    <ul class="pagination justify-content-center">
+                                        <th:block th:each="i : ${#numbers.sequence(1, quizes.getTotalPages())}">
+                                            <li class="page-item " th:classappend="${i == page} ? 'active'">
+                                                <a class="page-link" th:href="@{'/teacher/quiz/showListQuiz/'+${session.idClass}+'/'+${i}+'?txtSearch='+${search}}" th:text="${i}"></a>
+                                            </li>
+                                        </th:block>
+                                    </ul>
+                                </nav>
                             </div>
                         </fieldset>
                         <!--  -->

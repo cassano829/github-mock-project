@@ -5,9 +5,8 @@
  */
 package com.mockproject.repository;
 
-import com.mockproject.model.Subject;
+import com.mockproject.model.QuizOfClass;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -15,7 +14,5 @@ import org.springframework.stereotype.Repository;
  * @author Asus
  */
 @Repository
-public interface SubjectRepository extends JpaRepository<Subject, String> {
-
-    Subject findByIdSubject(String idSubject);
+public interface QuizOfClassRepository extends JpaRepository<QuizOfClass,Integer>{
 }

@@ -50,4 +50,8 @@ public class QuizOfStudentService {
         mailContent += "<p>Thank you,<br> Learning Management System Team</p>";
         mailService.sendMailToNotify(subject, senderName, mailContent, user.getEmail());
     }
+    
+//    public QuizOfStudent getQuizReviewByIdStudentAndIdQuiz(int idUser,int idQuiz){
+//        return repository.findByIdUserAndIdQuiz(idUser, idQuiz);
+//    }
 }

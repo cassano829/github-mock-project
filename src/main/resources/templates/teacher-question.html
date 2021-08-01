@@ -4,7 +4,7 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>LMS - Subjects</title>
+        <title>LMS - Assignments</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -31,7 +31,6 @@
                         </div>
                     </li>
                 </ul>
-
             </nav>
         </header>
         <div class="wrapper">
@@ -47,48 +46,65 @@
                     <li class="active">
                         <a th:href="@{/teacher/subject/showAllSubjectOfTeacher/1}"><i class="fas fa-list-ul"></i>Subject</a>
                     </li>
+                    <li>
+                        <a href="teacher-assignment.html"><i class="fas fa-hand-point-right"></i>Assignment</a>
+                    </li>
+                    <li class="act">
+                        <a th:href="@{'/teacher/quiz/showListQuiz/'+${session.idClass}}+'/1'"><i class="fas fa-hand-point-right"></i>Quiz</a>
+                    </li>
                 </ul>
             </nav>
             <!-- Page Content -->
             <div id="content">
                 <div class="container-fluid">
-                    <h3><i class="fas fa-list-ul"></i> Subject</h3>
-                    <div>
-                        <form class="search" action="student-class-enroll.html">
-                            <label>Search for new subject:</label>
-                            <input type="text" name="">
-                            <button type="submit"><i class="fas fa-search"></i></button>
-                        </form>
+                    <div class="d-flex justify-content-between mt-4">
+                        <div>
+                            <h3><i class="fas fa-puzzle-piece" th:text="${editingQuiz.nameQuiz}"></i></h3>
+                        </div>
+                        <div>
+                            <a href="teacher-question-add.html" class="btn"><i class="fas fa-plus"></i></a>
+                        </div>
                     </div>
+
                     <div class="main-container">
                         <div class="row pb-5 mb-4">
-                            <th:block th:if="${listSubject != null}">
-                                <div class="col-3 mt-4" th:each="subject : ${listSubject}">
-                                    <!-- Card-->
-                                    <div class="card rounded shadow-sm border-0">
-                                        <div class="card-body">
-                                            <h5 class="text-center" th:text="${subject.nameSubject}"></h5>
-                                            <a class="btn btn-primary w-100" th:href="@{'/teacher/class/showClassOfTeacher'+'/'+${subject.idSubject}+'/1'}"><i class="fas fa-book"></i> Enroll</a>
-                                        </div>
+                            <div class="col-12 mt-4" th:if="${questions != null}" th:each="question,state : ${questions}">
+                                <!-- Card-->
+                                <div class="card rounded shadow-sm border-0">
+                                    <div class="text-right">
+                                        <a th:href="@{'/teacher/quiz/question/editQuestion/'+${question.idQuestion}}" class="btn"><i class="fas fa-edit"></i></a>
+                                        <a th:href="@{'/teacher/quiz/question/deleteQuestion/'+${question.idQuestion}}" class="btn" onclick="return confirm('Do you want to delete this question?')"><i class="far fa-trash-alt"></i></a>
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="text-dark" th:text="'Question '+${state.index + 1}"></h5>
+                                        <div th:text="${question.contentQuestion}"></div>
+                                        <ol type="A">
+                                            <li th:each="answer : ${question.answers}">
+                                                <div>
+                                                    <input class="form-check-input" type="radio" name="flexRadioDefault" th:id="${answer.idAnswer}" 
+                                                           th:checked="${answer.isCorrect}" disabled/>
+                                                    <label class="form-check-label" th:for="${answer.idAnswer}" th:text="${answer.content}"></label>
+                                                </div>
+                                            </li>
+                                        </ol>
                                     </div>
                                 </div>
-                            </th:block>
+                            </div>
+                        </div>
+                        <div class="paging" th:if="${questions.getTotalPages() > 1}">
+                            <nav aria-label="Search Result Pages">
+                                <ul class="pagination justify-content-center" >
+                                    <th:block th:each="i : ${#numbers.sequence(1, questions.getTotalPages())}">
+                                        <li class="page-item " th:classappend="${i == page} ? 'active'">
+                                            <a class="page-link" th:href="@{'/teacher/quiz/questions/'+${editingQuiz.idQuiz}+'/'+${i}}" th:text="${i}"></a>
+                                        </li>
+                                    </th:block>
+                                </ul>
+                            </nav>
                         </div>
                     </div>
                 </div>
-                <div class="paging" th:if="${listSubject.getTotalPages() > 1}">
-                    <nav aria-label="Search Result Pages">
-                        <ul class="pagination justify-content-center" >
-                            <th:block th:each="i : ${#numbers.sequence(1, listSubject.getTotalPages())}">
-                                <li class="page-item"  th:classappend="${i == page} ? 'active'" >
-                                    <a class="page-link" th:href="@{'/teacher/subject/showAllSubjectOfTeacher/'+${i}}" th:text="${i}"></a>
-                                </li>
-                            </th:block>
-                        </ul>
-                    </nav>
-                </div>
             </div>
-
         </div>
 
         <!-- jQuery CDN - Slim version (=without AJAX) -->

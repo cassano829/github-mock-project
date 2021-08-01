@@ -7,8 +7,9 @@ package com.mockproject.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.mockproject.model.Quiz;
-import com.mockproject.model.Subject;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -18,9 +19,13 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface QuizRepository extends JpaRepository<Quiz, Integer> {
-       
+
     List<Quiz> findByIdUser(int idUser);
-    
-    @Query("SELECT q FROM Quiz q JOIN q.classes c JOIN q.subject s WHERE c.idClass=?1 AND s.idSubject =?2")
-    List<Quiz> getAllQuizByIdClassAndIdSubject(int idClass,String idSubject);
+
+    @Query(value = "SELECT * FROM Quizes WHERE nameQuiz LIKE %?1% AND idQuiz IN (SELECT qc.idQuiz FROM QuizesOfClass qc WHERE qc.idClass=?2) ORDER BY idQuiz DESC",
+            countQuery = "SELECT count(*) FROM Quizes", nativeQuery = true)
+    Page<Quiz> findAllByNameQuiz(String nameQuiz, int idClass, Pageable pageable);
+
+    @Query(value = "SELECT max(idQuiz) FROM Quizes", nativeQuery = true)
+    int getIdOfQuiz();
 }

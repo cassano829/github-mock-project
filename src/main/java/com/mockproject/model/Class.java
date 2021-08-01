@@ -36,9 +36,7 @@ public class Class {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idClass;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idSubject")
-    private Subject subject;
+    private String idSubject;
     
     private int idUser;
     
@@ -50,16 +48,6 @@ public class Class {
     @Column(name = "createDate")
     private String createDate;
     
-    private String password;
-    
-    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @EqualsAndHashCode.Exclude // không sử dụng trường này trong equals và hashcode
-    @ToString.Exclude // Khoonhg sử dụng trong toString()
-    @JoinTable(name = "QuizesOfClass", //Tạo ra một join Table tên là "QuizesOfClass"
-            joinColumns = @JoinColumn(name = "idClass"),  // TRong đó, khóa ngoại chính là address_id trỏ tới class hiện tại (Address)
-            inverseJoinColumns = @JoinColumn(name = "idQuiz") //Khóa ngoại thứ 2 trỏ tới thuộc tính ở dưới (Person)
-    )
-    private Set<Quiz> quizes;
-    
+    private String password;  
     
 }

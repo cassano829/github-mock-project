@@ -6,6 +6,7 @@
 package com.mockproject.controller;
 
 import com.mockproject.model.Question;
+import com.mockproject.model.Quiz;
 import com.mockproject.model.QuizCart;
 import com.mockproject.model.QuizDetail;
 import com.mockproject.model.QuizOfStudent;
@@ -21,18 +22,19 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  *
  * @author Asus
  */
 @Controller
-@RequestMapping("/student/quiz")
 public class QuizController {
 
     public final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -50,11 +52,12 @@ public class QuizController {
 
     @Autowired
     QuizService quizService;
+    
 
-    @GetMapping("/showQuiz")
+    @GetMapping("/student/quiz/showQuiz/{idQuiz}")
     public String showQuiz(HttpSession session,
-            Model model) {
-        int idQuiz = 1;
+            Model model, @PathVariable("idQuiz") int idQuiz) {
+        Quiz quiz = quizService.getQuizByIdQuiz(idQuiz);
         List<Question> questions = questionService.findListQuestionByIdQuiz(idQuiz);
         session.setAttribute("questions", questions);
         CustomUserDetail userDetail = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -63,11 +66,11 @@ public class QuizController {
         model.addAttribute("questionIndex", 0);
         Timestamp startQuiz = new Timestamp(System.currentTimeMillis());
         session.setAttribute("TimeStartQuiz", startQuiz);
-        session.setAttribute("timeLimit", 3);
+        session.setAttribute("timeLimit", quiz.getTimeLimit());
         return "quiz";
     }
 
-    @GetMapping("/chooseQuestion")
+    @GetMapping("/student/quiz/chooseQuestion")
     public String add(HttpSession session, HttpServletRequest request, Model model) throws Exception {
         String page = "quiz";
         int questionIndex = 0;
@@ -106,24 +109,24 @@ public class QuizController {
         }
 
         QuizOfStudent quizOfStudent = new QuizOfStudent();
-        quizOfStudent.setQuiz(quizService.getQuizByIdQuiz(cart.getIdQuiz()));
-        if ((totalCorrect / questions.size()) >= 0.5) {
+        quizOfStudent.setIdQuiz(cart.getIdQuiz());
+        float score = (totalCorrect * 10 / questions.size());
+        if (score >= 5.0) {
             quizOfStudent.setPass(true);
         } else {
             quizOfStudent.setPass(false);
         }
         CustomUserDetail userDetail = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        quizOfStudent.setUser(userDetail.getUser());
+        quizOfStudent.setIdUser(userDetail.getUser().getIdUser());
         quizOfStudent.setTotalCorrect(totalCorrect);
         quizOfStudent.setSubmitDate(df.format(new Date()));
         int idQuizOfStudent = quizOfStudentService.getIdOfQuizOfUser();
         quizOfStudent.setIdQuizOfUser(idQuizOfStudent + 1);
-
         quizOfStudentService.save(quizOfStudent);
         for (Integer questionId : cart.getQuizCart().keySet()) {
             QuizDetail quizDetail = new QuizDetail();
-            quizDetail.setQuestion(questionService.findbyId(questionId));
+            quizDetail.setIdQuestion(questionId);
             quizDetail.setQuizOfStudent(quizOfStudent);
             quizDetail.setUserAnswer(cart.getQuizCart().get(questionId));
             quizDetailService.insertQuizDetail(quizDetail);
@@ -137,4 +140,17 @@ public class QuizController {
         session.removeAttribute("TimeStartQuiz");
         return "studentHome";
     }
+
+//    @GetMapping("/quizReview/{idQuiz}")
+//    public String viewQuizReviewPage(Model model,@PathVariable("idQuiz") int idQuiz) {
+//        CustomUserDetail userDetail = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        QuizOfStudent quizOfStudent=quizOfStudentService.getQuizReviewByIdStudentAndIdQuiz(userDetail.getUser().getIdUser(), idQuiz);
+//        System.out.println(quizOfStudent.getQuiz().getNameQuiz());
+//        System.out.println(quizOfStudent.getSubmitDate());
+//        model.addAttribute("quizReview", quizOfStudent);
+//        
+//        return "quiz-review";
+//    }
+    
+
 }

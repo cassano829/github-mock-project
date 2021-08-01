@@ -7,10 +7,12 @@ package com.mockproject.controller;
 
 import com.mockproject.model.User;
 import com.mockproject.model.User_Role;
+import com.mockproject.security.CustomUserDetail;
 import com.mockproject.security.UserDetailServiceImp;
+import com.mockproject.service.ClassService;
 import com.mockproject.service.User_RoleService;
-import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +32,7 @@ public class UserController {
 
     @Autowired
     User_RoleService user_roleService;
+
 
     @GetMapping("/")
     public String loginPage() {
@@ -99,7 +102,7 @@ public class UserController {
         model.addAttribute("user", new User());
         return "sign-up";
     }
-
+    
     @PostMapping("/student/save")
     public String signUp(@ModelAttribute("user") User user,
             Model model, @RequestParam("rePassword") String rePwd) {
@@ -163,4 +166,5 @@ public class UserController {
             return "verify";
         }
     }
+    
 }

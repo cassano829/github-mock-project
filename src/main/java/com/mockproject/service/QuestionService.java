@@ -10,6 +10,8 @@ import com.mockproject.repository.QuestionRepository;
 import com.mockproject.model.Question;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -33,6 +35,10 @@ public class QuestionService {
         return questionRepository.findListQuestionByIdQuiz(idQuiz);
     }
     
+    public Page<Question> getQuestionsByIdQuiz(int idQuiz,Pageable pageable){
+        return questionRepository.findAllByIdQuiz(idQuiz,pageable);
+    }
+    
     public int findAnswerByIdCorrect(int questionId){
         Question question=questionRepository.findById(questionId).get();
         for(Answer answer:question.getAnswers()){
@@ -43,5 +49,8 @@ public class QuestionService {
         return -1;
     }
     
+    public int countNumOfQuesOfQuiz(int idQuiz){
+        return questionRepository.countNumOfQuesOfQuiz(idQuiz);
+    }
     
 }
