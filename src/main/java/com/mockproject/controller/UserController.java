@@ -12,6 +12,7 @@ import com.mockproject.security.CustomUserDetail;
 import com.mockproject.security.UserDetailServiceImp;
 import com.mockproject.service.NewsService;
 import com.mockproject.service.User_RoleService;
+import java.util.HashMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -71,18 +72,20 @@ public class UserController {
     @GetMapping("/page/{pageNumber}")
     public String listByPage(Model model, @PathVariable(name = "pageNumber") Integer currentPage) {
         CustomUserDetail user = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User u = new User();
         Page<News> page = newService.getListNewsByStatus(currentPage);
         int totalPages = page.getTotalPages();
         List<News> list = page.getContent();
-        for (News n : list) {
-            u = service.getUserByIdUser(n.getIdUser());
-        }
+        HashMap<Integer, String> mapNames = new HashMap<Integer, String>();
+
         if (list != null) {
             if (list.size() != 0) {
+                for (News n : list) {
+                    User u = service.getUserByIdUser(n.getIdUser());
+                    mapNames.put(u.getIdUser(), u.getFullName());
+                }
                 model.addAttribute("currentPage", currentPage);
                 model.addAttribute("totalPages", totalPages);
-                model.addAttribute("nameUser", u.getFullName());
+                model.addAttribute("mapNames", mapNames);
                 model.addAttribute("listNews", list);
             } else {
                 model.addAttribute("message", "Empty Announcement!");

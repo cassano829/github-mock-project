@@ -69,7 +69,7 @@
                                                 <div class="d-flex flex-column">
                                                     <h3 class="h6 font-weight-bold mb-0" th:text="${news.title}">Title</h3>
                                                     <div class="mb-3" tabindex="-1">
-                                                        by <a href="https://lms-hcmuni.fpt.edu.vn/user/view.php?id=4&course=1">[[${nameUser}]]</a>
+                                                        by <a href="https://lms-hcmuni.fpt.edu.vn/user/view.php?id=4&course=1" th:text="${mapNames.get(news.idUser)}"></a>
                                                         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Due: <time th:text="${news.createDate}">createDate</time>
                                                     </div>
                                                 </div>

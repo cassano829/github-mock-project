@@ -7,13 +7,12 @@ package com.mockproject.controller;
 
 import com.mockproject.model.News;
 import com.mockproject.model.User;
-import com.mockproject.security.CustomUserDetail;
 import com.mockproject.security.UserDetailServiceImp;
 import com.mockproject.service.NewsService;
+import java.util.HashMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -113,18 +112,20 @@ public class AdminController {
 
     @GetMapping("/pageAdmin/{pageNumber}")
     public String listByPageAdmin(Model model, @PathVariable(name = "pageNumber") Integer currentPage) {
-        User u = new User();
         Page<News> page = newService.getListNews(currentPage);
         int totalPages = page.getTotalPages();
         List<News> list = page.getContent();
-        for (News n : list) {
-            u = service.getUserByIdUser(n.getIdUser());
-        }
+        HashMap<Integer, String> mapNames = new HashMap<Integer, String>();
+
         if (list != null) {
             if (list.size() != 0) {
+                for (News n : list) {
+                    User u = service.getUserByIdUser(n.getIdUser());
+                    mapNames.put(u.getIdUser(), u.getFullName());
+                }
                 model.addAttribute("currentPage", currentPage);
                 model.addAttribute("totalPages", totalPages);
-                model.addAttribute("nameUser", u.getFullName());
+                model.addAttribute("mapNames", mapNames);
                 model.addAttribute("listNews", list);
             } else {
                 model.addAttribute("message", "Empty Announcement!");
