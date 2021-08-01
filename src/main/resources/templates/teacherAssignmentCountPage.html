@@ -17,6 +17,12 @@
             td:nth-child(odd) {
                 font-weight: normal;
             }
+            form {
+                text-align: left;
+            }
+            .btn:hover, .btn:focus{
+                background-color: #017BFF;
+            }
         </style>
     </head>
 
@@ -27,61 +33,75 @@
 
         <div id="content">
             <div class="container-fluid">
-                <h3><i class="fas fa-book-open"></i> Classes</h3>
+
                 <ul class="as rounded">
                     <li class="bg-secondary"><a th:href="@{/teacher/assignment/list}">List Assignment</a></li>
                     <li><a th:href="@{/teacher/assignment/create}">Create</a></li>
                 </ul>
+
                 <div class="main-container">
 
-                    <form class="form-add-product" th:action="@{/teacher/assignment/grade/class}">
+                    <form th:action="@{/teacher/assignment/grade/class}">
 
                         <a class="collapsible border rounded bg-white">
                             <i class="fas fa-sort-down"></i><strong>Assignment Detail</strong>
                         </a>
 
-                        <div class="con">
+                        <div class="con border rounded mt-3 p-3 bg-white">
 
-                            <div>
-                                <label><strong>Subject</strong></label>
+                            <div class="mb-3">
+                                <label>
+                                    <strong>Subject</strong>
+                                </label>
                                 <div>
-                                    <input readonly type="text" th:value="${assignmentData.idSubject}"/>
+                                    <input class="form-control col-5" th:value="${assignmentData.idSubject}" readonly>
                                 </div>
                             </div>
 
-                            <div>
-                                <label><strong>Title</strong></label>
+                            <div class="mb-3">
+                                <label>
+                                    <strong>Title</strong>
+                                </label>
                                 <div>
-                                    <input type="text" th:value="${assignmentData.title}">
+                                    <input class="form-control col-5" th:value="${assignmentData.title}" readonly>
                                 </div>
                             </div>
 
-                            <div>
-                                <label><strong>Content</strong></label>
+                            <div class="mb-3">
+                                <label>
+                                    <strong>Content</strong>
+                                </label>
                                 <div>
-                                    <textarea id="editors" readonly cols="90" rows="5" th:utext="${assignmentData.content}"></textarea>
+                                    <textarea id="editors" th:utext="${assignmentData.content}" readonly></textarea>
                                 </div>
                             </div>
 
-                            <div th:if="${assignmentData.attachments != null and assignmentData.attachments != ''}">
-                                <a th:href="@{${assignmentData.attachments}}" download>download</a>
-                            </div>
+                            <div class="mb-3">
+                                <div th:if="${assignmentData.attachments != null and !assignmentData.attachments.empty}">
+                                    <label>Download link: </label>
+                                    <a class="text-primary" th:href="@{${assignmentData.attachments}}" download>download</a>
+                                </div>
 
-                            <div th:unless="${assignmentData.attachments != null and assignmentData.attachments != ''}">
-                                <span>No files to download</span>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="control-label"><strong>Create Date</strong></label>
-                                <div class='input-group date' style="width: 40%; border-radius: 1px;">
-                                    <input readonly type="datetime-local" class="form-control" th:value="${#dates.format(assignmentData.createDate,'yyyy-MM-dd')}+'T'+${#dates.format(assignmentData.createDate,'HH:mm:ss')}">
+                                <div th:unless="${assignmentData.attachments != null and !assignmentData.attachments.empty}">
+                                    <label>Download link: No files to download</label>
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label class="control-label"><strong>Deadline</strong></label>
-                                <div class='input-group date' style="width: 40%; border-radius: 1px;">
-                                    <input readonly type="datetime-local" class="form-control" th:value="${#dates.format(assignmentData.deadline,'yyyy-MM-dd')}+'T'+${#dates.format(assignmentData.deadline,'HH:mm:ss')}">
+                            <div class="mb-3">
+                                <label>
+                                    <strong>Create Date</strong>
+                                </label>
+                                <div>
+                                    <input readonly type="datetime-local" class="form-control col-5" th:value="${#dates.format(assignmentData.createDate,'yyyy-MM-dd')}+'T'+${#dates.format(assignmentData.createDate,'HH:mm:ss')}">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label>
+                                    <strong>Deadline</strong>
+                                </label>
+                                <div>
+                                    <input readonly type="datetime-local" class="form-control col-5" th:value="${#dates.format(assignmentData.deadline,'yyyy-MM-dd')}+'T'+${#dates.format(assignmentData.deadline,'HH:mm:ss')}">
                                 </div>
                             </div>
 
@@ -91,13 +111,13 @@
                         </div>
 
                         <div class="border rounded bg-white mt-3 mb-3 p-2">
-                            <label><strong>Choose class: </strong></label>
+                            <label><strong>Choose class</strong></label>
                             <div>
                                 <span th:if="${listAssignmentOfClass==null or listAssignmentOfClass.empty}">This assignment 0 class</span>
-                                <select th:if="${listAssignmentOfClass!=null and !listAssignmentOfClass.empty}" th:name="idClass">
+                                <select class="form-control col-5" th:if="${listAssignmentOfClass!=null and !listAssignmentOfClass.empty}" th:name="idClass">
                                     <option th:each="class : ${listAssignmentOfClass}" th:value="${class.idClass}" th:text="${'['+ class.idClass +'] ' + mapClasses.get(class.idClass)}">
                                 </select>
-                                <button class="btn btn-primary" type="submit">Select</button>
+                                <button class="btn btn-primary mt-3" type="submit">Select</button>
                             </div>
                         </div>
 
@@ -139,10 +159,12 @@
     </div>
 
     <script>
+        let editor;
         ClassicEditor
                 .create(document.querySelector('#editors'))
                 .then(newEditor => {
                     editor = newEditor;
+                    editor.isReadOnly = true;
                 })
                 .catch(error => {
                     console.error(error);

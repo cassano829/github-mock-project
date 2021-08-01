@@ -10,6 +10,15 @@
         <link rel="stylesheet" th:href="@{/css/adminViewStuAssign.css}">
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
         <script src="https://cdn.ckeditor.com/ckeditor5/29.0.0/classic/ckeditor.js"></script>
+
+        <style>
+            form {
+                text-align: left;
+            }
+            .btn:hover, .btn:focus{
+                background-color: #017BFF;
+            }
+        </style>
     </head>
 
     <body>
@@ -17,7 +26,6 @@
         <!-- Page Content -->
         <div id="content">
             <div class="container-fluid">
-                <h3><i class="fas fa-book-open"></i> Assignment</h3>
 
                 <ul class="as rounded">
                     <li class="bg-secondary"><a th:href="@{/teacher/assignment/list}">List Assignment</a></li>
@@ -25,70 +33,88 @@
                 </ul>
 
                 <div class="main-container">
-                    <!--  -->
-                    <fieldset class="fs">
-                        <legend><strong th:text="${userFullName}"> Submission</strong></legend>
-                        <form class="form-add-product" style="margin-top: 20px;" th:action="@{'/teacher/assignment/grade/detail/submit/' + ${assignmentOfUserData.idAssignmentOfUser}}">
 
+                    <form class="border rounded p-3 bg-white" th:action="@{'/teacher/assignment/grade/detail/submit/' + ${assignmentOfUserData.idAssignmentOfUser}}">
+
+                        <h3><span th:text="${userFullName}"></span> submission</h3>
+
+                        <div class="mb-3">
+                            <label>
+                                <strong>Id Assignment:</strong>
+                            </label>
+                            <input class="form-control col-5" th:value="${assignmentOfUserData.idAssignment}" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>
+                                <strong>Id Class</strong>
+                            </label>
+                            <input class="form-control col-5" th:value="${assignmentOfUserData.idClass}" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>
+                                <strong>Id User</strong>
+                            </label>
+                            <input class="form-control col-5" th:value="${assignmentOfUserData.idUser}" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>
+                                <strong>Content</strong>
+                            </label>
                             <div>
-                                <label><strong>Id Assignment:</strong></label>
-                                <span th:text="${assignmentOfUserData.idAssignment}"></span>
+                                <textarea id="editors" th:name="content" th:utext="${assignmentOfUserData.content}" readonly></textarea>
                             </div>
+                        </div>
 
-                            <div>
-                                <label><strong>Id Class</strong></label>
-                                <span th:text="${assignmentOfUserData.idClass}"></span>
-                            </div>
+                        <div class="mb-3">
+                            <label>
+                                <strong>Attachments</strong>
+                            </label>
 
-                            <div>
-                                <label><strong>Id User</strong></label>
-                                <span th:text="${assignmentOfUserData.idUser}"></span>
+                            <div th:if="${assignmentOfUserData.attachments != null and !assignmentOfUserData.attachments.empty}">
+                                <label>Download link: </label>
+                                <a class="text-primary" th:href="@{${assignmentOfUserData.attachments}}" download>download</a>
                             </div>
+                            <div th:unless="${assignmentOfUserData.attachments != null and !assignmentOfUserData.attachments.empty}">
+                                <label>Download link: No files to download</label>                                
+                            </div>
+                        </div>
 
-                            <div>
-                                <label><strong>Content</strong></label>
-                                <div>
-                                    <textarea id="editors" cols="90" rows="5" th:utext="${assignmentOfUserData.content}"></textarea>
-                                </div>
-                            </div>
+                        <div class="mb-3">
+                            <span class="text-danger" th:if="${assignmentReportData == null}" >Not Graded</span>
+                            <span class="text-success" th:if="${assignmentReportData != null}" >Graded</span>
+                        </div>
 
-                            <div>
-                                <label><strong>Attachments:</strong></label>
-                                <a th:if="${assignmentOfUserData.attachments != null and !assignmentOfUserData.attachments.empty}" th:href="@{${assignmentOfUserData.attachments}}" download>Download</a>
-                                <span th:unless="${assignmentOfUserData.attachments != null and !assignmentOfUserData.attachments.empty}" th:href="@{assignmentOfUserData.attachments}">No Files to download</span>
-                            </div>
+                        <div class="mb-3">
+                            <input class="form-control col-5" type="number" min="0" max="10" th:name="mark" value="0" th:if="${assignmentReportData == null}" >
+                            <input class="form-control col-5" type="number" min="0" max="10" th:name="mark"  th:if="${assignmentReportData != null}" th:value="${assignmentReportData.grade}">
+                        </div>
 
-                            <div>
-                                <span class="text-danger" th:if="${assignmentReportData == null}" >Not Graded</span>
-                                <span class="text-success" th:if="${assignmentReportData != null}" >Graded</span>
-                            </div>
+                        <div>
+                            <button type="submit" class="btn btn-primary">Grade</button>
+                            <a th:href="@{/teacher/assignment/grade/class/page/1}">Cancel</a>
+                        </div>
+                    </form>
 
-                            <div>
-                                <input type="number" min="0" max="10" th:name="mark" value="0" th:if="${assignmentReportData == null}" >
-                                <input type="number" min="0" max="10" th:name="mark"  th:if="${assignmentReportData != null}" th:value="${assignmentReportData.grade}">
-                            </div>
-
-                            <div class="btt">
-                                <button type="submit" class="btn">Grade</button>
-                                <a th:href="@{/teacher/assignment/grade/class/page/1}">Cancel</a>
-                            </div>
-                        </form>
-                    </fieldset>
-                    <!--  -->
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        let editor;
         ClassicEditor
                 .create(document.querySelector('#editors'))
                 .then(newEditor => {
                     editor = newEditor;
+                    editor.isReadOnly = true;
                 })
                 .catch(error => {
                     console.error(error);
                 });
+
     </script>
 
 

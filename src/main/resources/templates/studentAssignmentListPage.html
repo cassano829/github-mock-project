@@ -11,6 +11,15 @@
         <link rel="stylesheet" th:href="@{/css/adminListAssignment.css}">
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
               integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+        
+        <style>
+            form {
+                text-align: left;
+            }
+            .btn:hover, .btn:focus{
+                background-color: #017BFF;
+            }
+        </style>
     </head>
 
     <body>
@@ -19,7 +28,6 @@
         <!-- Page Content -->
         <div id="content">
             <div class="container-fluid">
-                <h3><i class="fas fa-book-open"></i> Assignment</h3>
 
                 <ul class="as rounded">
                     <li class="bg-secondary"><a th:href="@{/student/assignment/page/1}">List Assignment</a></li>

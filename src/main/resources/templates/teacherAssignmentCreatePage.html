@@ -10,6 +10,15 @@
         <link rel="stylesheet" th:href="@{/css/adminCreateAssignment.css}">
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
         <script src="https://cdn.ckeditor.com/ckeditor5/29.0.0/classic/ckeditor.js"></script>
+
+        <style>
+            form {
+                text-align: left;
+            }
+            .btn:hover, .btn:focus{
+                background-color: #017BFF;
+            }
+        </style>
     </head>
 
     <body>
@@ -17,7 +26,6 @@
         <!-- Page Content -->
         <div id="content">
             <div class="container-fluid">
-                <h3><i class="fas fa-book-open"></i> Assignment</h3>
 
                 <ul class="as rounded">
                     <li class="bg-secondary"><a th:href="@{/teacher/assignment/list}">List Assignment</a></li>
@@ -25,64 +33,72 @@
                 </ul>
 
                 <div class="main-container">
-                    <!--  -->
-                    <fieldset class="fs">
-                        <legend><strong>Create Assignment</strong></legend>
-                        <form class="form-add-product" th:action="@{/teacher/assignment/create/save}" method="POST" style="margin-top: 20px;">
-                            <input type="hidden" th:name="idUser" th:value="${#authentication.getPrincipal().getUser().getIdUser()}">
-                            <input type="hidden" th:name="status" th:value="${true}">
+
+
+                    <form class="border rounded p-3 bg-white" th:action="@{/teacher/assignment/create/save}" method="POST" style="margin-top: 20px;">
+                        <input type="hidden" th:name="idUser" th:value="${#authentication.getPrincipal().getUser().getIdUser()}">
+                        <input type="hidden" th:name="status" th:value="${true}">
+
+                        <h3 class="mb-3">Create Assignment</h3>
+                        
+                        <div class="mb-3">
+                            <label>
+                                <strong>Subject</strong>
+                            </label>
                             <div>
-                                <label>
-                                    <strong>Subject</strong>
-                                </label>
-                                <div>
-                                    <input type="text" th:name="idSubject" th:value="${session.teacherSubjectAssignment}" readonly>
-                                </div>
+                                <input class="form-control col-5" type="text" th:name="idSubject" th:value="${session.teacherSubjectAssignment}" readonly>
                             </div>
+                        </div>
 
+                        <div class="mb-3">
+                            <label>
+                                <strong>Title</strong>
+                            </label>
                             <div>
-                                <label>
-                                    <strong>Title</strong>
-                                </label>
-                                <div>
-                                    <input type="text" th:name="title" required>
-                                </div>
+                                <input class="form-control col-5" type="text" th:name="title" required>
                             </div>
+                        </div>
 
+                        <div class="mb-3">
+                            <label>
+                                <strong>Content</strong>
+                            </label>
                             <div>
-                                <label>
-                                    <strong>Content</strong>
-                                </label>
-                                <div>
-                                    <textarea  id="editors" th:name="content" cols="90" rows="5"></textarea>
-                                </div>
+                                <textarea id="editors" th:name="content"></textarea>
                             </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>
+                                <strong>Attachment</strong>
+                            </label>
+                            <div><input id="filess" type="file" onchange="convertFile()"></div>
+                            <input id="base64Code" th:name="attachments" type="hidden"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <strong>Deadline</strong>
+                            </label>
                             <div>
-                                <div><input id="filess" type="file" onchange="convertFile()"></div>
-                                <input id="base64Code" th:name="attachments" type="hidden"/>
+                                <input class="form-control col-5" th:name="deadline" type="datetime-local" required>
                             </div>
+                        </div>
 
-                            <div class="form-group">
-                                <label class="control-label"><strong>Deadline</strong></label>
-                                <div class='input-group date' style="width: 40%; border-radius: 1px;">
-                                    <input th:name="deadline" type="datetime-local" class="form-control" required>
-                                </div>
-                            </div>
+                        <div class="mb-3">
+                            <label><strong>Create By :</strong></label><span th:text="${#authentication.getPrincipal().getUser().getFullName()}"></span>
+                        </div>
 
-                            <div>
-                                <label><strong>Create By :</strong></label><span th:text="${#authentication.getPrincipal().getUser().getFullName()}"></span>
-                            </div>
+                        <div th:if="${message != null and !message.empty}">
+                            <h3 class="text-success" th:text="${message}"></h3>
+                        </div>
 
-                            <div th:if="${message != null and !message.empty}">
-                                <h3 class="text-success" th:text="${message}"></h3>
-                            </div>
+                        <div>
+                            <button type="submit" class="btn btn-primary">Create</button>
+                            <a th:href="@{/teacher/assignment/list}">Cancel</a>
+                        </div>
+                    </form>
 
-                            <div class="btt">
-                                <button type="submit" class="btn">Create</button>
-                                <a th:href="@{/teacher/assignment/list}">Cancel</a>
-                            </div>
-                        </form>
-                    </fieldset>
                 </div>
             </div>
         </div>
