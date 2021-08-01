@@ -9,9 +9,17 @@ import com.mockproject.model.User;
 import com.mockproject.security.UserDetailServiceImp;
 import com.mockproject.service.ClassService;
 import com.mockproject.model.Class;
+import com.mockproject.security.CustomUserDetail;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +27,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -29,6 +38,9 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/teacher")
 public class TeacherController {
 
+    private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    private final Validator validator = factory.getValidator();
+
     @Autowired
     UserController userController;
 
@@ -37,6 +49,9 @@ public class TeacherController {
 
     @Autowired
     UserDetailServiceImp userService;
+
+    @Autowired
+    UserDetailServiceImp service;
 
     @GetMapping("/home")
     public String showTeacherHome(Model model) {
@@ -81,10 +96,10 @@ public class TeacherController {
         return listByPageClassTeacher(model, 1, idSubject);
     }
 
-    @GetMapping("/subject")
-    public String showSubject() {
-        return "teacherSubject";
-    }
+//    @GetMapping("/subject")
+//    public String showSubject() {
+//        return "teacherSubject";
+//    }
 
     @GetMapping("/subject/editClass/{id}")
     public ModelAndView editClassFormPage(@PathVariable(name = "id") Integer id) {
@@ -146,7 +161,65 @@ public class TeacherController {
     }
 
     @GetMapping("/account")
-    public String showAccountPage() {
-        return "teacherAccount";
+    public String teacherAccountPage(Model model) {
+        CustomUserDetail user = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("user", user.getUser());
+
+        return "teacher-account";
+    }
+
+    @RequestMapping(value = "/update-account-page")
+    public String updateTeacherAccountPage(@RequestParam(name = "idUser") int idUser, Model model) {
+        //update account page
+        User user = service.loadUserByIdUser(idUser);
+
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
+        return "teacher-update-account";
+    }
+
+    @PostMapping(value = "/update-account")
+    public String updateTeacherAccount(@ModelAttribute(name = "user") User user,
+            @RequestParam(name = "confirm_password") String confirmPassword,
+            Model model) {
+        //Validate data from attribute
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        //Error map
+        HashMap<String, String> error = new HashMap<>();
+        String message = null;
+
+        //check unique email
+        boolean isEmailUnique = service.isEmailUniqueUpdate(user.getEmail(), user.getIdUser());
+        if (!isEmailUnique) {
+            error.put("emailError", "This email address was already being used");
+        }
+
+        //check match password confirm
+        boolean isPasswordMatch = user.getPassword().equalsIgnoreCase(confirmPassword);
+        if (!isPasswordMatch) {
+            error.put("confirmPasswordError", "Confirm password not match");
+        }
+
+        if (violations.isEmpty() && error.isEmpty() && isPasswordMatch) {
+            try {
+                service.updateAdminAcount(user);
+                model.addAttribute("message", "Successfully update account : " + user.getEmail());
+                return "forward:/teacher/account";
+            } catch (Exception e) {
+                e.printStackTrace();
+                message = "Error while update this account";
+            }
+        } else {
+            for (ConstraintViolation<User> violation : violations) {
+                error.put(violation.getPropertyPath() + "Error", violation.getMessageTemplate());
+            }
+        }
+
+        model.addAttribute("error", error);
+        model.addAttribute("message", message);
+        model.addAttribute("user", user);
+
+        return "forward:/teacher/update-account-page";
     }
 }

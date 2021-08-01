@@ -1,37 +1,44 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.mockproject.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import java.io.Serializable;
+import lombok.Data;
+import org.hibernate.annotations.*;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import lombok.Data;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 
-/**
- *
- * @author ACER
- */
 @Entity
 @Data
 @Table(name = "Subjects")
+@SQLDelete(sql = "UPDATE Subjects SET status = 'false' WHERE idSubject=?")
+@Where(clause = "status=true")
+@FilterDef(name = "deletedSubjectFilter", parameters = @ParamDef(name = "status", type = "boolean"))
+@Filter(name = "deletedSubjectFilter", condition = "status = :status")
 public class Subject implements Serializable {
 
     @Id
+    @Column(name = "idSubject",updatable=false,nullable = false,unique = true)
+    @Pattern(regexp = "^([A-Z]{3})+([0-9]{3})$",message = "Incorrect Subject ID format - Ex : ABC123")
     private String idSubject;
 
-    private int idUser;
+    @Column(nullable = false)
+    @NotBlank(message = "Subject name can't be empty")
+    @NotEmpty(message = "Subject name can't be empty")
     private String nameSubject;
 
+
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
+    @Column(name = "createDate")
     private String createDate;
 
-    private boolean status;
+    private boolean status = Boolean.TRUE;
 
+    @Column(name= "idUser")
+    private int idUser;
 }

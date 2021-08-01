@@ -5,6 +5,8 @@
  */
 package com.mockproject.repository;
 
+//import com.mockproject.model.Answer;
+//import org.springframework.data.jpa.repository.JpaRepository;
 import com.mockproject.model.UsersOfClass;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
