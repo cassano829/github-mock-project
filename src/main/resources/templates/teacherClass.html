@@ -75,7 +75,7 @@
                                         <a th:href="@{'/teacher/subject/editClass/' + ${class.idClass}}" class="btn"><i class="fas fa-edit"></i></a>
                                         <a th:href="@{'/teacher/subject/deleteClass/' + ${class.idClass}}" class="btn far fa-trash-alt" onclick="return confirm('Are you sure you want to delete?')"></a>
                                     </div>
-                                    
+
                                     <div class="text-right" th:unless="${class.status == true}">
                                         <a th:href="@{'/teacher/subject/editClass/' + ${class.idClass}}" class="btn"><i class="fas fa-edit"></i></a>
                                         <a th:href="@{'/teacher/subject/restoreClass/' + ${class.idClass}}" class="btn far fas fa-undo" onclick="return confirm('Are you sure you want to restore?')"></a>
@@ -84,8 +84,9 @@
                                     <div class="card-body">
                                         <h5> <a href="#" class="text-dark" th:text="${class.nameClass}">Class Name</a></h5>
                                         <p>This is class for [[${class.nameClass}]] students</p>
-                                        <a class="btn btn-primary" href="teacher-assignment.html"><i class="fas fa-book"></i> Assignments</a>
-                                        <a class="btn btn-info" href="teacher-quiz.html"><i class="fas fa-puzzle-piece"></i> Quizzes</a>
+                                        
+                                        <a class="mb-3 btn btn-primary" th:href="@{'/teacher/assignment/assignmentOfClass/' + ${class.idClass}}"><i class="fas fa-book"></i> Assignments</a>
+                                        <a class="mb-3 btn btn-info" href="teacher-quiz.html"><i class="fas fa-puzzle-piece"></i> Quizzes</a>
                                     </div>
                                 </div>
                             </div>
@@ -135,10 +136,10 @@
         <!-- Bootstrap JS -->
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
         <script>
-                                               $('#create-subject-form').hide();
-                                               $('#create-subject-button').click(function () {
-                                                   $('#create-subject-form').toggle('slow');
-                                               });
+                                            $('#create-subject-form').hide();
+                                            $('#create-subject-button').click(function () {
+                                                $('#create-subject-form').toggle('slow');
+                                            });
         </script>
     </body>
 

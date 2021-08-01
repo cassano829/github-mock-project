@@ -78,7 +78,7 @@
                                             <th scope="col">Status</th>
                                         </tr>
                                     </thead>
-                                    <tbody th:each="class : ${listClass}">>
+                                    <tbody th:each="class : ${listClass}">
                                         <tr>
                                             <th scope="row"><a class="sub text-primary" th:href="@{'/student/enroll/' + ${class.idClass}}" th:text="${class.nameClass}">Name Class</a></th>
                                             <td th:text="${class.idSubject}">Subject</td>

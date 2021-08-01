@@ -66,10 +66,10 @@ public class TeacherController {
         int totalPages = page.getTotalPages();
         List<Class> list = page.getContent();
         if (list != null) {
+            model.addAttribute("idSubject", idSubject);
             if (list.size() != 0) {
                 model.addAttribute("currentPage", currentPage);
                 model.addAttribute("totalPages", totalPages);
-                model.addAttribute("idSubject", idSubject);
                 model.addAttribute("nameUser", u.getFullName());
                 model.addAttribute("listClass", list);
             } else {
@@ -100,7 +100,6 @@ public class TeacherController {
 //    public String showSubject() {
 //        return "teacherSubject";
 //    }
-
     @GetMapping("/subject/editClass/{id}")
     public ModelAndView editClassFormPage(@PathVariable(name = "id") Integer id) {
         ModelAndView mav = new ModelAndView("teacherEditClass");

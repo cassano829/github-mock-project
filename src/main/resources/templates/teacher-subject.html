@@ -76,9 +76,17 @@
                                         <p th:text="${subject.nameSubject}"></p>
                                         <h6 th:text="${'Created: ' + subject.createDate}"></h6>
                                         <!--                                    DETAILS OF SUBJECT GO IN THIS FORM-->
-                                        <a class="btn btn-primary w-100" id="btn-search-panel"
+                                        <a class="mb-3 btn btn-primary w-100" id="btn-search-panel"
                                            th:href="@{/teacher/subject/{id}(id=${subject.idSubject})}"><i
-                                                class="fas fa-book"></i>Detail
+                                                class="fas fa-book"></i>Classes
+                                        </a>
+                                        <a class="mb-3 btn btn-primary w-100" id="btn-search-panel"
+                                           th:href="@{#}"><i
+                                                class="fas fa-book"></i>Quizzes
+                                        </a>
+                                        <a class="mb-3 btn btn-primary w-100" id="btn-search-panel"
+                                           th:href="@{/teacher/assignment/{id}(id=${subject.idSubject})}"><i
+                                                class="fas fa-book"></i>Assignments
                                         </a>
                                     </div>
                                 </div>

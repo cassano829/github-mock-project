@@ -82,7 +82,7 @@ public class StudentController {
         List<UsersOfClass> listUserEnrolled = uolService.findUserByIdUser(user.getUser().getIdUser());
         for (UsersOfClass uol : listUserEnrolled) {
             if (idClass == uol.getIdClass()) {
-                return "studentEntered";
+                return "redirect:/student/assignment/" + idClass;
             }
         }
         model.addAttribute("nameTeacher", name);
