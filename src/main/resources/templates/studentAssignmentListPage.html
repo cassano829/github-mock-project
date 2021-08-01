@@ -11,7 +11,7 @@
         <link rel="stylesheet" th:href="@{/css/adminListAssignment.css}">
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
               integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
-        
+
         <style>
             form {
                 text-align: left;
@@ -36,36 +36,40 @@
                 <div class="main-container">
 
                     <form class="form-add-product">
+                        <div th:if="${assignments.getTotalElements() == 0}">
+                            <h3 class="text-danger" text-center>Empty Assignment!</h3>
+                        </div>
+                        <div th:unless="${assignments.getTotalElements() == 0}">
+                            <div class="row pb-5 mb-4">
+                                <!-- Card-->
+                                <div class="col-3 mt-4"  th:each="assignment : ${assignments}">
+                                    <div class="card rounded shadow-sm border-0">
+                                        <div class="card-body">
+                                            <h5>Id Assignment: <span th:text="${assignment.idAssignment}"></span></h5>
 
-                        <div class="row pb-5 mb-4">
-                            <!-- Card-->
-                            <div class="col-3 mt-4"  th:each="assignment : ${assignments}">
-                                <div class="card rounded shadow-sm border-0">
-                                    <div class="card-body">
-                                        <h5>Id Assignment: <span th:text="${assignment.idAssignment}"></span></h5>
+                                            <label>Due date:</label><br>
+                                            <span th:if="${assignment.deadline.after(#dates.createNow())}" th:text="${assignment.deadline}"></span>
+                                            <span  class="text-danger" th:if="${assignment.deadline.before(#dates.createNow())}" th:text="${assignment.deadline}"></span>
 
-                                        <label>Due date:</label><br>
-                                        <span th:if="${assignment.deadline.after(#dates.createNow())}" th:text="${assignment.deadline}"></span>
-                                        <span  class="text-danger" th:if="${assignment.deadline.before(#dates.createNow())}" th:text="${assignment.deadline}"></span>
+                                            <br><label>Status: </label>
+                                            <span  class="text-primary"  th:text="${assignment.status}"></span>
 
-                                        <br><label>Status: </label>
-                                        <span  class="text-primary"  th:text="${assignment.status}"></span>
+                                            <br><label>Submission: </label>
+                                            <div th:if="${mapAssignment.containsKey(assignment.idAssignment) and assignment.deadline.after(#dates.createNow())}">
+                                                <a class="text-primary" th:href="@{'/student/assignment/update/' + ${assignment.idAssignment}}">Update</a>
+                                            </div>
+                                            <div th:if="${!mapAssignment.containsKey(assignment.idAssignment) and assignment.deadline.after(#dates.createNow())}">
+                                                <a class="text-primary"  th:href="@{'/student/assignment/create/' + ${assignment.idAssignment}}">Add</a>
+                                            </div>
 
-                                        <br><label>Submission: </label>
-                                        <div th:if="${mapAssignment.containsKey(assignment.idAssignment) and assignment.deadline.after(#dates.createNow())}">
-                                            <a class="text-primary" th:href="@{'/student/assignment/update/' + ${assignment.idAssignment}}">Update</a>
+                                            <div th:if="${mapAssignment.containsKey(assignment.idAssignment) and assignment.deadline.before(#dates.createNow())}">
+                                                <a  class="text-primary" th:href="@{'/student/assignment/view/' + ${assignment.idAssignment}}">View</a>
+                                            </div>
+                                            <div th:if="${!mapAssignment.containsKey(assignment.idAssignment) and assignment.deadline.before(#dates.createNow())}">
+                                                <span class="text-danger">Not Submitted</span>
+                                            </div>
+
                                         </div>
-                                        <div th:if="${!mapAssignment.containsKey(assignment.idAssignment) and assignment.deadline.after(#dates.createNow())}">
-                                            <a class="text-primary"  th:href="@{'/student/assignment/create/' + ${assignment.idAssignment}}">Add</a>
-                                        </div>
-
-                                        <div th:if="${mapAssignment.containsKey(assignment.idAssignment) and assignment.deadline.before(#dates.createNow())}">
-                                            <a  class="text-primary" th:href="@{'/student/assignment/view/' + ${assignment.idAssignment}}">View</a>
-                                        </div>
-                                        <div th:if="${!mapAssignment.containsKey(assignment.idAssignment) and assignment.deadline.before(#dates.createNow())}">
-                                            <span class="text-danger">Not Submitted</span>
-                                        </div>
-
                                     </div>
                                 </div>
                             </div>

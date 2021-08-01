@@ -27,22 +27,22 @@
     <nav id="sidebar">
         <ul class="list-unstyled components">
             <li>
-                <a href="student-home.html"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+                <a th:href="@{/student/home}"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
             </li>
             <li>
-                <a href="student-account.html"><i class="fas fa-id-card"></i>Account</a>
+                <a th:href="@{/student/account}"><i class="fas fa-id-card"></i>Account</a>
             </li>
             <li class="active">
-                <a href="student-class.html"><i class="fas fa-list-ul"></i>Class</a>
+                <a th:href="@{/student/class}"><i class="fas fa-list-ul"></i>Class</a>
             </li>
             <li class="act">
-                <a href=""><i class="fas fa-hand-point-right"></i>List Assignments</a>
+                <a th:href="@{'/student/assignment/' + ${session.studentCurrentIdClass}}"><i class="fas fa-hand-point-right"></i>List Assignments</a>
             </li>
             <li>
-                <a href="student-quiz-list.html"><i class="fas fa-hand-point-right"></i>List Quizes</a>
+                <a th:href="@{#}"><i class="fas fa-hand-point-right"></i>List Quizes</a>
             </li>
             <li>
-                <a href="student-mark-report.html"><i class="fas fa-hand-point-right"></i>Mark Report</a>
+                <a thhref="@{#}"><i class="fas fa-hand-point-right"></i>Mark Report</a>
             </li>
         </ul>
     </nav>

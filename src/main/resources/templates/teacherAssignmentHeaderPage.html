@@ -27,19 +27,19 @@
         <nav id="sidebar">
             <ul class="list-unstyled components">
                 <li>
-                    <a href="teacherHome.html"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+                    <a th:href="@{/teacher/home}"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
                 </li>
                 <li>
-                    <a href="teacherAccount.html"><i class="fas fa-id-card"></i>Account</a>
+                    <a th:href="@{/teacher/account}"><i class="fas fa-id-card"></i>Account</a>
                 </li>
                 <li class="active">
-                    <a href="teacher-subject.html"><i class="fas fa-list-ul"></i>Subject</a>
+                    <a th:href="@{/subject/teacher}"><i class="fas fa-list-ul"></i>Subject</a>
                 </li>
                 <li class="act">
-                    <a href="teacher-assignment.html"><i class="fas fa-hand-point-right"></i>Assignment</a>
+                    <a th:href="@{'/teacher/assignment/' + ${session.teacherSubjectAssignment}}"><i class="fas fa-hand-point-right"></i>Assignment</a>
                 </li>
                 <li>
-                    <a href="teacher-quiz.html"><i class="fas fa-hand-point-right"></i>Quiz</a>
+                    <a th:href="@{#}"><i class="fas fa-hand-point-right"></i>Quiz</a>
                 </li>
 
             </ul>

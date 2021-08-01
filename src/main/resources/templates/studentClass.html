@@ -1,31 +1,29 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Teacher Subject Page</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-              integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <title>Student class page</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <link rel="stylesheet" th:href="@{/css/styles.css}">
-        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
-              integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
     </head>
 
     <body>
         <header class="header" id="header">
             <nav class="navbar navbar-expand-lg navbar-light">
-                <h2><a exact="true" class="logo" href="shopping">LMS</a></h2>
+                <h2><a exact="true" class="logo" th:href="@{#}">LMS</a></h2>
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
+                    <li class="nav-item active">
                     </li>
                 </ul>
                 <div sec:authorize="isAuthenticated()">
                     <ul class="navbar-nav">
                         <li class="nav-item dropdown">
-                            <a class="nav-link" href="#" id="navbarDropdown" style=" color: #7d99ff; " data-toggle="dropdown"
-                               aria-haspopup="true" aria-expanded="false">
+                            <a class="nav-link" href="#" id="navbarDropdown" style=" color: #7d99ff; " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Welcome <b><span sec:authentication="name">Username</span></b>
                                 <span sec:authentication="principal.authorities">Roles</span>
                             </a>
@@ -41,80 +39,106 @@
         <div class="wrapper">
             <!-- Sidebar -->
             <nav id="sidebar">
-                <ul class="list-unstyled components">
-                    <li>
-                        <a th:href="@{/student/home}"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
-                    </li>
-                    <li  class="active">
-                        <a th:href="@{/student/class}"><i class="fas fa-list-ul"></i>Class</a>
-                    </li>
-                    <li>
-                        <a th:href="@{/student/account}"><i class="fas fa-id-card"></i>Account</a>
-                    </li>
-                </ul>
+                <nav id="sidebar">
+                    <ul class="list-unstyled components">
+                        <li>
+                            <a th:href="@{/student/home}"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+                        </li>
+                        <li  class="active">
+                            <a th:href="@{/student/class}"><i class="fas fa-list-ul"></i>Class</a>
+                        </li>
+                        <li>
+                            <a th:href="@{/student/account}"><i class="fas fa-id-card"></i>Account</a>
+                        </li>
+                    </ul>
 
+                </nav>
             </nav>
             <!-- Page Content -->
             <div id="content">
                 <div class="container-fluid">
-                    <h3><i class="fas fa-list-ul"></i> Subject</h3>
-                    <div class="main-container">
-                        <h4>Giao diện sau khi nhấn vào class, thanh bên trái sẽ có 3 cột, class, assignment, quiz</h4>
-                        <h5> class sẽ danh sách những lớp student đã tham gia</h5>
-                        <h5>quiz, assignment sẽ là những bài quiz, assignment sẽ làm</h5>
+                    <h3><i class="fas fa-user-friends"></i> Classes</h3>
+                    <div>
+                        <form class="search" th:action="@{/student/search}">
+                            <label>Search for new class:</label>
+                            <input type="text" name="keyword" th:value="${keyword}">
+                            <button type="submit"><i class="fas fa-search"></i></button>
+                        </form>
+                    </div>
+
+                    <div class="main-container text-center">
                         <div class="row pb-5 mb-4">
-                            <div class="col-3 mt-4">
-                                <!-- Card-->
-                                <div class="card rounded shadow-sm border-0">
-                                    <div class="card-body">
-                                        <h5> <a href="#" class="text-dark">Class Name</a></h5>
-                                        <p>Description: This is small description</p>
-                                        <form action="AddCar" method="POST">
-                                            <button type="submit" class="btn btn-primary w-100" id="btn-search-panel"><i class="fas fa-book"></i> Xyz</button>
-                                        </form>
-                                    </div>
-                                </div>
+                            <div class="col-12">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Class Name</th>
+                                            <th scope="col">Subject</th>
+                                            <th scope="col">Teacher</th>
+                                            <th scope="col">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody th:each="class : ${listClass}">
+                                        <tr>
+                                            <th scope="row"><a class="sub text-primary" th:href="@{'/student/enroll/' + ${class.idClass}}" th:text="${class.nameClass}">Name Class</a></th>
+                                            <td th:text="${class.idSubject}">Subject</td>
+                                            <td th:text="${mapNames.get(class.idUser)}"></td>
+                                            <td th:if="${mapClassEnrolled.containsKey(class.idClass)}"><b>Enrolled</b></td>
+                                            <td th:unless="${mapClassEnrolled.containsKey(class.idClass)}">Enroll</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+<!--                                <div style="text-align: center;">
+                                    <form action="#">
+                                        <input type="text" name=""/>
+                                        <button type="submit"><i class="fas fa-search"></i></button>
+                                    </form>
+                                </div>-->
                             </div>
+                        </div>
+                        <div th:if="${currentPage == null || totalPages == null}">
+                            <h3 th:text="${message}" style="color: green" text-center></h3>
+                        </div>
+                        <div th:unless="${currentPage == null || totalPages == null}">
+                            <div>
+                                Page [[${currentPage}]] of [[${totalPages}]]
+                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 
-                            <div class="col-3 mt-4">
-                                <!-- Card-->
-                                <div class="card rounded shadow-sm border-0">
-                                    <div class="card-body">
-                                        <h5> <a href="#" class="text-dark">Class Name</a></h5>
-                                        <p>Description: This is small description</p>
-                                        <form action="AddCar" method="POST">
-                                            <button type="submit" class="btn btn-primary w-100" id="btn-search-panel"><i class="fas fa-book"></i> Xyz</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
+                                <a class="text-primary" th:if="${currentPage > 1}" th:href="@{'/student/classPage/1' + '?keyword=' + ${keyword != null ? keyword : ''}}">First</a>
+                                <b><span th:unless="${currentPage > 1}">First</span></b>
+                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 
-                            <div class="col-3 mt-4">
-                                <!-- Card-->
-                                <div class="card rounded shadow-sm border-0">
-                                    <div class="card-body">
-                                        <h5> <a href="#" class="text-dark">Class Name</a></h5>
-                                        <p>Description: This is small description</p>
-                                        <form action="AddCar" method="POST">
-                                            <button type="submit" class="btn btn-primary w-100" id="btn-search-panel"><i class="fas fa-book"></i> Xyz</button>
-                                        </form>
-                                    </div>
-                                </div>
+                                <a class="text-primary" th:if="${currentPage > 1}" th:href="@{'/student/classPage/' + ${currentPage - 1} + '?keyword=' + ${keyword != null ? keyword : ''}}">Previous</a>
+                                <b><span th:unless="${currentPage > 1}">Previous</span></b>
+                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+
+                                <span th:each="i : ${#numbers.sequence(1, totalPages)}">
+                                    <a class="text-primary" th:if="${i != currentPage}" th:href="@{'/student/classPage/' + ${i} + '?keyword=' + ${keyword != null ? keyword : ''}}">[[${i}]]</a>
+                                    <b><span th:unless="${i != currentPage}">[[${i}]]</span></b>
+                                    &nbsp;&nbsp;&nbsp;
+                                </span>
+                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+
+                                <a class="text-primary" th:if="${currentPage < totalPages}" th:href="@{'/student/classPage/' + ${currentPage + 1} + '?keyword=' + ${keyword != null ? keyword : ''}}">Next</a>
+                                <b><span th:unless="${currentPage < totalPages}">Next</span></b>
+                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+
+                                <a class="text-primary" th:if="${currentPage < totalPages}" th:href="@{'/student/classPage/' + ${totalPages} + '?keyword=' + ${keyword != null ? keyword : ''}}">Last</a>
+                                <b><span th:unless="${currentPage < totalPages}">Last</span></b>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
-        </div>
-
-        <!-- jQuery CDN - Slim version (=without AJAX) -->
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-                integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-        <!-- Bootstrap JS -->
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
-                integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
-        crossorigin="anonymous"></script>
+            <!-- jQuery CDN - Slim version (=without AJAX) -->
+            <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+            <!-- Bootstrap JS -->
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
 
     </body>
 

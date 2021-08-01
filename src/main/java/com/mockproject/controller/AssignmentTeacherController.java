@@ -12,9 +12,9 @@ import com.mockproject.repository.AssignmentClassRepository;
 import com.mockproject.repository.AssignmentOfClassRepository;
 import com.mockproject.repository.AssignmentRepository;
 import com.mockproject.repository.UserRepository;
-import com.mockproject.security.CustomUserDetail;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -53,7 +53,7 @@ public class AssignmentTeacherController {
     AssignmentOfClassRepository assignmentOfClassRepository;
 
     @GetMapping("/{id}")
-    public String assignmentListBySubjectId(@PathVariable("id") String idSubject, HttpSession session, Authentication authentication, Model model) {
+    public String assignmentListBySubjectId(@PathVariable("id") String idSubject, HttpSession session, Model model) {
         session.setAttribute("teacherSubjectAssignment", idSubject);
         Map<Integer, User> mapUser = userRepository.findAll().stream().collect(Collectors.toMap(User::getIdUser, user -> user));
 
@@ -63,11 +63,20 @@ public class AssignmentTeacherController {
         //model.addAttribute("assignments", assignmentRepository.findAllByIdSubjectAndIdUser(idSubject, ((CustomUserDetail) authentication.getPrincipal()).getUser().getIdUser(), PageRequest.of(0, 5)));
 
         return "teacherAssignmentListPage";
+    }
 
+    @GetMapping("/assignmentOfClass/{id}")
+    public String showAssignmentOfClass(HttpSession session, @PathVariable("id") Integer idClass, Model model) {
+//        String idSubject = assignmentClassRepository.findById(idClass).get().getIdSubject();
+//        session.setAttribute("teacherSubjectAssignment", idSubject);
+        List<Assignment> list = assignmentRepository.getListClassesByIdAssignmentInside(idClass);
+        model.addAttribute("class", assignmentClassRepository.findById(idClass).get());
+        model.addAttribute("listAssignmentOfClass", list);
+        return "assignmentOfClass";
     }
 
     @GetMapping("/list")
-    public String assignmentList(HttpSession session, Authentication authentication, Model model) {
+    public String assignmentList(HttpSession session, Model model) {
         String idSubject = (String) session.getAttribute("teacherSubjectAssignment");
         Map<Integer, User> mapUser = userRepository.findAll().stream().collect(Collectors.toMap(User::getIdUser, user -> user));
 
@@ -87,7 +96,7 @@ public class AssignmentTeacherController {
 
         model.addAttribute("page", page);
         model.addAttribute("mapUser", mapUser);
-        model.addAttribute("assignments", assignmentRepository.findByIdSubject(idSubject, PageRequest.of(page - 1 , 4)));
+        model.addAttribute("assignments", assignmentRepository.findByIdSubject(idSubject, PageRequest.of(page - 1, 4)));
         //model.addAttribute("assignments", assignmentRepository.findAllByIdSubjectAndIdUser(idSubject, ((CustomUserDetail) authentication.getPrincipal()).getUser().getIdUser(), PageRequest.of(page - 1, 5)));
         return "teacherAssignmentListPage";
     }
@@ -105,7 +114,7 @@ public class AssignmentTeacherController {
 
     @GetMapping("/create")
     public String createAssignment(@RequestParam(required = false) String success, Model model) {
-        if(success != null){
+        if (success != null) {
             model.addAttribute("message", "Create success");
         }
         return "teacherAssignmentCreatePage";
@@ -124,8 +133,8 @@ public class AssignmentTeacherController {
         if (assignmentData.isPresent()) {
             model.addAttribute("assignmentData", assignmentData.get());
         }
-        
-        if(success != null){
+
+        if (success != null) {
             model.addAttribute("message", "Update success");
         }
         return "teacherAssignmentEditPage";
@@ -144,7 +153,7 @@ public class AssignmentTeacherController {
     public String assignmentClass(@PathVariable("id") Integer idAssignment, HttpSession session, Model model) {
         String idSubject = (String) session.getAttribute("teacherSubjectAssignment");
         session.setAttribute("teacherCurrentIdAssignment", idAssignment);
-        Map<Integer, Integer> map  = new HashMap<>();
+        Map<Integer, Integer> map = new HashMap<>();
         assignmentOfClassRepository.findByIdAssignment(idAssignment).forEach(s -> {
             map.put(s.getIdClass(), s.getIdAssignment());
         });
@@ -154,22 +163,21 @@ public class AssignmentTeacherController {
         model.addAttribute("classes", assignmentClassRepository.findByIdSubjectAndStatus(idSubject, true, PageRequest.of(0, 5)));
         return "teacherAssignmentClassPage";
     }
-    
+
     @GetMapping("/class/page/{id}")
-    public String assignmentClassPage(@PathVariable("id") Integer page, HttpSession session, Model model){
+    public String assignmentClassPage(@PathVariable("id") Integer page, HttpSession session, Model model) {
         String idSubject = (String) session.getAttribute("teacherSubjectAssignment");
         Integer idAssignment = (Integer) session.getAttribute("teacherCurrentIdAssignment");
-        Map<Integer, Integer> map  = new HashMap<>();
+        Map<Integer, Integer> map = new HashMap<>();
         assignmentOfClassRepository.findByIdAssignment(idAssignment).forEach(s -> {
             map.put(s.getIdClass(), s.getIdAssignment());
         });
-        
+
         model.addAttribute("page", page);
         model.addAttribute("addedClassesMap", map);
         model.addAttribute("classes", assignmentClassRepository.findByIdSubjectAndStatus(idSubject, true, PageRequest.of(page - 1, 5)));
         return "teacherAssignmentClassPage";
     }
-    
 
     @GetMapping("/class/add/{id}")
     public String assignmentClassAdd(@PathVariable("id") Integer idClass, @RequestParam("page") Integer page, HttpSession session, Model model) {
@@ -179,7 +187,7 @@ public class AssignmentTeacherController {
             aoc.setIdAssignment(idAssignment);
             aoc.setIdClass(idClass);
             assignmentOfClassRepository.save(aoc);
-        }else{
+        } else {
             Integer idAssignmentOfClass = assignmentOfClassRepository.findByIdAssignmentAndIdClass(idAssignment, idClass).getIdAssignmentOfClass();
             assignmentOfClassRepository.deleteById(idAssignmentOfClass);
         }

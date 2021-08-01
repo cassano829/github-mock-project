@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author truon
  */
 @Controller
-@RequestMapping("student/assignment/")
+@RequestMapping("/student/assignment/")
 public class AssignmentStudentController {
 
     @Autowired

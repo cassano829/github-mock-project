@@ -5,7 +5,7 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+>
     <head>
         <title>Verify</title>
         <meta charset="UTF-8">
@@ -19,7 +19,7 @@ and open the template in the editor.
             <h4 th:text="${nofitication}" style="color: green" text-center></h4>
 
             <p>We already sent a verification code to your email.</p>
-            <form th:action="@{/student/verify}" method="POST">
+            <form th:action="@{/verify}" method="POST">
                 <input type="text" name="AUTHEN_CODE"/>
                 <input type="submit" value="verify"/>
             </form>

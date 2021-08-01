@@ -6,15 +6,16 @@
 package com.mockproject.service;
 
 import com.mockproject.model.User;
-import java.io.UnsupportedEncodingException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.UnsupportedEncodingException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -38,6 +39,20 @@ public class MailService {
         try {
             helper.setFrom("lmsteamproject@gmail.com", senderName);
             helper.setTo(user.getEmail());
+            helper.setSubject(subject);
+            helper.setText(mailContent, true);
+            javaMailSender.send(msg);
+        } catch (MessagingException | UnsupportedEncodingException ex) {
+            Logger.getLogger(MailService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void sendMailToNotify(String subject,String senderName,String mailContent,String emailTo){
+        MimeMessage msg = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(msg);
+        try {
+            helper.setFrom("lmsteamproject@gmail.com", senderName);
+            helper.setTo(emailTo);
             helper.setSubject(subject);
             helper.setText(mailContent, true);
             javaMailSender.send(msg);

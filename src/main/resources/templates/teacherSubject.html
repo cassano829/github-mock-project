@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html>
 
     <head>
@@ -16,7 +16,7 @@
     <body>
         <header class="header" id="header">
             <nav class="navbar navbar-expand-lg navbar-light">
-                <h2><a exact="true" class="logo" href="shopping">LMS</a></h2>
+                <h2><a exact="true" class="logo" th:href="@{#}">LMS</a></h2>
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
                     </li>
@@ -39,7 +39,7 @@
             </nav>
         </header>
         <div class="wrapper">
-            <!-- Sidebar -->
+             Sidebar 
             <nav id="sidebar">
                 <ul class="list-unstyled components">
                     <li>
@@ -54,49 +54,122 @@
                 </ul>
 
             </nav>
-            <!-- Page Content -->
+             Page Content 
             <div id="content">
                 <div class="container-fluid">
                     <h3><i class="fas fa-list-ul"></i> Subject</h3>
                     <div class="main-container">
-                        <h3>Sau khi nhấn vào 1 subject, teacher sẽ CRUD class cho subject đó</h3>
-                        <h4>Giao diện sau khi nhấn vào subject, thanh bên trái sẽ có 3 cột, class, assignment, quiz</h4>
-                        <h5>CRUD class sẽ thao tác trong mục Class</h5>
+                        <div class="row pb-5 mb-4">
+                            <div class="col-3 mt-4">
+                                 Card
+                                <div class="card rounded shadow-sm border-0" th:each="subject : ${listSubject}">
+                                    <div class="card-body">
+                                        <h5> <a href="#" class="text-dark" th:text="${subject.idSubject}">Subject ID</a></h5>
+                                        <p th:text="${subject.nameSubject}">Name</p>
+                                        by <a th:href="@{#}">[[${nameUser}]]</a> 
+                                        <form action="AddCar" method="POST">
+                                            <input type="hidden" th:text="${subject.idSubject}"/>
+                                            <button type="submit" class="btn btn-primary w-100" id="btn-search-panel"><i class="fas fa-book"></i>Join</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         jQuery CDN - Slim version (=without AJAX) 
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+                integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+         Bootstrap JS 
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+                integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script>
+
+    </body>
+
+</html>-->
+
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Teacher Subject Page</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <link rel="stylesheet" th:href="@{/css/styles.css}">
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    </head>
+
+    <body>
+        <header class="header" id="header">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <h2><a exact="true" class="logo" th:href="@{#}">LMS</a></h2>
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                    </li>
+                </ul>
+                <div sec:authorize="isAuthenticated()">
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" id="navbarDropdown" style=" color: #7d99ff; " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Welcome <b><span sec:authentication="name">Username</span></b>
+                                <span sec:authentication="principal.authorities">Roles</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" th:href="@{/logout}">Logout</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+
+            </nav>
+        </header>
+        <div class="wrapper">
+            <!-- Sidebar -->
+            <nav id="sidebar">
+                <ul class="list-unstyled components">
+                    <li>
+                        <a th:href="@{/teacher/home}"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+                    </li>
+                    <li  class="active">
+                        <a th:href="@{/subject/teacher}"><i class="fas fa-list-ul"></i>Subject</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/teacher/account}"><i class="fas fa-id-card"></i>Account</a>
+                    </li>
+                </ul>
+            </nav>
+            <!-- Page Content -->
+            <div id="content">
+                <div class="container-fluid">
+                    <h3><i class="fas fa-list-ul"></i> Subject</h3>
+                    <div>
+                        <form class="search" action="student-class-enroll.html">
+                            <label>Search for new subject:</label>
+                            <input type="text" name="">
+                            <button type="submit"><i class="fas fa-search"></i></button>
+                        </form>
+                    </div>
+                    <div class="main-container">
                         <div class="row pb-5 mb-4">
                             <div class="col-3 mt-4">
                                 <!-- Card-->
                                 <div class="card rounded shadow-sm border-0">
                                     <div class="card-body">
-                                        <h5> <a href="#" class="text-dark">SubjectName</a></h5>
-                                        <p>Description: This is small description</p>
-                                        <form action="AddCar" method="POST">
-                                            <button type="submit" class="btn btn-primary w-100" id="btn-search-panel"><i class="fas fa-book"></i> Xyz</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-3 mt-4">
-                                <!-- Card-->
-                                <div class="card rounded shadow-sm border-0">
-                                    <div class="card-body">
-                                        <h5> <a href="#" class="text-dark">SubjectName</a></h5>
-                                        <p>Description: This is small description</p>
-                                        <form action="AddCar" method="POST">
-                                            <button type="submit" class="btn btn-primary w-100" id="btn-search-panel"><i class="fas fa-book"></i> Xyz</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-3 mt-4">
-                                <!-- Card-->
-                                <div class="card rounded shadow-sm border-0">
-                                    <div class="card-body">
-                                        <h5> <a href="#" class="text-dark">SubjectName</a></h5>
-                                        <p>Description: This is small description</p>
-                                        <form action="AddCar" method="POST">
-                                            <button type="submit" class="btn btn-primary w-100" id="btn-search-panel"><i class="fas fa-book"></i> Xyz</button>
+                                        <form>
+                                            <h5> <a href="#" class="text-dark">Subject ID</a></h5>
+                                            <p>Name</p>
+                                            by <a>Admin</a>
+                                            <button class="btn btn-primary w-100"><i class="fas fa-book"></i> Enroll</button>
                                         </form>
                                     </div>
                                 </div>
@@ -108,14 +181,9 @@
         </div>
 
         <!-- jQuery CDN - Slim version (=without AJAX) -->
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-                integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <!-- Bootstrap JS -->
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
-                integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
-        crossorigin="anonymous"></script>
-
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
     </body>
 
 </html>
