@@ -78,7 +78,7 @@
                                     </label>
                                     <div>
                                         <input  type="number" name="numOfQues" min="1" th:field="*{numOfQues}"
-                                                th:max="${quiz.questions.size()}"/>
+                                                th:max="${quiz.questions.size()}" required/>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -94,13 +94,13 @@
                                     <label><strong>
                                             Open Date</strong></label>
                                     <div>
-                                        <input type="datetime-local" name="openDate" th:field="*{openDate}" required/>
+                                        <input type="datetime-local" name="openDate" id="openDate" th:field="*{openDate}" onchange="changeMinDueDate();" required/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label><strong>Due Date</strong></label>
                                     <div>
-                                        <input type="datetime-local" name="openDate" th:field="*{dueDate}" required/> 
+                                        <input type="datetime-local" name="openDate" id="dueDate" th:field="*{dueDate}" onchange="changeMaxOpenDate();" required/> 
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -133,10 +133,22 @@
         <!-- Bootstrap JS -->
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
         <script>
-            $('#create-subject-form').hide();
-            $('#create-subject-button').click(function () {
-                $('#create-subject-form').toggle('slow');
-            });
+            function changeMinDueDate() {
+                var openDate=document.getElementById("openDate").value;
+                var dueDate=document.getElementById("dueDate").value;
+                if(openDate>dueDate){
+                    document.getElementById("dueDate").value=openDate;
+                }
+                document.getElementById("dueDate").setAttribute('min', openDate);
+            }
+            function changeMaxOpenDate() {
+                var openDate=document.getElementById("openDate").value;
+                var dueDate=document.getElementById("dueDate").value;
+                if(openDate>dueDate){
+                    document.getElementById("openDate").value=dueDate;
+                }
+                document.getElementById("openDate").setAttribute('max', dueDate);
+            }
         </script>
     </body>
 

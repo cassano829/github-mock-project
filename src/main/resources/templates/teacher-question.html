@@ -62,7 +62,8 @@
                             <h3><i class="fas fa-puzzle-piece" th:text="${editingQuiz.nameQuiz}"></i></h3>
                         </div>
                         <div>
-                            <a href="teacher-question-add.html" class="btn"><i class="fas fa-plus"></i></a>
+                            <button class="btn trigger-btn" data-toggle="modal" data-target="#myModal"><i
+                                class="fas fa-plus"></i></button>
                         </div>
                     </div>
 
@@ -101,6 +102,73 @@
                                     </th:block>
                                 </ul>
                             </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="myModal" class="modal fade">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="main-container">
+                            <div class="row pb-5 mb-4">
+                                <div class="col-12 mt-4">
+                                    <div class="card rounded shadow-sm border-0">
+                                        <div class="card-body">
+                                            <legend><strong>Add Question</strong></legend>
+                                            <div class="alert alert-info justify-content-center" role="alert" 
+                                                 th:text="${!questions.isEmpty()} ? 'Question '+${questions.getContent().size()+1} : 'Question 1'">
+                                            </diV>
+                                            <form class="form-add-product" style="margin-top: 20px;" th:action="@{/teacher/quiz/question/create}"
+                                                  th:object="${newQuestion}" th:method="POST">
+                                                <div class="form-group">
+                                                    <label>
+                                                        <strong>Question Content</strong>
+                                                    </label>
+                                                    <div>
+                                                        <input type="text" class="form-control" name="contentQuestion"  th:field="*{contentQuestion}" value="" required />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>
+                                                        <strong>Answer</strong>
+                                                    </label>
+                                                    <div>
+                                                        <div class="mt-3">
+                                                            <input class="form-check-input" type="radio" name="correctAnswer" id="questionA" value="0" checked>
+                                                            <label class="form-check-label" for="questionA">
+                                                                A. <input name="answerContent" type="text" value="" required/>
+                                                            </label>
+                                                        </div>
+                                                        <div class="mt-3">
+                                                            <input class="form-check-input" type="radio" name="correctAnswer" id="questionB" value="1">
+                                                            <label class="form-check-label" for="questionB">
+                                                                B. <input name="answerContent" type="text" value="" required/>
+                                                            </label>
+                                                        </div>
+                                                        <div class="mt-3">
+                                                            <input class="form-check-input" type="radio" name="correctAnswer" id="questionC" value="2">
+                                                            <label class="form-check-label" for="questionC">
+                                                                C. <input name="answerContent" type="text" value="" required/>
+                                                            </label>
+                                                        </div>
+                                                        <div class="mt-3">
+                                                            <input class="form-check-input" type="radio" name="correctAnswer" id="questionD" value="3">
+                                                            <label class="form-check-label" for="questionD">
+                                                                D. <input name="answerContent" type="text" value="" required/>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="hidden" name="idQuiz" th:value="${editingQuiz.idQuiz}">
+                                                    <button type="submit" class="btn btn-primary">Create</button>
+                                                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -21,11 +21,12 @@ import com.mockproject.service.SubjectService;
 import org.springframework.web.bind.annotation.PathVariable;
 import com.mockproject.model.Class;
 import com.mockproject.model.Question;
+import com.mockproject.model.QuizOfClass;
+import com.mockproject.repository.QuizOfClassRepository;
 import com.mockproject.service.QuestionService;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
@@ -59,10 +60,13 @@ public class TeacherController {
 
     @Autowired
     QuestionService questionService;
+    
+    @Autowired
+    QuizOfClassRepository quizOfClassRepository;
 
     @GetMapping("/subject/showAllSubjectOfTeacher/{page}")
     public String showListSubject(Model model, @PathVariable("page") int page) {
-        model.addAttribute("listSubject", subjectService.getAllSubject(PageRequest.of(page - 1, 1)));
+        model.addAttribute("listSubject", subjectService.getAllSubject(PageRequest.of(page - 1, 4)));
         model.addAttribute("page", page);
         return "teacher-subject";
     }
@@ -70,7 +74,7 @@ public class TeacherController {
     @GetMapping("/class/showClassOfTeacher/{idSubject}/{page}")
     public String showClassOfTeacher(Model model, @PathVariable("idSubject") String idSubject, HttpSession session, @PathVariable("page") int page) {
         CustomUserDetail userDetail = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Page<Class> classes = classService.getListClassByIdTeacherAndIdSubject(userDetail.getUser().getIdUser(), idSubject, PageRequest.of(page - 1, 8));
+        Page<Class> classes = classService.getListClassByIdTeacherAndIdSubject(userDetail.getUser().getIdUser(), idSubject, PageRequest.of(page - 1, 4));
         model.addAttribute("classesOfTeacher", classes);
         model.addAttribute("page", page);
         session.setAttribute("idSubject", idSubject);
@@ -83,10 +87,8 @@ public class TeacherController {
         String search = "";
         if (request.getParameter("txtSearch") != null) {
             search = request.getParameter("txtSearch");
-            model.addAttribute("quizes", quizService.searchQuiz(search, idClass, PageRequest.of(page - 1, 4)));
-        } else {
-            model.addAttribute("quizes", quizService.searchQuiz(search, idClass, PageRequest.of(page - 1, 4)));
         }
+        model.addAttribute("quizes", quizService.searchQuiz(search, idClass, PageRequest.of(page - 1, 4)));
         model.addAttribute("search", search);
         session.setAttribute("idClass", idClass);
         model.addAttribute("page", page);
@@ -100,6 +102,7 @@ public class TeacherController {
 //        model.addAttribute("quizOfStudents",quizOfStudentService.getListQuizOfStudentByIdQuiz(idQuiz));
 //        return "quizOfClass";
 //    }
+    
     @GetMapping("/quiz/create")
     public String viewCreatePage() {
         return "teacher-quiz-add";
@@ -128,7 +131,12 @@ public class TeacherController {
             quiz.setIdUser(userDetail.getUser().getIdUser());
             String idSubject = (String) session.getAttribute("idSubject");
             quiz.setIdSubject(idSubject);
-            questions = new ArrayList<>();
+            if(session.getAttribute("questions")!=null){
+                questions = (List<Question>) session.getAttribute("questions");
+            }else{
+                questions = new ArrayList<>();
+            }
+            
             session.setAttribute("questions", questions);
             url = viewCreateQuestionPage(model, quiz, session);
         } else {
@@ -147,6 +155,10 @@ public class TeacherController {
                 for (Question question : questions) {
                     questionService.save(question);
                 }
+                QuizOfClass quizOfClass=new QuizOfClass();
+                quizOfClass.setIdQuiz(newQuiz.getIdQuiz());
+                quizOfClass.setIdClass(idClass);
+                quizOfClassRepository.save(quizOfClass);
                 session.removeAttribute("newQuiz");
             }
         }
@@ -209,7 +221,7 @@ public class TeacherController {
     public String updateQuiz(@ModelAttribute("quiz") Quiz quiz, HttpSession session) {
         int idClass = (int) session.getAttribute("idClass");
         quizService.saveQuiz(quiz);
-        return "redirect:/teaacher/quiz/showListQuiz/" + idClass + "/1";
+        return "redirect:/teacher/quiz/showListQuiz/" + idClass + "/1";
     }
 
     @GetMapping("/quiz/questions/{idQuiz}/{page}")
@@ -219,6 +231,7 @@ public class TeacherController {
         model.addAttribute("questions", questions);
         model.addAttribute("editingQuiz", quizService.getQuizByIdQuiz(idQuiz));
         model.addAttribute("page", page);
+        model.addAttribute("newQuestion", new Question());
         return "teacher-question";
     }
 
@@ -230,7 +243,6 @@ public class TeacherController {
 
     @PostMapping("/quiz/question/editQuestion/update")
     public String updateQuestion(@ModelAttribute("question") Question question, HttpServletRequest request) {
-//        Quiz quiz = (Quiz) session.getAttribute("editingQuiz");
         Quiz quiz = question.getQuiz();
         int correctAnswer = Integer.parseInt(request.getParameter("correctAnswer"));
         String[] answerContents = request.getParameterValues("answerContent");
@@ -267,5 +279,30 @@ public class TeacherController {
             quizService.saveQuiz(quiz);
         }
         return "redirect:/teacher/quiz/questions/" + quiz.getIdQuiz() + "/1";
+    }
+
+    @PostMapping("/quiz/question/create")
+    public String createNewQuestion(@ModelAttribute("newQuestion") Question question, HttpServletRequest request) {
+        int idQuiz = Integer.parseInt(request.getParameter("idQuiz"));
+        int correctAnswer = Integer.parseInt(request.getParameter("correctAnswer"));
+        String[] answerContents = request.getParameterValues("answerContent");
+        question.setCreateDate(new Date());
+        question.setStatus(true);
+        question.setQuiz(quizService.getQuizByIdQuiz(idQuiz));
+        Set<Answer> answers = question.getAnswers();
+        for (int i = 0; i < answerContents.length; i++) {
+            Answer answer = new Answer();
+            answer.setContent(answerContents[i]);
+            if (i == correctAnswer) {
+                answer.setIsCorrect(true);
+            } else {
+                answer.setIsCorrect(false);
+            }
+            answer.setQuestion(question);
+            answers.add(answer);
+        }
+        question.setAnswers(answers);
+        questionService.save(question);
+        return "redirect:/teacher/quiz/questions/" + idQuiz + "/1";
     }
 }

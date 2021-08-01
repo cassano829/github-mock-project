@@ -20,7 +20,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
@@ -31,12 +30,16 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Table(name = "Questions")
 public class Question {
 
+    public Question() {
+    }
+
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idQuestion", unique = true, nullable = false)
     private int idQuestion;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "idQuiz")
     private Quiz quiz;
 

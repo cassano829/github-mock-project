@@ -93,8 +93,7 @@
                                                     Quiz 1
                                                 </td>
                                                 <td>
-                                                    <span th:text="${quiz.status == 'started'} ? 'Started ' : (${quiz.status == 'not started '} ? 'Not Started' : 'End ')"></span>
-                                                    <a th:href="@{/teacher/quiz/editStatus}"><i class="fas fa-edit"></i></a>
+                                                    <span th:text="${quiz.status == 'started'} ? 'Started ' : (${quiz.status == 'not started'} ? 'Not Started' : 'Ended ')"></span>
                                                 </td>
                                                 <td th:text="${quiz.openDate}"></td>
                                                 <td th:text="${quiz.dueDate}"></td>

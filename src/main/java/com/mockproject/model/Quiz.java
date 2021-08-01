@@ -53,7 +53,7 @@ public class Quiz {
 
     private String idSubject;
     
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "quiz")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "quiz",cascade = CascadeType.ALL)
     private Set<Question> questions;
 
 }

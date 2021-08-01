@@ -43,7 +43,7 @@ public class StudentController {
     @GetMapping("/student/class/viewClassesOfStudent/{page}")
     public String viewClassesOfStudentPage(Model model,@PathVariable("page") int page) {
         CustomUserDetail userDetail = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Page<Class> classes= classService.getAllClassByIdStudent(userDetail.getUser().getIdUser(),PageRequest.of(page-1,5));
+        Page<Class> classes= classService.getAllClassByIdStudent(userDetail.getUser().getIdUser(),PageRequest.of(page-1,4));
         Map<Integer,User> teacherOfClass=new HashMap<>();
         for(Class aClass:classes){
             teacherOfClass.put(aClass.getIdClass(), userRepository.getById(aClass.getIdUser()));
@@ -56,7 +56,7 @@ public class StudentController {
     
     @GetMapping("/student/quiz/showQuizesStudent/{idClass}/{page}")
     public String viewQuizesOfStudentPage(Model model,@PathVariable("idClass") int idClass,@PathVariable("page") int page){
-        model.addAttribute("quizes", quizService.searchQuiz("",idClass,PageRequest.of(page-1,5)));
+        model.addAttribute("quizes", quizService.searchQuiz("",idClass,PageRequest.of(page-1,8)));
         model.addAttribute("page", page);
         model.addAttribute("class", classService.findClassById(idClass));
         model.addAttribute("today",new Date());
