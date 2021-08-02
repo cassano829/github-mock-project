@@ -69,7 +69,7 @@
                                 <div class="card rounded shadow-sm border-0">
                                     <div class="card-body">
                                         <legend><strong>Add Question</strong></legend>
-                                        <div class="alert alert-info justify-content-center" role="alert" 
+                                        <div class="alert alert-info text-center" role="alert" 
                                              th:text="${session.questions != null} ? 'Question '+${session.questions.size()+1} : 'Question 1'">
                                         </diV>
                                         <form class="form-add-product" style="margin-top: 20px;" th:action="@{/teacher/quiz/addQuestion/create}"

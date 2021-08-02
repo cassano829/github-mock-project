@@ -70,9 +70,12 @@
                             </form>
                         </li>
                     </ul>
+                    <div th:if="${quizes == null OR quizes.getContent().size() == 0}" class="alert alert-danger text-danger" role="alert">
+                        <strong> <i class="fas fa-exclamation-circle"> Empty</i></strong> 
+                    </div>
                     <div class="main-container">
                         <!--  -->
-                        <fieldset class="fs">
+                        <fieldset class="fs" th:if="${quizes != null}">
                             <div class="form-add-product" style="margin-top: 20px;">
                                 <div>
                                     <table class="table table-bordered table-responsive-lg">
@@ -86,7 +89,7 @@
                                             <th>Duration</th>
                                             <th>Action</th>
                                         </tr>
-                                        <th:block th:if="${quizes != null}" th:each="quiz,state : ${quizes}">
+                                        <th:block  th:each="quiz,state : ${quizes}">
                                             <tr>
                                                 <td th:text="${state.index}"></td>
                                                 <td th:text="${quiz.nameQuiz}">

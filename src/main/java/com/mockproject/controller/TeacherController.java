@@ -60,7 +60,7 @@ public class TeacherController {
 
     @Autowired
     QuestionService questionService;
-    
+
     @Autowired
     QuizOfClassRepository quizOfClassRepository;
 
@@ -131,12 +131,12 @@ public class TeacherController {
             quiz.setIdUser(userDetail.getUser().getIdUser());
             String idSubject = (String) session.getAttribute("idSubject");
             quiz.setIdSubject(idSubject);
-            if(session.getAttribute("questions")!=null){
+            if (session.getAttribute("questions") != null) {
                 questions = (List<Question>) session.getAttribute("questions");
-            }else{
+            } else {
                 questions = new ArrayList<>();
             }
-            
+
             session.setAttribute("questions", questions);
             url = viewCreateQuestionPage(model, quiz, session);
         } else {
@@ -155,7 +155,7 @@ public class TeacherController {
                 for (Question question : questions) {
                     questionService.save(question);
                 }
-                QuizOfClass quizOfClass=new QuizOfClass();
+                QuizOfClass quizOfClass = new QuizOfClass();
                 quizOfClass.setIdQuiz(newQuiz.getIdQuiz());
                 quizOfClass.setIdClass(idClass);
                 quizOfClassRepository.save(quizOfClass);
@@ -213,6 +213,9 @@ public class TeacherController {
     public String editQuiz(Model model, HttpServletRequest request, HttpSession session) {
         int idQuiz = Integer.parseInt(request.getParameter("idQuiz"));
         Quiz quiz = quizService.getQuizByIdQuiz(idQuiz);
+        if (quiz.getQuestions() != null) {
+            quiz.getQuestions().removeIf(question -> question.isStatus()==false);
+        }
         model.addAttribute("quiz", quiz);
         return "teacher-quiz-edit";
     }

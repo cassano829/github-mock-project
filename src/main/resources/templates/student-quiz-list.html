@@ -44,13 +44,13 @@
                         <a href="student-account.html"><i class="fas fa-id-card"></i>Account</a>
                     </li>
                     <li class="active">
-                        <a href="student-class.html"><i class="fas fa-list-ul"></i>Class</a>
+                        <a th:href="@{/student/class/viewClassesOfStudent/1}"><i class="fas fa-list-ul"></i>Class</a>
                     </li>
                     <li>
                         <a href="student-class-entered.html"><i class="fas fa-hand-point-right"></i>List Assignments</a>
                     </li>
                     <li class="act">
-                        <a th:href="@{'/student/quiz/showQuizesStudent/'+${class.idClass}}+'/'+${page}"><i class="fas fa-hand-point-right"></i>List Quizs</a>
+                        <a th:href="@{'/student/quiz/showQuizesStudent/'+${session.class.idClass}}+'/'+${page}"><i class="fas fa-hand-point-right"></i>List Quizs</a>
                     </li>
                     <li>
                         <a href="student-mark-report.html"><i class="fas fa-hand-point-right"></i>Mark Report</a>
@@ -62,10 +62,12 @@
                 <div class="container-fluid">
                     <div class="d-flex justify-content-between mt-4">
                         <div>
-                            <h3 th:text="${class.nameClass}"></h3>
+                            <h3 th:text="${session.class.nameClass}"></h3>
                         </div>
                     </div>
-
+                    <div th:if="${quizes == null OR quizes.getContent().size() == 0}" class="alert alert-danger text-danger" role="alert">
+                        <strong> <i class="fas fa-exclamation-circle"> No quizes</i></strong> 
+                    </div>
                     <div class="main-container">
                         <div class="row pb-5 mb-4">
                             <div class="col-3 mt-4" th:if="${quizes != null}" th:each="quiz: ${quizes} ">
@@ -77,14 +79,14 @@
                                         <p th:text="'Number of questions : '+${quiz.numOfQues}"></p>
                                         <p th:text="'Duration : '+${quiz.timeLimit}+' minutes'"></p>
                                         <p th:text="${quiz.dueDate > today} ? 'Status : '+${quiz.status} : 'Status : ended'"></p>
-
-                                        <!--                                        <a th:if="${quiz.status == 'end'}" th:href="@{'/student/quiz/quizReivew/'+${quiz.idQuiz}}">Review</a>-->
-                                        <a th:href="@{'/student/quiz/quizReview/'+${quiz.idQuiz}}">Review</a><br>
-                                        <th:block th:if="${quiz.dueDate > today}">
-                                            <a th:href="@{'/student/quiz/showQuiz/'+${quiz.idQuiz}}" class="btn btn-primary" href="student-quiz-do.html" th:if="${quiz.status=='started'}">
-                                                <i class="fas fa-sign-in-alt"> Enter</i> 
-                                            </a>
-                                        </th:block>
+                                        <div class="form form-group">
+                                            <a class="btn btn-success" th:if="${quiz.status == 'ended'}" th:href="@{'/student/quiz/quizReivew/'+${quiz.idQuiz}}" >Review</a>
+                                            <th:block th:if="${quiz.dueDate > today}">
+                                                <a th:href="@{'/student/quiz/showQuiz/'+${quiz.idQuiz}}"  th:if="${quiz.status=='started'}">
+                                                    <i class="fas fa-sign-in-alt"> Enter</i> 
+                                                </a>
+                                            </th:block>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -94,7 +96,7 @@
                                 <ul class="pagination justify-content-center" >
                                     <th:block th:each="i : ${#numbers.sequence(1, quizes.getTotalPages())}">
                                         <li class="page-item " th:classappend="${i == page} ? 'active'">
-                                            <a class="page-link" th:href="@{'/student/quiz/showQuizesStudent/'+${class.idClass}+'/'+${i}}" th:text="${i}"></a>
+                                            <a class="page-link" th:href="@{'/student/quiz/showQuizesStudent/'+${session.class.idClass}+'/'+${i}}" th:text="${i}"></a>
                                         </li>
                                     </th:block>
                                 </ul>

@@ -40,24 +40,30 @@
             <!-- Sidebar -->
             <nav id="sidebar">
                 <ul class="list-unstyled components">
-                    <li >
-                        <a th:href="@{/student/home}"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+                    <li>
+                        <a href="student-home.html"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
                     </li>
                     <li>
-                        <a th:href="@{/student/class}"><i class="fas fa-list-ul"></i>Class</a>
+                        <a href="student-account.html"><i class="fas fa-id-card"></i>Account</a>
                     </li>
                     <li class="active">
-                        <a th:href="@{/student/quiz/showQuiz}"><i class="fas fa-id-card"></i>Tests & Quizes</a>
+                        <a th:href="@{/student/class/viewClassesOfStudent/1}"><i class="fas fa-list-ul"></i>Class</a>
                     </li>
                     <li>
-                        <a th:href="@{/student/account}"><i class="fas fa-id-card"></i>Account</a>
+                        <a href="student-class-entered.html"><i class="fas fa-hand-point-right"></i>List Assignments</a>
+                    </li>
+                    <li class="act">
+                        <a th:href="@{'/student/quiz/showQuizesStudent/'+${session.class.idClass}}+'/'+${page}"><i class="fas fa-hand-point-right"></i>List Quizs</a>
+                    </li>
+                    <li>
+                        <a href="student-mark-report.html"><i class="fas fa-hand-point-right"></i>Mark Report</a>
                     </li>
                 </ul>
 
             </nav>
             <!-- Page Content -->
             <div id="content">
-                
+
                 <form th:action="@{/student/quiz/chooseQuestion}" method="get">
                     <div class="container-fluid">
                         <h3><i class="fas fa-id-card"></i> Quiz</h3>

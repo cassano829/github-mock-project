@@ -22,6 +22,7 @@ import com.mockproject.model.User;
 import com.mockproject.repository.UserRepository;
 import java.util.HashMap;
 import java.util.Map;
+import javax.servlet.http.HttpSession;
 import org.springframework.data.domain.Sort;
 
 /**
@@ -55,10 +56,10 @@ public class StudentController {
     }
     
     @GetMapping("/student/quiz/showQuizesStudent/{idClass}/{page}")
-    public String viewQuizesOfStudentPage(Model model,@PathVariable("idClass") int idClass,@PathVariable("page") int page){
-        model.addAttribute("quizes", quizService.searchQuiz("",idClass,PageRequest.of(page-1,8)));
+    public String viewQuizesOfStudentPage(Model model,@PathVariable("idClass") int idClass,@PathVariable("page") int page,HttpSession session){
+        model.addAttribute("quizes", quizService.searchQuiz("",idClass,PageRequest.of(page-1,4)));
         model.addAttribute("page", page);
-        model.addAttribute("class", classService.findClassById(idClass));
+        session.setAttribute("class", classService.findClassById(idClass));
         model.addAttribute("today",new Date());
         return "student-quiz-list";
     }

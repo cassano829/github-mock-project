@@ -60,7 +60,9 @@
                             <a href="teacher-class-add.html" class="btn"><i class="fas fa-plus"></i></a>
                         </div>
                     </div>
-
+                    <div th:if="${classesOfTeacher == null OR classesOfTeacher.getContent().size() == 0}" class="alert alert-danger text-danger" role="alert">
+                        <strong> <i class="fas fa-exclamation-circle"> Empty</i></strong> 
+                    </div>
                     <div class="main-container">
                         <div class="row pb-5 mb-4" th:if="${classesOfTeacher != null}" th:each="class: ${classesOfTeacher}">
                             <div class="col-3 mt-4">
