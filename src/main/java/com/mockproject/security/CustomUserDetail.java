@@ -27,7 +27,14 @@ public class CustomUserDetail implements UserDetails {
 
     User user;
 
-    @Override
+    
+
+	public CustomUserDetail(User user) {
+		super();
+		this.user = user;
+	}
+
+	@Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<Role> roles = user.getRoles();
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
@@ -36,6 +43,11 @@ public class CustomUserDetail implements UserDetails {
         }
         return authorities;
     }
+	
+	public int getIdUser() {
+        return user.getIdUser();
+    }
+	
 
     @Override
     public String getPassword() {

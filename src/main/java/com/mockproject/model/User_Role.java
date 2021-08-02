@@ -22,4 +22,18 @@ public class User_Role {
     @Id
     private Integer idUser;
     private int idRole;
+	public Integer getIdUser() {
+		return idUser;
+	}
+	public void setIdUser(Integer idUser) {
+		this.idUser = idUser;
+	}
+	public int getIdRole() {
+		return idRole;
+	}
+	public void setIdRole(int idRole) {
+		this.idRole = idRole;
+	}
+    
+    
 }

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>adminl count asignment Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <link rel="stylesheet" href="cssTeacher/teacherCountAssignment.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+</head>
+
+<body>
+    <header class="header" id="header">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <h2><a exact="true" class="logo" href="shopping">LMS</a></h2>
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="#" id="navbarDropdown" style=" color: #7d99ff; " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        ${sessionScope.LOGIN_USERDTO.name}
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="logout">Logout</a>
+                    </div>
+                </li>
+            </ul>
+
+        </nav>
+    </header>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <ul class="list-unstyled components">
+                <li>
+                    <a href="teacherHome.html"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+                </li>
+                <li>
+                    <a href="teacherAccount.html"><i class="fas fa-id-card"></i>Account</a>
+                </li>
+                <li class="active">
+                    <a href="teacher-subject.html"><i class="fas fa-list-ul"></i>Subject</a>
+                </li>
+                <li class="act">
+                    <a href="teacher-assignment.html"><i class="fas fa-hand-point-right"></i>Assignment</a>
+                </li>
+                <li>
+                    <a href="teacher-quiz.html"><i class="fas fa-hand-point-right"></i>Quiz</a>
+                </li>
+            </ul>
+        </nav>
+        <!-- Page Content -->
+        <div id="content">
+            <div class="container-fluid">
+                <h3><i class="fas fa-book-open"></i> Report</h3>
+                <div class="main-container">
+                    <!--  -->
+                    <fieldset class="fs">
+                        <legend><strong>Assign 1</strong></legend>
+                        <form class="form-add-product" action="" style="margin-top: 20px;">
+                            <div class="con">
+                                <div>
+                                    <label>
+                                    <strong>Subject</strong>
+                                </label>
+                                    <div>
+                                        <input readonly name="" type="text" value="${def}" maxlength="100" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label>
+                                    <strong>Assignment Instructions</strong>
+                                </label>
+                                    <div>
+                                        <textarea readonly name="" cols="90" rows="5">${abcs}</textarea>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div><input type="file"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label"><strong>Open Date</strong></label>
+                                    <div class='input-group date' style="width: 40%; border-radius: 1px;">
+                                        <input readonly type="datetime-local" class="form-control" value="2014-01-02T15:42">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label"><strong>Due Date</strong></label>
+                                    <div class='input-group date' style="width: 40%; border-radius: 1px;">
+                                        <input readonly type="datetime-local" class="form-control" value="2014-01-29T11:42">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label><strong>Create By :</strong> </label><span>${USERS_email}</span>
+                                </div>
+                            </div>
+                            <div><label><strong>Submissions</strong></label></div>
+                            <div>
+                                <table class="tblinfo">
+                                    <tr>
+                                        <th>Students</th>
+                                        <th>Submtted Date</th>
+                                        <th>Grade</th>
+                                        <th>Check</th>
+                                    </tr>
+                                    <tr th:each="userReport:${userReports}">
+                                        <td>
+                                            <strong th:text="${userReport.key.fullName}"></strong>
+                                        </td>
+                                        <td>{14/7/2021 12:00am}</td>
+                                        <td><a class="text-danger" th:text="${userReport.value.grade}"></a>/10</td>
+                                        <td>
+                                            <a class="btn btn-primary" href="teacher-assignment-view.html">view</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="btt">
+                                <a class="btn btn-secondary" href="teacher-quiz.html">Cancel</a>
+                            </div>
+                        </form>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+        <!--  -->
+        <!-- jQuery CDN - Slim version (=without AJAX) -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js " integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo " crossorigin="anonymous "></script>
+        <!-- Popper.JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js " integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ " crossorigin="anonymous "></script>
+        <!-- Bootstrap JS -->
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js " integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm " crossorigin="anonymous "></script>
+        <script>
+            var coll = document.getElementsByClassName("collapsible");
+            var i;
+
+            for (i = 0; i < coll.length; i++) {
+                coll[i].addEventListener("click", function() {
+                    this.classList.toggle("active");
+                    var content = this.nextElementSibling;
+                    if (content.style.display === "block") {
+                        content.style.display = "none";
+                    } else {
+                        content.style.display = "block";
+                    }
+                });
+            }
+        </script>
+</body>
+
+</html>

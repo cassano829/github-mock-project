@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<form action="/student/quiz/entered"  method="Post">
+		<input type="hidden" name="idQuiz" th:value="${idQuiz}">
+		<div th:each="questionAndAnswer:${questionsAndAnswers}">
+		<h3 th:text="${questionAndAnswer.key.content}"></h3>
+		<input type="hidden" name="idQuestion" th:value="${questionAndAnswer.key.idQuestion}">
+			<div th:each="answer:${questionAndAnswer.value}" >
+				<input type="radio" th:name="${questionAndAnswer.key.idQuestion}" th:value="${answer.content}" th:text="${answer.content}">
+				<input type="hidden" name="answer" th:value="${answer.content}">
+			</div>
+		</div>
+		<input type="submit">
+	</form>
+</body>
+</html>
