@@ -34,8 +34,10 @@
                 </ul>
 
                 <div class="main-container">
-
                     <form class="form-add-product">
+                        <div>
+                            <h3 th:text="${session.class.nameClass}"></h3>
+                        </div>
                         <div th:if="${assignments.getTotalElements() == 0}">
                             <h3 class="text-danger" text-center>Empty Assignment!</h3>
                         </div>
@@ -45,7 +47,7 @@
                                 <div class="col-3 mt-4"  th:each="assignment : ${assignments}">
                                     <div class="card rounded shadow-sm border-0">
                                         <div class="card-body">
-                                            <h5>Id Assignment: <span th:text="${assignment.idAssignment}"></span></h5>
+                                            <h5><span th:text="${assignment.title}"></span></h5>
 
                                             <label>Due date:</label><br>
                                             <span th:if="${assignment.deadline.after(#dates.createNow())}" th:text="${assignment.deadline}"></span>

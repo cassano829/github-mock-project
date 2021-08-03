@@ -5,9 +5,21 @@
  */
 package com.mockproject.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import org.springframework.format.annotation.DateTimeFormat;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,19 +29,32 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "Questions")
-public class Question {
+public class Question implements Serializable{
 
     public Question() {
     }
 
-    private int idQuestion;
-    private int idQuiz;
-    private String content;
-    private boolean status;
-    private Set<Answer> answers = new HashSet<Answer>(0);
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idQuestion", unique = true, nullable = false)
+    private int idQuestion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idQuiz")
+    private Quiz quiz;
+
+    @Column(name = "content")
+    private String contentQuestion;
+
+    private boolean status;
+
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    private Date createDate;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "question", cascade = CascadeType.ALL)
+    private Set<Answer> answers = new HashSet<Answer>(0);
+
     public int getIdQuestion() {
         return idQuestion;
     }
@@ -38,23 +63,22 @@ public class Question {
         this.idQuestion = idQuestion;
     }
 
-
-
-    @Column(name = "content")
-    public String getContent() {
-        return content;
+    public Quiz getQuiz() {
+        return quiz;
     }
 
-    public Question(int idQuiz) {
-        this.idQuiz = idQuiz;
+    public void setQuiz(Quiz quiz) {
+        this.quiz = quiz;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public String getContentQuestion() {
+        return contentQuestion;
     }
 
+    public void setContentQuestion(String contentQuestion) {
+        this.contentQuestion = contentQuestion;
+    }
 
-    @Column(name = "status")
     public boolean isStatus() {
         return status;
     }
@@ -63,19 +87,14 @@ public class Question {
         this.status = status;
     }
 
-    private String createDate;
-
-    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
-    @Column(name = "createDate")
-    public String getCreateDate() {
+    public Date getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(String createDate) {
+    public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "question")
     public Set<Answer> getAnswers() {
         return answers;
     }
@@ -84,27 +103,4 @@ public class Question {
         this.answers = answers;
     }
 
-    @Column(name = "idQuiz")
-    public int getIdQuiz() {
-        return idQuiz;
-    }
-
-    public void setIdQuiz(int idQuiz) {
-        this.idQuiz = idQuiz;
-    }
-
-    public Question(int idQuiz, String questionContent, boolean status, String createDate) {
-        this.idQuiz = idQuiz;
-        this.content = questionContent;
-        this.status = status;
-        this.createDate = createDate;
-    }
-
-    public Question(int idQuiz, String questionContent, Set<Answer> answer) {
-        this.idQuiz = idQuiz;
-        this.content = questionContent;
-        this.answers=answer;
-    }
-
-    
 }

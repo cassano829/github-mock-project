@@ -157,19 +157,16 @@ public class AdminController {
         return "adminHome";
     }
 
-//    @GetMapping("/subject")
-//    public String showSubject() {
-//        return "adminSubject";
-//    }
-
-    @RequestMapping("/account")
+//    @RequestMapping("/account")
+    @GetMapping("/account")
     public String adminAccountPage(Model model) {
         CustomUserDetail user = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         model.addAttribute("user", user.getUser());
         return "admin-account";
     }
 
-    @RequestMapping("/user")
+//    @RequestMapping("/user")
+    @GetMapping("/user")
     public String adminUserPage(Model model) {
 
         List<User> userList = service.loadAllUsers();

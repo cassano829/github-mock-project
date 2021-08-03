@@ -15,10 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Data;
 
-/**
- *
- * @author ACER
- */
+
 @Entity
 @Data
 @Table(name = "News")

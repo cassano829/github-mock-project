@@ -11,27 +11,14 @@ import com.mockproject.model.User;
 import com.mockproject.model.User_Role;
 import com.mockproject.security.CustomUserDetail;
 import com.mockproject.security.UserDetailServiceImp;
-//import com.mockproject.service.RoleService;
-//import com.mockproject.service.User_RoleService;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.core.context.SecurityContextHolder;
-//import org.springframework.stereotype.Controller;
-//import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.text.SimpleDateFormat;
-//import java.util.HashMap;
-//import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import com.mockproject.service.NewsService;
 import com.mockproject.service.RoleService;
 import com.mockproject.service.User_RoleService;
-//import com.mockproject.service.User_RoleService;
 import java.util.HashMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +52,7 @@ public class UserController {
 
     @Autowired
     User_RoleService user_roleService;
+
 
     @GetMapping("/")
     public String loginPage() {
@@ -226,6 +214,7 @@ public class UserController {
         return "sign-up";
     }
 
+
     @PostMapping("/save")
     public String signUp(@ModelAttribute("user") User user,
                          Model model, @RequestParam("rePassword") String rePwd) {
@@ -293,15 +282,6 @@ public class UserController {
         }
     }
 
-    //redirect to update account PAGE
-
-
-    //handle update STUDENT'S account request
-    
-
-
-    //=============================== Utilities Methods
-
     private List<User> prepareUserList(List<User> userList) {
         if (userList != null && !userList.isEmpty()) {
             for (User u : userList) {
@@ -323,5 +303,4 @@ public class UserController {
         }
         return userList;
     }
-
 }

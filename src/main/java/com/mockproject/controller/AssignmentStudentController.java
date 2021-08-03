@@ -11,6 +11,7 @@ import com.mockproject.repository.AssignmentRepository;
 import com.mockproject.repository.AssignmentsOfUserRepository;
 import com.mockproject.repository.UserRepository;
 import com.mockproject.security.CustomUserDetail;
+import com.mockproject.service.ClassService;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -42,11 +43,16 @@ public class AssignmentStudentController {
     UserRepository userRepository;
 
     @Autowired
+    ClassService classService;
+    
+    @Autowired
     AssignmentsOfUserRepository assignmentsOfUserRepository;
 
     @GetMapping("/{id}")
     public String assignmentList(@PathVariable("id") Integer idClass, HttpSession session, Authentication authentication, Model model) {
         session.setAttribute("studentCurrentIdClass", idClass);
+        session.setAttribute("class", classService.getClassById(idClass));
+
         User _user = ((CustomUserDetail) authentication.getPrincipal()).getUser();
         List<AssignmentsOfUser> list = assignmentsOfUserRepository.findByIdClassAndIdUser(idClass, _user.getIdUser());
 

@@ -15,11 +15,15 @@ import org.springframework.stereotype.Repository;
 
 /**
  *
- * @author ACER
+ * <<<<<<< HEAD @a
+ *
+ *
+ * uthor Asus
  */
 @Repository
 public interface ClassRepository extends JpaRepository<Class, Integer> {
 
+//    List<Class> findByIdUser(int idTeacher);
 //    @Query("SELECT c FROM Class c WHERE c.idUser = :idUser AND c.idSubject = :idSubject")
 //    Page<Class> findAllClassWithTeacher(Pageable page, @Param("idUser") Integer idUser, @Param("idSubject") String idSubject);
     @Query("SELECT c FROM Class c WHERE c.idUser = :idUser AND c.idSubject = :idSubject AND c.idSubject in (SELECT s.idSubject FROM Subject s WHERE s.status = 1)")
@@ -32,5 +36,11 @@ public interface ClassRepository extends JpaRepository<Class, Integer> {
 
     @Query("SELECT c FROM Class c WHERE c.idSubject in (SELECT s.idSubject FROM Subject s WHERE s.status = 1)")
     Page<Class> findAllClass(Pageable page);
+
+    @Query("SELECT c FROM Class c WHERE c.idUser=?1 AND c.idSubject=?2")
+    Page<Class> findByIdTeacherAndIdSubject(int idUser, String idSubject, Pageable pageable);
+
+    @Query("SELECT c FROM Class c WHERE c.idClass in (SELECT uc.idClass FROM UserOfClass uc WHERE idUser=?1)")
+    Page<Class> findAllByIdUser(int idStudent, Pageable pageable);
 
 }

@@ -44,7 +44,7 @@
                         <a th:href="@{/teacher/home}"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
                     </li>
                     <li class="active">
-                        <a th:href="@{/subject/teacher}"><i class="fas fa-list-ul"></i>Subject</a>
+                        <a th:href="@{/subject/teacher}"><i class="fas fa-book-open"></i>Subjects</a>
                     </li>
                     <li>
                         <a th:href="@{/teacher/account}"><i class="fas fa-id-card"></i>Account</a>
@@ -86,7 +86,7 @@
                                         <p>This is class for [[${class.nameClass}]] students</p>
                                         
                                         <a class="mb-3 btn btn-primary" th:href="@{'/teacher/assignment/assignmentOfClass/' + ${class.idClass}}"><i class="fas fa-book"></i> Assignments</a>
-                                        <a class="mb-3 btn btn-info" href="teacher-quiz.html"><i class="fas fa-puzzle-piece"></i> Quizzes</a>
+                                        <a class="mb-3 btn btn-info" th:href="@{'/teacher/quiz/showListQuiz/' + ${class.idClass} + '/1'}"><i class="fas fa-puzzle-piece"></i> Quizzes</a>
                                     </div>
                                 </div>
                             </div>

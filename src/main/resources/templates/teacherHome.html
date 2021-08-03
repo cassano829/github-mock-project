@@ -32,7 +32,6 @@
                         </li>
                     </ul>
                 </div>
-
             </nav>
         </header>
         <div class="wrapper">
@@ -43,7 +42,7 @@
                         <a th:href="@{/teacher/home}"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
                     </li>
                     <li>
-                        <a th:href="@{/subject/teacher}"><i class="fas fa-list-ul"></i>Subject</a>
+                        <a th:href="@{/subject/teacher}"><i class="fas fa-book-open"></i>Subjects</a>
                     </li>
                     <li>
                         <a th:href="@{/teacher/account}"><i class="fas fa-id-card"></i>Account</a>
@@ -69,7 +68,7 @@
                                                 <div class="d-flex flex-column">
                                                     <h3 class="h6 font-weight-bold mb-0" th:text="${news.title}">Title</h3>
                                                     <div class="mb-3" tabindex="-1">
-                                                        by <a href="https://lms-hcmuni.fpt.edu.vn/user/view.php?id=4&course=1" th:text="${mapNames.get(news.idUser)}"></a>
+                                                        by <a th:href="@{#}" th:text="${mapNames.get(news.idUser)}"></a>
                                                         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Due: <time th:text="${news.createDate}">createDate</time>
                                                     </div>
                                                 </div>

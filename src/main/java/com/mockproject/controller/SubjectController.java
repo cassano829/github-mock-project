@@ -2,7 +2,6 @@
 
 package com.mockproject.controller;
 
-
 import com.mockproject.model.Subject;
 import com.mockproject.security.CustomUserDetail;
 import com.mockproject.security.UserDetailServiceImp;
@@ -13,7 +12,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -28,7 +26,7 @@ import java.util.Set;
 @Controller
 @RequestMapping(value = "/subject")
 public class SubjectController {
-
+    
     @Autowired
     SubjectService service;
 

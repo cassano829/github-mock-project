@@ -20,4 +20,7 @@ public interface AssignmentOfClassRepository extends CrudRepository<AssignmentsO
     
     public AssignmentsOfClass findByIdAssignmentAndIdClass(Integer idAssignment, Integer idClass);
     
+    @Query("FROM AssignmentsOfClass aoc WHERE aoc.idAssignment = ?1 and aoc.idClass in (SELECT c.idClass FROM Class c WHERE c.idUser = ?2)")
+    public List<AssignmentsOfClass> customFindByIdAssignmentAndIdUser(Integer idAssignment, Integer idUser);
+    
 }

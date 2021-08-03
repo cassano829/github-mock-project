@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Student List Quizzes Page</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <link rel="stylesheet" th:href="@{/css/styles.css}">
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    </head>
+
+    <body>
+        <header class="header" id="header">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <h2><a exact="true" class="logo" th:href="@{#}">LMS</a></h2>
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                    </li>
+                </ul>
+                <div sec:authorize="isAuthenticated()">
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" id="navbarDropdown" style=" color: #7d99ff; " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Welcome <b><span sec:authentication="name">Username</span></b>
+                                <span sec:authentication="principal.authorities">Roles</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" th:href="@{/logout}">Logout</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </nav>
+        </header>
+        <div class="wrapper">
+            <!-- Sidebar -->
+            <nav id="sidebar">
+                <ul class="list-unstyled components">
+                    <li>
+                        <a th:href="@{/student/home}"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <a th:href="@{/student/class}"><i class="fas fa-list-ul"></i>Class</a>
+                    </li>
+                    <li>
+                        <a th:href="@{'/student/assignment/' + ${session.studentCurrentIdClass}}"><i class="fas fa-hand-point-right"></i>List Assignments</a>
+                    </li>
+                    <li class="act">
+                        <a th:href="@{'/student/quiz/showQuizesStudent/'+${session.class.idClass}}+'/'+${page}"><i class="fas fa-hand-point-right"></i>List Quizzes</a>
+                    </li>
+                    <li>
+                        <a th:href="@{#}"><i class="fas fa-hand-point-right"></i>Mark Report</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/student/account}"><i class="fas fa-id-card"></i>Account</a>
+                    </li>
+                </ul>
+            </nav>
+            <!-- Page Content -->
+            <div id="content">
+                <div class="container-fluid">
+                    <div class="d-flex justify-content-between mt-4">
+                        <div>
+                            <h3 th:text="${session.class.nameClass}"></h3>
+                        </div>
+                    </div>
+                    <div th:if="${quizes == null OR quizes.getContent().size() == 0}" class="alert alert-danger text-danger" role="alert">
+                        <strong> <i class="fas fa-exclamation-circle"> No quizes</i></strong> 
+                    </div>
+                    <div class="main-container">
+                        <div class="row pb-5 mb-4">
+                            <div class="col-3 mt-4" th:if="${quizes != null}" th:each="quiz: ${quizes} ">
+                                <div class="card rounded shadow-sm border-0">
+                                    <div class="card-body">
+                                        <h5 th:text="${quiz.nameQuiz}"></h5>
+                                        <label >Open date:</label><p class="text-danger" th:text="${quiz.openDate}"></p>
+                                        <label >Due date:</label><p class="text-danger" th:text="${quiz.dueDate}"></p>
+                                        <p th:text="'Number of questions : '+${quiz.numOfQues}"></p>
+                                        <p th:text="'Duration : '+${quiz.timeLimit}+' minutes'"></p>
+                                        <p th:text="${quiz.dueDate > today} ? 'Status : '+${quiz.status} : 'Status : ended'"></p>
+                                        <div class="form form-group">
+                                            <a class="btn btn-success" th:if="${quiz.status == 'ended'}" th:href="@{'/student/quiz/quizReivew/'+${quiz.idQuiz}}" >Review</a>
+                                            <th:block th:if="${quiz.dueDate > today}">
+                                                <a th:href="@{'/student/quiz/showQuiz/'+${quiz.idQuiz}}"  th:if="${quiz.status=='started'}">
+                                                    <i class="fas fa-sign-in-alt"> Enter</i> 
+                                                </a>
+                                            </th:block>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="paging" th:if="${quizes.getTotalPages() > 1}">
+                            <nav aria-label="Search Result Pages">
+                                <ul class="pagination justify-content-center" >
+                                    <th:block th:each="i : ${#numbers.sequence(1, quizes.getTotalPages())}">
+                                        <li class="page-item " th:classappend="${i == page} ? 'active'">
+                                            <a class="page-link" th:href="@{'/student/quiz/showQuizesStudent/'+${session.class.idClass}+'/'+${i}}" th:text="${i}"></a>
+                                        </li>
+                                    </th:block>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--  -->
+            <!-- jQuery CDN - Slim version (=without AJAX) -->
+            <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js " integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo " crossorigin="anonymous "></script>
+            <!-- Popper.JS -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js " integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ " crossorigin="anonymous "></script>
+            <!-- Bootstrap JS -->
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js " integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm " crossorigin="anonymous "></script>
+
+    </body>
+
+</html>

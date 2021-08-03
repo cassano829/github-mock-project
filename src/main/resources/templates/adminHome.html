@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-        <link  type="text/css" rel="stylesheet" th:href="@{/css/adminHome.css}"> 
+        <link type="text/css" rel="stylesheet" th:href="@{/css/adminHome.css}"> 
 
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
     </head>
@@ -44,13 +44,13 @@
                         <a th:href="@{/admin/home}"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
                     </li>
                     <li>
-                        <a th:href="@{/subject/admin/}"><i class="fas fa-list-ul"></i>Subject</a>
+                        <a th:href="@{/subject/admin/}"><i class="fas fa-book-open"></i>Subjects</a>
                     </li>
                     <li>
                         <a th:href="@{/admin/account}"><i class="fas fa-id-card"></i>Account</a>
                     </li>
                     <li>
-                        <a th:href="@{/admin/user}"><i class="fas fa-book-open"></i>Users</a>
+                        <a th:href="@{/admin/user}"><i class="fas fa-user-tag"></i>Users</a>
                     </li>
                 </ul>
             </nav>
@@ -92,7 +92,7 @@
                                                 <div class="d-flex flex-column">
                                                     <h3 class="h6 font-weight-bold mb-0" th:text="${news.title}">Title</h3>
                                                     <div class="mb-3" tabindex="-1">
-                                                        by <a href="https://lms-hcmuni.fpt.edu.vn/user/view.php?id=4&course=1" th:text="${mapNames.get(news.idUser)}"></a> 
+                                                        by <a th:href="@{#}" th:text="${mapNames.get(news.idUser)}"></a> 
                                                         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Due: <time th:text="${news.createDate}">createDate</time>
                                                         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Status: <i th:text="${news.status}">Status</i>
                                                     </div>

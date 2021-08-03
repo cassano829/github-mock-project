@@ -6,29 +6,35 @@
 package com.mockproject.service;
 
 import com.mockproject.repository.ClassRepository;
-import java.text.SimpleDateFormat;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.mockproject.model.Class;
 import com.mockproject.security.CustomUserDetail;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-/**
- *
- * @author ACER
- */
+
+
 @Service
 public class ClassService {
 
-    public final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
     @Autowired
     ClassRepository repo;
+
+    public Page<Class> getListClassByIdTeacherAndIdSubject(int idTeacher, String idSubject, Pageable pageable) {
+        Page<Class> classes = repo.findByIdTeacherAndIdSubject(idTeacher, idSubject, pageable);
+        return classes;
+    }
+
+    public Page<Class> getAllClassByIdStudent(int idUser, Pageable pageable) {
+        return repo.findAllByIdUser(idUser, pageable);
+    }
+
+    public final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public Page<Class> getListClassRoleTeacher(int pageNumber, String idSubject) {
         CustomUserDetail user = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

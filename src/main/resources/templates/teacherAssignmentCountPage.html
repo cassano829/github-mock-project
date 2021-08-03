@@ -114,15 +114,21 @@
                             <label><strong>Choose class</strong></label>
                             <div>
                                 <span th:if="${listAssignmentOfClass==null or listAssignmentOfClass.empty}">This assignment 0 class</span>
-                                <select class="form-control col-5" th:if="${listAssignmentOfClass!=null and !listAssignmentOfClass.empty}" th:name="idClass">
-                                    <option th:each="class : ${listAssignmentOfClass}" th:value="${class.idClass}" th:text="${'['+ class.idClass +'] ' + mapClasses.get(class.idClass)}">
-                                </select>
-                                <button class="btn btn-primary mt-3" type="submit">Select</button>
+                               
+                                <div th:if="${listAssignmentOfClass!=null and !listAssignmentOfClass.empty}">
+                                    <select class="form-control col-5"  th:name="idClass">
+                                        <option th:each="class : ${listAssignmentOfClass}" th:value="${class.idClass}" th:text="${'['+ class.idClass +'] ' + mapClasses.get(class.idClass)}">
+                                    </select>
+                                    <button class="btn btn-primary mt-3" type="submit">Select</button>
+                                </div>
                             </div>
                         </div>
 
+                        <div th:unless="${assignmentOfUsers!=null and !assignmentOfUsers.empty}">
+                            <h3 class="text-danger">This assignment has no submission</h3>
+                        </div>
 
-                        <div>
+                        <div th:if="${assignmentOfUsers!=null and !assignmentOfUsers.empty}">
                             <table class="table bg-white border rounded">
 
                                 <tr>

@@ -51,7 +51,13 @@
                                             </span>
                                         </div>
                                         <div class="card-body p-1">
-                                            <h5>Id Assignment: <span th:text="${assignment.idAssignment}"></span></h5>
+                                            <h5><span th:text="${assignment.title}"></span></h5>
+                                            
+                                            <div>
+                                                <label>Id: </label>
+                                                <span class="text-primary"  th:text="${assignment.idAssignment}"></span>
+                                            </div>
+                                            
                                             <div>
                                                 <label>Status: </label>
                                                 <span class="text-primary"  th:text="${assignment.status}"></span>
@@ -70,7 +76,7 @@
                                             </div>
                                             <div>
                                                 <label>Grading:</label>
-                                                <a class="text-primary"  th:if="${assignment.idUser == #authentication.getPrincipal().getUser().getIdUser()}" th:href="@{'/teacher/assignment/grade/' + ${assignment.idAssignment}}">Grading</a>
+                                                <a class="text-primary" th:href="@{'/teacher/assignment/grade/' + ${assignment.idAssignment}}">Grading</a>
                                             </div>
                                         </div>
                                     </div>

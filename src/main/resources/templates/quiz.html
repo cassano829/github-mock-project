@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Quiz Page</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+              integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <link rel="stylesheet" th:href="@{/css/styles.css}">
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+              integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    </head>
+
+    <body>
+        <header class="header" id="header">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <h2><a exact="true" class="logo" th:href="@{#}">LMS</a></h2>
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                    </li>
+                </ul>
+                <div sec:authorize="isAuthenticated()">
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" id="navbarDropdown" style=" color: #7d99ff; " data-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="false" >
+                                Welcome <b><span sec:authentication="name">Username</span></b>
+                                <span sec:authentication="principal.authorities">Roles</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" th:href="@{/logout}">Logout</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </nav>
+        </header>
+        <div class="wrapper">
+            <!-- Sidebar -->
+            <nav id="sidebar">
+                <ul class="list-unstyled components">
+                    <li>
+                        <a href="student-home.html"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <a th:href="@{/student/class/viewClassesOfStudent/1}"><i class="fas fa-list-ul"></i>Class</a>
+                    </li>
+                    <li>
+                        <a th:href="@{'/student/assignment/' + ${session.studentCurrentIdClass}}"><i class="fas fa-hand-point-right"></i>List Assignments</a>
+                    </li>
+                    <li class="act">
+                        <a th:href="@{'/student/quiz/showQuizesStudent/' + ${session.class.idClass}}+'/1'"><i class="fas fa-hand-point-right"></i>List Quizzes</a>
+                    </li>
+                    <li>
+                        <a th:href="@{#}"><i class="fas fa-hand-point-right"></i>Mark Report</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/student/account}"><i class="fas fa-id-card"></i>Account</a>
+                    </li>
+                </ul>
+
+            </nav>
+            <!-- Page Content -->
+            <div id="content">
+
+                <form th:action="@{/student/quiz/chooseQuestion}" method="get">
+                    <div class="container-fluid">
+                        <h3><i class="fas fa-id-card"></i> Quiz</h3>
+                        <div class="d-flex justify-content-center flex-wrap mt-4">
+                            <!--List cau hoi-->
+                            <div>
+                                <div class="row quiz-panel text-center">
+                                    <div>
+                                        Time left: <span id="timer">60s</span>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <input type="submit" id="submit-form" class="btn btn-finish btn-radius" name="action" value="Finish"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="questionId" th:value="${session.questions.get(questionIndex).idQuestion}">
+
+                        </div>
+                        <div class="quiz-container mt-4">
+                            <div class="row">
+                                <div class="col-md-12 body-content bg-white">
+                                    <h1 class="text-center text-danger" th:text="${session.nameQuiz}"></h1>
+                                    <hr>
+                                    <h2 id="question" th:text="'Question '+${questionIndex + 1}+': '+${session.questions.get(questionIndex).contentQuestion}">Question 1: How to use Spring boot?</h2>
+                                    <div class="form-group" id="answer-form" method="post">
+                                        <div class="quiz-header">
+                                            <ol type="A">
+                                                <li th:each="answer,state : ${session.questions.get(questionIndex).getAnswers()}">
+                                                    <input type="radio" name="answer" th:value="${answer.idAnswer}" th:id="${state.index}" class="answer mr-3"
+                                                           th:checked="${session.quizCart.quizCart.get(session.questions.get(questionIndex).idQuestion) == answer.idAnswer}"/>
+                                                    <label th:for="${state.index}" id="a_text" th:text="${answer.content}"></label>
+                                                </li>
+                                            </ol>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="d-flex justify-content-between footer">
+                                    <div>
+                                        <th:block th:unless="${questionIndex eq 0}">
+                                            <button type="submit" class="btn btn-paging" name="questionIndex" th:value="${questionIndex - 1}"> 
+                                                &larr;Previous
+                                            </button>
+                                        </th:block>
+                                    </div>
+                                    <div>
+                                        <div class="row question-panel text-center">
+                                            <th:block th:if="${session.questions != null}">
+                                                <div th:each="question,state : ${session.questions}">
+                                                    <button th:classappend="${state.index == questionIndex} ? 'bg-primary'" class="btn btn-paging-question" type="submit" name="questionIndex"
+                                                            th:value="${state.index}"><span th:text="${state.index + 1}"></span></button>
+                                                </div>
+                                            </th:block>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <th:block th:if="${questionIndex < session.questions.size()-1}">
+                                            <button class="btn btn-paging" type="submit" name="questionIndex" th:value="${questionIndex + 1}">Next
+                                                &rarr;</button>
+                                        </th:block>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- jQuery CDN - Slim version (=without AJAX) -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+                integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+        <!-- Bootstrap JS -->
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+                integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script>
+        <script th:inline="javascript">  
+
+            function cal(timer) {
+            var minutes = parseInt(timer / 60, 10);
+            var seconds = parseInt(timer % 60, 10);
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+            document.querySelector('#timer').textContent = minutes + ":" + seconds;
+            }
+
+            function submitQuiz() {
+            $.ajax({
+            url: 'quiz',
+                    type: 'POST',
+                    data: $("#answer-form").serialize(),
+                    success: function () {},
+                    error: function () {
+                    alert("Cannot save your answer!");
+                    }
+            });
+            }
+
+            function startTimer(duration) {
+            var timer = duration;
+            cal(timer);
+            var intervalCount = setInterval(function () {
+            cal(timer);
+            if (--timer < 0) {
+            document.getElementById("submit-form").click();
+            clearInterval(intervalCount);
+            }
+
+            }, 1000);
+            }
+
+            window.onload = function () {
+            var endTime = new Date(Date.parse(new Date([[${session.TimeStartQuiz}]])) + [[${session.timeLimit}]] * 60 * 1000);
+            var curTime = new Date().getTime();
+            var diff = Math.round((endTime - curTime) / 1000);
+            var fiveMinutes = diff;
+            startTimer(fiveMinutes);
+            }
+
+//
+//            function cal(timer) {
+//            var minutes = parseInt(timer / 60, 10);
+//            var seconds = parseInt(timer % 60, 10);
+//            minutes = minutes < 10 ? "0" + minutes : minutes;
+//            seconds = seconds < 10 ? "0" + seconds : seconds;
+//            document.querySelector('#timer').textContent = minutes + ":" + seconds;
+//            }
+//
+//            function startTimer(duration) {
+//            var timer = duration;
+//            cal(timer);
+//            var intervalCount = setInterval(function () {
+//            cal(timer);
+//            if (--timer < 0) {
+//            $('#submit-form').click();
+//            clearInterval(intervalCount);
+//            }
+//            }, 1000);
+//            }
+//            window.onload = function () {
+//            var endTime = new Date(Date.parse(new Date([[${session.TimeStartQuiz}]])) + [[${session.timeLimit}]] * 60 * 1000);
+//            var curTime = new Date().getTime();
+//            var diff = Math.round((endTime - curTime) / 1000);
+//            startTimer(diff);
+//            }
+//            $("input[type=radio]").click(function () {
+//            if ($(this).prop("checked")) {
+//            submitQuiz()
+//            }
+//            });
+        </script>
+    </body>
+
+</html>

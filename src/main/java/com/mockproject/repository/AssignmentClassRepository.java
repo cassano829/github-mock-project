@@ -21,6 +21,8 @@ public interface AssignmentClassRepository extends CrudRepository<com.mockprojec
     
     public Page<Class> findByIdSubjectAndStatus(String idSubject, boolean status, Pageable pageAble);
     
+    public Page<Class> findByIdSubjectAndIdUserAndStatus(String idSubject, Integer idUser, boolean status, Pageable pageable);
+    
     @Query(value = "from Class where idClass in (select aoc.idClass from AssignmentsOfClass aoc where aoc.idAssignment = ?1)")
     public List<Class> getListClassByIdAssignment(Integer idAssignment);
     

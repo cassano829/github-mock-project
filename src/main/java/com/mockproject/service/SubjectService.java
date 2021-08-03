@@ -1,16 +1,10 @@
-/* LiemNguyen created on 16/07/2021 */
 
 package com.mockproject.service;
 
 import com.mockproject.model.Subject;
 import com.mockproject.repository.SubjectRepository;
-
-
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +17,6 @@ public class SubjectService  {
 
     @Autowired
     SubjectRepository repo;
-
 
     public void save(Subject subj) {
         subj.setCreateDate(df.format(new Date()));

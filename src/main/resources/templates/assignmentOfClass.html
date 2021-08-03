@@ -45,17 +45,17 @@
                     <li>
                         <a th:href="@{/teacher/home}"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
                     </li>
-                    <li>
-                        <a th:href="@{/teacher/account}"><i class="fas fa-id-card"></i>Account</a>
-                    </li>
                     <li class="active">
-                        <a th:href="@{/subject/teacher}"><i class="fas fa-list-ul"></i>Subject</a>
+                        <a th:href="@{/subject/teacher}"><i class="fas fa-book-open"></i>Subjects</a>
                     </li>
                     <li class="act">
                         <a th:href="@{'/teacher/assignment/assignmentOfClass/' + ${class.idClass}}"><i class="fas fa-hand-point-right"></i>Assignment</a>
                     </li>
                     <li>
-                        <a th:href="@{#}"><i class="fas fa-hand-point-right"></i>Quiz</a>
+                        <a th:href="@{'/teacher/quiz/showListQuiz/'+${class.idClass}}+'/1'"><i class="fas fa-hand-point-right"></i>Quiz</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/teacher/account}"><i class="fas fa-id-card"></i>Account</a>
                     </li>
                 </ul>
             </nav>
@@ -66,27 +66,32 @@
                         <div>
                             <h3>[[${class.nameClass}]]</h3>
                         </div>
-                        <div>
-                            <a href="teacher-assignment-add.html" class="btn"><i class="fas fa-plus"></i></a>
-                        </div>
                     </div>
 
                     <div class="main-container">
-                        <div class="row pb-5 mb-4">
-                            <div class="col-3 mt-4" th:each="assignment : ${listAssignmentOfClass}">
-                                <!-- Card-->
-                                <div class="card rounded shadow-sm border-0">
-<!--                                    <div class="text-right">
-                                        <a href="teacher-assignment-update.html" class="btn"><i class="fas fa-edit"></i></a>
-                                        <a href="#" class="btn"><i class="far fa-trash-alt"></i></a>
-                                    </div>-->
-                                    <div class="card-body">
-                                        <h5 class="text-dark" th:text="${assignment.title}">Name Assignment </h5>
-                                        <p>This is assigment</p>
+                        <div th:if="${listAssignmentOfClass.size() == 0}">
+                            <h3 class="text-danger" text-center>Empty Assignment!</h3>
+                        </div>
+                        <div th:unless="${listAssignmentOfClass.size() == 0}">
+                            <div class="row pb-5 mb-4">
+                                <div class="col-3 mt-4" th:each="assignment : ${listAssignmentOfClass}">
+                                    <!-- Card-->
+                                    <div class="card rounded shadow-sm border-0">
+                                        <!--                                    <div class="text-right">
+                                                                                <a href="teacher-assignment-update.html" class="btn"><i class="fas fa-edit"></i></a>
+                                                                                <a href="#" class="btn"><i class="far fa-trash-alt"></i></a>
+                                                                            </div>-->
+                                        <div class="card-body">
+                                            <h5 class="text-dark" th:text="${assignment.title}">Name Assignment </h5>
+                                            <div>
+                                                <label>Deadline: <b th:text="${assignment.deadline}"></b></label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>

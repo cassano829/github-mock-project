@@ -4,16 +4,15 @@
  * and open the template in the editor.
  */
 package com.mockproject.controller;
-
-import com.mockproject.model.Class;
-import com.mockproject.model.User;
+import com.mockproject.service.QuizService;
+import java.util.Date;
+import org.springframework.data.domain.PageRequest;
 import com.mockproject.model.UsersOfClass;
 import com.mockproject.security.CustomUserDetail;
 import com.mockproject.security.UserDetailServiceImp;
 import com.mockproject.service.ClassService;
 import com.mockproject.service.UsersOfClassService;
 import com.mockproject.service.User_RoleService;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
@@ -27,6 +26,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import com.mockproject.model.Class;
+import com.mockproject.model.User;
+import com.mockproject.repository.UserRepository;
+import java.util.HashMap;
+import javax.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,6 +41,8 @@ import org.springframework.web.bind.annotation.RequestParam;
  *
  * @author ACER
  */
+
+
 @Controller
 @RequestMapping("/student")
 public class StudentController {
@@ -58,6 +64,21 @@ public class StudentController {
 
     @Autowired
     User_RoleService user_roleService;
+
+    @Autowired
+    QuizService quizService;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @GetMapping("/quiz/showQuizesStudent/{idClass}/{page}")
+    public String viewQuizesOfStudentPage(Model model, @PathVariable("idClass") int idClass, @PathVariable("page") int page, HttpSession session) {
+        model.addAttribute("quizes", quizService.searchQuiz("", idClass, PageRequest.of(page - 1, 4)));
+        model.addAttribute("page", page);
+        session.setAttribute("class", classService.getClassById(idClass));
+        model.addAttribute("today", new Date());
+        return "student-quiz-list";
+    }
 
     @GetMapping("/home")
     public String showHome(Model model) {
@@ -102,7 +123,8 @@ public class StudentController {
             uol.setIdClass(idClass);
             uol.setIdUser(user.getUser().getIdUser());
             uolService.save(uol);
-            return "studentEntered";
+            model.addAttribute("idClass", uol.getIdClass());
+            return "redirect:/student/assignment/" + uol.getIdClass();
         } else {
             model.addAttribute("class", cl);
             model.addAttribute("nameTeacher", u.getFullName());
@@ -171,7 +193,7 @@ public class StudentController {
         return "student-update-account";
     }
 
-    @PostMapping(value = "/student/update-account")
+    @PostMapping(value = "/update-account")
     public String updateStudentAccount(@ModelAttribute(name = "user") User user,
             @RequestParam(name = "confirm_password") String confirmPassword,
             Model model) {
