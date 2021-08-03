@@ -1,132 +1,119 @@
+
 package com.mockproject.model;
 
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Column;
+import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import lombok.Data;
-
-
+/**
+ *
+ * @author truon
+ */
 @Entity
-@Data
-@Table(name="Assignments")
-public class Assignment {
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@Table(name = "Assignments")
+public class Assignment implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer idAssignment;
-	
-	@Column(nullable = false, unique = true)
+
+    private String idSubject;
+
+    private Integer idUser;
+
     private String title;
-	
-	@Column(nullable = false, unique = true)
+
     private String content;
-	
-	@Column(nullable = false, unique = true)
+
     private boolean status;
-	
-	@Column(nullable = false, unique = true)
+
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private Date deadline;
-	
-	@Column(nullable = false, unique = true)
-	private Date createDate;
-    
-	@OneToMany(mappedBy = "assignment")
-	private List<AssignmentOfClass> assignmentOfClasses = new ArrayList<>();
-	
-	@OneToMany(mappedBy = "assignment")
-	private List<Report> report = new ArrayList<>();
 
-	@ManyToOne
-	@JoinColumn(name="idSubject")
-	private Subject subject;
-	
-	@ManyToOne
-	@JoinColumn(name="idUser")
-	private User user;
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    private Date createDate;
 
-	public Integer getIdAssignment() {
-		return idAssignment;
-	}
+    private String attachments;
 
-	public void setIdAssignment(Integer idAssignment) {
-		this.idAssignment = idAssignment;
-	}
+    public Integer getIdAssignment() {
+        return idAssignment;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public void setIdAssignment(Integer idAssignment) {
+        this.idAssignment = idAssignment;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public String getIdSubject() {
+        return idSubject;
+    }
 
-	public String getContent() {
-		return content;
-	}
+    public void setIdSubject(String idSubject) {
+        this.idSubject = idSubject;
+    }
 
-	public void setContent(String content) {
-		this.content = content;
-	}
+    public Integer getIdUser() {
+        return idUser;
+    }
 
-	public boolean isStatus() {
-		return status;
-	}
+    public void setIdUser(Integer idUser) {
+        this.idUser = idUser;
+    }
 
-	public void setStatus(boolean status) {
-		this.status = status;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public Date getDeadline() {
-		return deadline;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public void setDeadline(Date deadline) {
-		this.deadline = deadline;
-	}
+    public String getContent() {
+        return content;
+    }
 
-	public Date getCreateDate() {
-		return createDate;
-	}
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
+    public boolean isStatus() {
+        return status;
+    }
 
-	public List<AssignmentOfClass> getAssignmentOfClasses() {
-		return assignmentOfClasses;
-	}
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
 
-	public void setAssignmentOfClasses(List<AssignmentOfClass> assignmentOfClasses) {
-		this.assignmentOfClasses = assignmentOfClasses;
-	}
+    public Date getDeadline() {
+        return deadline;
+    }
 
-	public Subject getSubject() {
-		return subject;
-	}
+    public void setDeadline(Date deadline) {
+        this.deadline = deadline;
+    }
 
-	public void setSubject(Subject subject) {
-		this.subject = subject;
-	}
+    public Date getCreateDate() {
+        return createDate;
+    }
 
-	public User getUser() {
-		return user;
-	}
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+    public String getAttachments() {
+        return attachments;
+    }
 
-	
-	
-    
+    public void setAttachments(String attachments) {
+        this.attachments = attachments;
+    }
+
+//>>>>>>> master
 }

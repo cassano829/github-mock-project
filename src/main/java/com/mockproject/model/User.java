@@ -1,16 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.mockproject.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.annotations.SQLDelete;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -22,7 +20,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Data;
 
@@ -33,22 +30,33 @@ import lombok.Data;
 @Entity
 @Data
 @Table(name = "Users")
-public class User implements Comparable<User> {
+@SQLDelete(sql = "UPDATE Users SET status = 'false' WHERE idUser=?")
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idUser;
+
+    @NotBlank(message = "Fullname can't be empty")
+    @NotEmpty(message = "Fullname can't be empty")
     private String fullName;
 
     @Column(nullable = false, unique = true)
+    @Email(message = "Email format incorrect",
+            regexp = "[a-z][a-zA-Z0-9_.]{4,32}@[a-z0-9]{2,}([.][a-z0-9]{2,4}){1,2}")
     private String email;
-    
-    @Column(nullable = false, unique = true, updatable = false)
+
     private String verificationCode;
 
+    @NotBlank(message = "Password can't be empty")
+    @NotEmpty(message = "Password can't be empty")
+    @Size.List ({
+            @Size(min=8, message="Password must be at least 8 characters"),
+            @Size(max=60, message="Password must be less than 16 characters")
+    })
     private String password;
 
-    private boolean status;
+    private boolean status=Boolean.TRUE;
 
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     @Column(name = "createDate")
@@ -71,150 +79,5 @@ public class User implements Comparable<User> {
             }
         }
         return false;
-    }
-
-    @OneToMany(mappedBy = "user")
-	private List<Subject> subjects = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "user")
-	private List<Class> classes = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "user")
-	private List<Report> reportes = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "user")
-	private List<Quiz> quizes = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-  	private List<QuizOfUser> quizOfUsers = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "user")
-  	private List<Assignment> assignment = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "user")
-  	private List<UserOfClass> userOfClass = new ArrayList<>();
-    
-	public Integer getIdUser() {
-		return idUser;
-	}
-
-	public void setIdUser(Integer idUser) {
-		this.idUser = idUser;
-	}
-
-	public String getFullName() {
-		return fullName;
-	}
-
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getVerificationCode() {
-		return verificationCode;
-	}
-
-	public void setVerificationCode(String verificationCode) {
-		this.verificationCode = verificationCode;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public boolean isStatus() {
-		return status;
-	}
-
-	public void setStatus(boolean status) {
-		this.status = status;
-	}
-
-	public String getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(String createDate) {
-		this.createDate = createDate;
-	}
-
-	public Set<Role> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
-	}
-
-	public List<Subject> getSubjects() {
-		return subjects;
-	}
-
-	public void setSubjects(List<Subject> subjects) {
-		this.subjects = subjects;
-	}
-
-	public List<Class> getClasses() {
-		return classes;
-	}
-
-	public void setClasses(List<Class> classes) {
-		this.classes = classes;
-	}
-
-	public List<Report> getReportes() {
-		return reportes;
-	}
-
-	public void setReportes(List<Report> reportes) {
-		this.reportes = reportes;
-	}
-
-	public List<Quiz> getQuizes() {
-		return quizes;
-	}
-
-	public void setQuizes(List<Quiz> quizes) {
-		this.quizes = quizes;
-	}
-
-	public List<QuizOfUser> getQuizOfUsers() {
-		return quizOfUsers;
-	}
-
-	public void setQuizOfUsers(List<QuizOfUser> quizOfUsers) {
-		this.quizOfUsers = quizOfUsers;
-	}
-
-	@Override
-	public int compareTo(User o) {
-		// TODO Auto-generated method stub
-		return this.getIdUser() - o.getIdUser();
-	}
-
-	
-//	public List<Subject> getSubjects() {
-//		return subjects;
-//	}
-//
-//	public void setSubjects(List<Subject> subjects) {
-//		this.subjects = subjects;
-//	}
-//	
-//	
-    
-    
-
+    }   
 }

@@ -1,86 +1,42 @@
 package com.mockproject.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+import org.hibernate.annotations.*;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import lombok.Data;
-
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 
 @Entity
 @Data
-@Table(name="Subjects")
-public class Subject {
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idSubject;
-    
+@Table(name = "Subjects")
+@SQLDelete(sql = "UPDATE Subjects SET status = 'false' WHERE idSubject=?")
+@Where(clause = "status=true")
+@FilterDef(name = "deletedSubjectFilter", parameters = @ParamDef(name = "status", type = "boolean"))
+@Filter(name = "deletedSubjectFilter", condition = "status = :status")
+public class Subject implements Serializable {
 
-    @Column(nullable = false, unique = true)
+    @Id
+    @Column(name = "idSubject", updatable = false, nullable = false, unique = true)
+    @Pattern(regexp = "^([A-Z]{3})+([0-9]{3})$", message = "Incorrect Subject ID format - Ex : ABC123")
+    private String idSubject;
+
+    @Column(nullable = false)
+    @NotBlank(message = "Subject name can't be empty")
+    @NotEmpty(message = "Subject name can't be empty")
     private String nameSubject;
-    
-    @Column(nullable = false, unique = true, updatable = false)
+
+    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
+    @Column(name = "createDate")
     private String createDate;
 
-    
-    @ManyToOne
-	@JoinColumn(name="idUser")
-	private User user;
-    
-    @OneToMany(mappedBy = "subject")
-	private List<Class> classes = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "subject")
-	private List<Assignment> assignment = new ArrayList<>();
+    private boolean status = Boolean.TRUE;
 
-
-	public Integer getIdSubject() {
-		return idSubject;
-	}
-
-
-	public void setIdSubject(Integer idSubject) {
-		this.idSubject = idSubject;
-	}
-
-
-	public String getNameSubject() {
-		return nameSubject;
-	}
-
-
-	public void setNameSubject(String nameSubject) {
-		this.nameSubject = nameSubject;
-	}
-
-
-	public String getCreateDate() {
-		return createDate;
-	}
-
-
-	public void setCreateDate(String createDate) {
-		this.createDate = createDate;
-	}
-
-
-//	public User getUser() {
-//		return user;
-//	}
-//
-//
-//	public void setUser(User user) {
-//		this.user = user;
-//	}
-    
-    
+    @Column(name = "idUser")
+    private int idUser;
 }

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Teacher Assignment List Page</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+              integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <link rel="stylesheet" th:href="@{/css/adminListAssignment.css}">
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+              integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    </head>
+
+    <body>
+
+        <header th:replace="~{/teacherAssignmentHeaderPage}"></header>
+        <!-- Page Content -->
+        <div id="content">
+            <div class="container-fluid">
+
+                <ul class="as rounded">
+                    <li class="bg-secondary"><a th:href="@{/teacher/assignment/list}">List Assignment</a></li>
+                    <li><a th:href="@{/teacher/assignment/create}">Create</a></li>
+                </ul>
+
+                <div class="main-container">
+
+                    <form class="form-add-product">
+                        <div th:if="${assignments.getTotalElements() == 0}">
+                            <h3 class="text-danger" text-center>Empty Assignment!</h3>
+                        </div>
+                        <div th:unless="${assignments.getTotalElements() == 0}">
+                            <div class="row pb-5 mb-4">
+                                <div class="col-3 mt-4"  th:each="assignment : ${assignments}">
+                                    <!-- Card-->
+                                    <div class="card rounded shadow-sm border-0">
+                                        <div class="text-right">
+
+                                            <!--update-->
+                                            <a th:if="${assignment.idUser == #authentication.getPrincipal().getUser().getIdUser()}" th:href="@{'/teacher/assignment/update/' + ${assignment.idAssignment}}" ><i class="fas fa-edit"></i></a>
+
+                                            <!--delete-->
+                                            <span th:if="${assignment.idUser != #authentication.getPrincipal().getUser().getIdUser()}">
+                                                <i class="far fa-eye"></i>
+                                            </span>
+                                            <span th:if="${assignment.idUser == #authentication.getPrincipal().getUser().getIdUser()}">
+                                                <a th:if="${assignment.status == true}" th:href="@{'/teacher/assignment/remove/' + ${assignment.idAssignment} + '?page=' + ${page}}" onclick="return confirm('Delete this assignment?')"><i class="far fa-trash-alt"></i></a>
+                                                <a th:unless="${assignment.status == true}" th:href="@{'/teacher/assignment/remove/' + ${assignment.idAssignment} + '?page=' + ${page}}"><i class="fas fa-redo-alt"></i></a>
+                                            </span>
+                                        </div>
+                                        <div class="card-body p-1">
+                                            <h5><span th:text="${assignment.title}"></span></h5>
+                                            
+                                            <div>
+                                                <label>Id: </label>
+                                                <span class="text-primary"  th:text="${assignment.idAssignment}"></span>
+                                            </div>
+                                            
+                                            <div>
+                                                <label>Status: </label>
+                                                <span class="text-primary"  th:text="${assignment.status}"></span>
+                                            </div>
+                                            <div>
+                                                <label>Create Date:</label><br>
+                                                <span th:text="${assignment.createDate}"></span>
+                                            </div>
+                                            <div>
+                                                <label>Deadline:</label><br>
+                                                <span th:text="${assignment.deadline}"></span>
+                                            </div>
+                                            <div>
+                                                <label>View Classes: </label>
+                                                <a class="text-primary" th:href="@{'/teacher/assignment/class/' + ${assignment.idAssignment}}">View</a>
+                                            </div>
+                                            <div>
+                                                <label>Grading:</label>
+                                                <a class="text-primary" th:href="@{'/teacher/assignment/grade/' + ${assignment.idAssignment}}">Grading</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <strong>
+                        <a class="sub" th:if="${assignments.getTotalPages() > 1}" th:each="i : ${#numbers.sequence(1, assignments.getTotalPages())}" th:href="@{'/teacher/assignment/list/page/' + ${i}}" th:text="${i + '  '}"></a>
+                    </strong>
+                    <!--  -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js "
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo "
+    crossorigin="anonymous "></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js "
+            integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ "
+    crossorigin="anonymous "></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js "
+            integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm "
+    crossorigin="anonymous "></script>
+
+</body>
+
+</html>

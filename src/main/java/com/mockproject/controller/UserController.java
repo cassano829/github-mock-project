@@ -14,7 +14,8 @@ import com.mockproject.model.QuizDetail;
 import com.mockproject.model.QuizOfClass;
 import com.mockproject.model.QuizOfUser;
 import com.mockproject.model.Report;
-import com.mockproject.model.Subject;
+import com.mockproject.model.Role;
+import com.mockproject.model.News;
 import com.mockproject.model.User;
 import com.mockproject.model.UserOfClass;
 import com.mockproject.model.User_Role;
@@ -32,148 +33,110 @@ import com.mockproject.service.QuizService;
 import com.mockproject.service.SubjectService;
 import com.mockproject.service.UserOfClassService;
 import com.mockproject.service.UserService;
-import com.mockproject.service.User_RoleService;
-import net.bytebuddy.utility.RandomString;
 import com.mockproject.model.Class;
 import com.mockproject.service.ReportService;
-
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import java.text.SimpleDateFormat;
+import java.util.Optional;
+import com.mockproject.service.NewsService;
+import com.mockproject.service.RoleService;
+import com.mockproject.service.User_RoleService;
+import java.util.HashMap;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- *
  * @author ACER
  */
 @Controller
 public class UserController {
 
+    private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    private final Validator validator = factory.getValidator();
+
     @Autowired
     UserDetailServiceImp service;
 
     @Autowired
+    RoleService roleService;
+    
+    @Autowired
+    NewsService newService;
+
+    @Autowired
     User_RoleService user_roleService;
     
+//    @Autowired
+//	SubjectService subjectService ;
+//    
+//    @Autowired
+//   	ClassService classService ;
+//    
+//    @Autowired
+//   	QuizOfClassService quizOfClassService ;
+//    
+//    @Autowired
+//   	QuizService quizService ;
+//    
+//    @Autowired
+//   	QuestionService questionService ;
+//    
+//    @Autowired
+//   	AnswerService answerService ;
+//    
+//    @Autowired
+//   	QuizOfUserService quizOfUserService ;
+//    
+//    @Autowired
+//   	QuizDetailService quizDetailService ;
+//    
+//    @Autowired
+//   	AssignmentService assignmentService ;
+//    
+//    @Autowired
+//   	AssignmentOfClassService assignmentOfClassService ;
+//    
     @Autowired
-	SubjectService subjectService ;
+    ReportService reportService;
+//    
+//    @Autowired
+//   	UserService userService ;
+//    
+//    @Autowired
+//   	UserOfClassService userOfClassService ;
     
-    @Autowired
-   	ClassService classService ;
-    
-    @Autowired
-   	QuizOfClassService quizOfClassService ;
-    
-    @Autowired
-   	QuizService quizService ;
-    
-    @Autowired
-   	QuestionService questionService ;
-    
-    @Autowired
-   	AnswerService answerService ;
-    
-    @Autowired
-   	QuizOfUserService quizOfUserService ;
-    
-    @Autowired
-   	QuizDetailService quizDetailService ;
-    
-    @Autowired
-   	AssignmentService assignmentService ;
-    
-    @Autowired
-   	AssignmentOfClassService assignmentOfClassService ;
-    
-    @Autowired
-   	ReportService reportService ;
-    
-    @Autowired
-   	UserService userService ;
-    
-    @Autowired
-   	UserOfClassService userOfClassService ;
-    
+
 
     @GetMapping("/")
     public String loginPage() {
         return "login";
     }
 
+    @GetMapping("/loginError")
+    public String errorPage() {
+        return "redirect:/?error";
+    }
+
     @GetMapping("/403")
     public String handleError() {
         return "403";
-    }
-
-    //admin
-    @GetMapping("/admin/home")
-    public String adminHomePage() {
-        return "adminHome";
-    }
-
-    @GetMapping("/admin/subject")
-    public String adminSubjectPage() {
-        return "adminSubject";
-    }
-
-    @GetMapping("/admin/account")
-    public String adminAccountPage() {
-        return "adminAccount";
-    }
-
-    @GetMapping("/admin/user")
-    public String adminUserPage() {
-        return "adminUser";
-    }
-
-    //teacher
-    @GetMapping("/teacher/home")
-    public String teacherHomePage() {
-        return "teacherHome";
-    }
-
-    @GetMapping("/teacher/subject")
-    public String teacherSubjectPage(HttpSession session) {
-    	CustomUserDetail user = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		session.setAttribute("subjects", subjectService.findSubjectByIdUser(user.getIdUser()));
-        return "teacher-subject";
-    }
-    
-    @GetMapping("/teacher-class")
-    public String teacherClassPage(HttpSession session,@RequestParam(name = "idSubject") int idSubject) {
-    	CustomUserDetail user = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		session.setAttribute("classes", classService.findClassByUser_idUserAndSubject_idSubjectAndStatus(user.getIdUser(),idSubject,true));
-        return "/teacher-class";
-    }
-    
-    @GetMapping("/teacher-assignment")
-    public String teacherAsignmentPage(HttpSession session,@RequestParam(name = "idClass") int idClass) {
-    	List<AssignmentOfClass> listAsignmentOfClass = new ArrayList<AssignmentOfClass>();
-    	List<Assignment> listAssignment = new ArrayList<Assignment>();
-    	listAsignmentOfClass = assignmentOfClassService.findAssignmentOfClassByClass_idClass(idClass);
-    	for(AssignmentOfClass asignmentOfClass:listAsignmentOfClass) {
-    		listAssignment.add(assignmentService.findAssignmentByidAssignment(asignmentOfClass.getAssignment().getIdAssignment()));
-    	}
-    	session.setAttribute("listAsignmentOfClass", listAsignmentOfClass); 
-    	session.setAttribute("listAssignment", listAssignment);    	
-        return "/teacher-assignment";
     }
     
     @GetMapping("/teacher-assignment-report")
@@ -191,20 +154,6 @@ public class UserController {
     	
     	model.addAttribute("userReports", userReport);
         return "/teacher-assignment-report";
-    }
-    
-    @GetMapping("/teacher-quiz")
-    public String teacherQuizPage(HttpSession session,@RequestParam(name = "idClass") int idClass) {
-        List<Quiz> listQuiz = new ArrayList<>() ; 
-    	List<QuizOfClass> listQuizOfClass = new ArrayList<>() ;
-    	
-    	listQuizOfClass = quizOfClassService.findQuizOfClassByIdClass(idClass);
-    	for(int i =0; i<listQuizOfClass.size();i++) {
-    		listQuiz.add(quizService.findQuizByIdQuiz(listQuizOfClass.get(i).getQuiz().getIdQuiz()));
-    	}
-    	session.setAttribute("listQuizOfClass",listQuizOfClass);
-    	session.setAttribute("quizes",listQuiz);
-        return "/teacher-quiz";
     }
     
     @GetMapping("/teacher-quiz-report")
@@ -297,12 +246,6 @@ public class UserController {
         return "/teacher-class-report";
     }
     
-
-    @GetMapping("/teacher/account")
-    public String teacherAccountPage() {
-        return "teacherAccount";
-    }
-
     //student
     @GetMapping("/student/home")
     public String studentHomePage() {
@@ -466,16 +409,77 @@ public class UserController {
     public String studentAccountPage() {
         return "student-account";
     }
+//    @GetMapping("/student/home")
+//    public String studentHomePage() {
+//        return "studentHome";
+//    }
+//
+//    @GetMapping("/student/class")
+//    public String studentClassPage() {
+//        return "studentClass";
+//    }
 
-    @GetMapping("/student/create")
+//    @RequestMapping("/student/account")
+//    public String studentAccountPage(Model model) {
+//        CustomUserDetail user = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        model.addAttribute("user", user.getUser());
+//
+//        return "student-account";
+//    }
+    
+    @GetMapping("/handleException")
+    public String handleException() {
+        CustomUserDetail user = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (user.hasRole("ADMIN")) {
+            return "redirect:/admin/home";
+        } else if (user.hasRole("TEACHER")) {
+            return "redirect:/teacher/home";
+        } else if (user.hasRole("STUDENT")) {
+            return "redirect:/student/home";
+        }
+        return null;
+    }
+
+    @GetMapping("/page/{pageNumber}")
+    public String listByPage(Model model, @PathVariable(name = "pageNumber") Integer currentPage) {
+        CustomUserDetail user = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Page<News> page = newService.getListNewsByStatus(currentPage);
+        int totalPages = page.getTotalPages();
+        List<News> list = page.getContent();
+        HashMap<Integer, String> mapNames = new HashMap<Integer, String>();
+
+        if (list != null) {
+            if (list.size() != 0) {
+                for (News n : list) {
+                    User u = service.getUserByIdUser(n.getIdUser());
+                    mapNames.put(u.getIdUser(), u.getFullName());
+                }
+                model.addAttribute("currentPage", currentPage);
+                model.addAttribute("totalPages", totalPages);
+                model.addAttribute("mapNames", mapNames);
+                model.addAttribute("listNews", list);
+            } else {
+                model.addAttribute("message", "Empty Announcement!");
+            }
+        }
+        if (user.hasRole("TEACHER")) {
+            return "teacherHome";
+        } else if (user.hasRole("STUDENT")) {
+            return "studentHome";
+        }
+        return null;
+    }
+
+    @GetMapping("/create")
     public String signUp(Model model) {
         model.addAttribute("user", new User());
         return "sign-up";
     }
 
-    @PostMapping("/student/save")
+
+    @PostMapping("/save")
     public String signUp(@ModelAttribute("user") User user,
-            Model model, @RequestParam("rePassword") String rePwd) {
+                         Model model, @RequestParam("rePassword") String rePwd) {
 
         boolean checkEmpty = true;
         if (user.getEmail().trim().isEmpty()) {
@@ -492,7 +496,10 @@ public class UserController {
             boolean checkCorrect = true;
             boolean checkEmail = service.isValidEmail(user.getEmail());
             boolean checkRePwd = rePwd.matches(user.getPassword());
-
+            if(user.getPassword().length() < 8 || user.getPassword().length() > 16){
+                checkCorrect = false;
+                error = "Password length must between 8-16 characters";
+            }
             if (!checkEmail) {
                 checkCorrect = false;
                 error = "Wrong email format! (ex: alpha123@gmail.com)";
@@ -526,7 +533,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/student/verify")
+    @PostMapping("/verify")
     public String verifyAccount(@RequestParam("AUTHEN_CODE") String code, Model model) {
         boolean verified = service.verify(code);
         if (verified) {
@@ -535,5 +542,27 @@ public class UserController {
             model.addAttribute("messageError", "Invalid code verify!");
             return "verify";
         }
+    }
+
+    private List<User> prepareUserList(List<User> userList) {
+        if (userList != null && !userList.isEmpty()) {
+            for (User u : userList) {
+                try {
+                    u.setCreateDate(new SimpleDateFormat("dd-MMM-yyyy")
+                            .format(new SimpleDateFormat("yyyy-MM-dd").parse(u.getCreateDate())));
+                    Optional<User_Role> ur = user_roleService.findByIdUser(u.getIdUser());
+                    if (ur.isPresent()) {
+                        Optional<Role> r = roleService.findById(ur.get().getIdRole());
+                        if (r.isPresent()) {
+                            u.getRoles().add(r.get());
+                        }
+                    }
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return userList;
     }
 }

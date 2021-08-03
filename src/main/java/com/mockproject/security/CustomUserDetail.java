@@ -7,15 +7,16 @@ package com.mockproject.security;
 
 import com.mockproject.model.Role;
 import com.mockproject.model.User;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -82,5 +83,5 @@ public class CustomUserDetail implements UserDetails {
     public boolean hasRole(String roleName) {
         return user.hasRole(roleName);
     }
-
+    
 }

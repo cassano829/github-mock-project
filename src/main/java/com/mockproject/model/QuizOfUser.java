@@ -1,121 +1,51 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.mockproject.model;
 
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
 import lombok.Data;
 
-
+/**
+ *
+ * @author ACER
+ */
 @Entity
 @Data
-@Table(name="QuizesOfUser")
+@Table(name = "QuizesOfUser")
 public class QuizOfUser {
-	@Id
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idQuizOfUser;
-    
-    @Column(nullable = false, unique = true)
+    private int idQuizOfUser;
+
+    //Update
+    private int idUser;
+
     private boolean isPass;
-    
-    @Column(nullable = false, unique = true)
+
     private int totalCorrect;
-    
-    @Column
-    private float grade;
-    
-    @ManyToOne
-	@JoinColumn(name="idUser")
-	private User user;	
 
-    
-    @ManyToOne
-	@JoinColumn(name="idQuiz")
-	private Quiz quiz;
-    
-    @OneToMany(mappedBy = "quizOfUser")
-	private List<QuizDetail> quizDetails = new ArrayList<>();
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", shape = JsonFormat.Shape.STRING)
+    @Column(name = "submitDate")
+    private String submitDate;
 
-    
-    
-	public QuizOfUser() {
-		
-	}
+    private int idQuiz;
 
-	public QuizOfUser(boolean isPass, int totalCorrect, User user, Quiz quiz) {
-		super();
-		this.isPass = isPass;
-		this.totalCorrect = totalCorrect;
-		this.user = user;
-		this.quiz = quiz;
-	}
+    private double grade;
 
-	public Integer getIdQuizOfUser() {
-		return idQuizOfUser;
-	}
-
-	public void setIdQuizOfUser(Integer idQuizOfUser) {
-		this.idQuizOfUser = idQuizOfUser;
-	}
-
-	public boolean isPass() {
-		return isPass;
-	}
-
-	public void setPass(boolean isPass) {
-		this.isPass = isPass;
-	}
-
-	public int getTotalCorrect() {
-		return totalCorrect;
-	}
-
-	public void setTotalCorrect(int totalCorrect) {
-		this.totalCorrect = totalCorrect;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public Quiz getQuiz() {
-		return quiz;
-	}
-
-	public void setQuiz(Quiz quiz) {
-		this.quiz = quiz;
-	}
-
-	public List<QuizDetail> getQuizDetails() {
-		return quizDetails;
-	}
-
-	public void setQuizDetails(List<QuizDetail> quizDetails) {
-		this.quizDetails = quizDetails;
-	}
-
-	public float getGrade() {
-		return grade;
-	}
-
-	public void setGrade(float grade) {
-		this.grade = grade;
-	}
-    
-    
-    
+    @OneToMany(mappedBy = "quizOfStudent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<QuizDetail> quizDetails;
 }

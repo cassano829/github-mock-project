@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Teacher Assignment Class Page</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+              integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <link rel="stylesheet" th:href="@{/css/adminListAssignment.css}">
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+              integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+
+        <style>
+            td:nth-child(odd) {
+                font-weight: normal;
+            }
+        </style>
+
+    </head>
+
+    <body>
+
+        <header th:replace="~{/teacherAssignmentHeaderPage}"></header>
+        <!-- Page Content -->
+        <div id="content">
+            <div class="container-fluid">
+
+                <ul class="as rounded">
+                    <li class="bg-secondary"><a th:href="@{/teacher/assignment/list}">List Assignment</a></li>
+                    <li><a th:href="@{/teacher/assignment/create}">Create</a></li>
+                </ul>
+
+                <div class="main-container">
+
+                    <form class="form-add-product">
+                        
+                        <div class="text-left bg-white border rounded mt-3 mb-3 p-2">
+                            <h3>List Classes(add assignment to Class)</h3>
+                        </div>
+                        
+                        <div>
+                            <table class="table bg-white border rounded">
+                                <tr>
+                                    <th>Id Class</th>
+                                    <th>Id Subject</th>
+                                    <th>Id User</th>
+                                    <th>Name Class</th>
+                                    <th>Create Date</th>
+                                    <th>Add Status</th>
+                                    <th>Add</th>
+                                </tr>
+                                <tr th:each="class : ${classes}">
+                                    <td th:text="${class.idClass}"></td>
+                                    <td th:text="${class.idSubject}"></td>
+                                    <td th:text="${class.idUser}"></td>
+                                    <td th:text="${class.nameClass}"></td>
+                                    <td th:text="${class.createDate}"></td>
+                                    <td>
+                                        <span class="text-success" th:if="${#maps.containsKey(addedClassesMap, class.idClass)}">Added</span>
+                                        <span class="text-danger" th:unless="${#maps.containsKey(addedClassesMap, class.idClass)}">not add</span>
+                                    </td>
+                                    <td>
+                                        <a class="text-primary" th:if="${#maps.containsKey(addedClassesMap, class.idClass)}" th:href="@{'/teacher/assignment/class/add/' + ${class.idClass} + '?page=' + ${page}}">Undo</a>
+                                        <a class="text-primary" th:unless="${#maps.containsKey(addedClassesMap, class.idClass)}" th:href="@{'/teacher/assignment/class/add/' + ${class.idClass} + '?page=' + ${page}}">Add</a>
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </div>
+                    </form>
+                    <strong>
+                        <a class="sub" th:if="${classes.getTotalPages() > 1}" th:each="i : ${#numbers.sequence(1, classes.getTotalPages())}" th:href="@{'/teacher/assignment/class/page/' + ${i}}" th:text="${i + '  '}"></a>
+                    </strong>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js "
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo "
+    crossorigin="anonymous "></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js "
+            integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ "
+    crossorigin="anonymous "></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js "
+            integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm "
+    crossorigin="anonymous "></script>
+
+</body>
+
+</html>

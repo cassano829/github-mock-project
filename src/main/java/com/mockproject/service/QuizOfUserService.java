@@ -4,14 +4,7 @@ package com.mockproject.service;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.mockproject.model.Subject;
-import com.mockproject.repository.ClassRepository;
-import com.mockproject.repository.QuizOfClassRepository;
 import com.mockproject.repository.QuizOfUserRepository;
-import com.mockproject.repository.SubjectRepository;
-import com.mockproject.model.Class;
-import com.mockproject.model.Quiz;
-import com.mockproject.model.QuizOfClass;
 import com.mockproject.model.QuizOfUser;
 
 

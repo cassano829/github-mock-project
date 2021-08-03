@@ -1,76 +1,68 @@
+
+
 package com.mockproject.model;
 
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.*;
+import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import lombok.Data;
-
-
+/**
+ *
+ * @author Asus
+ */
 @Entity
-@Data
-@Table(name="Answers")
-public class Answer {
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idAnswer;
-    
+@Table(name = "Answers")
+public class Answer implements Serializable {
 
-    @Column(nullable = false, unique = true)
+    private int idAnswer;
+    private Question question;
     private String content;
-    
-    @Column(nullable = false, unique = true)
     private boolean isCorrect;
+
+    public Answer() {
+    }
+
+    public Answer(Question question, String answerContent, boolean isCorrect) {
+        this.question = question;
+        this.content = answerContent;
+        this.isCorrect = isCorrect;
+    }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idAnswer", unique = true, nullable = false)
+    public int getIdAnswer() {
+        return idAnswer;
+    }
+
+    public void setIdAnswer(int idAnswer) {
+        this.idAnswer = idAnswer;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idQuestion", nullable = false)
+    public Question getQuestion() {
+        return this.question;
+    }
     
-    @ManyToOne
-	@JoinColumn(name="idQuestion")
-	private Question question;
-
-	public Integer getIdAnswer() {
-		return idAnswer;
-	}
-
-	public void setIdAnswer(Integer idAnswer) {
-		this.idAnswer = idAnswer;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public boolean isCorrect() {
-		return isCorrect;
-	}
-
-	public void setCorrect(boolean isCorrect) {
-		this.isCorrect = isCorrect;
-	}
-
-	public Question getQuestion() {
-		return question;
-	}
-
-	public void setQuestion(Question question) {
-		this.question = question;
-	}
+    public void setQuestion(Question question) {
+        this.question = question;
+    }
     
-    
+    @Column(name = "content",nullable = false,length = 65535)
+    public String getContent() {
+        return content;
+    }
 
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-	
-    
+    @Column(name = "isCorrect",nullable = false)
+    public boolean isIsCorrect() {
+        return isCorrect;
+    }
+
+    public void setIsCorrect(boolean isCorrect) {
+        this.isCorrect = isCorrect;
+    }
 }

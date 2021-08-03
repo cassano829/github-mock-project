@@ -1,11 +1,14 @@
+
+
+
 package com.mockproject.model;
 
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-
+import java.io.Serializable;
+import java.util.Date;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,97 +16,88 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import org.springframework.format.annotation.DateTimeFormat;
+import java.util.HashSet;
+import java.util.Set;
 
-import lombok.Data;
-
-
+/**
+ *
+ * @author Asus
+ */
 @Entity
-@Data
-@Table(name="Questions")
-public class Question {
-	@Id
+@Table(name = "Questions")
+public class Question implements Serializable{
+
+    public Question() {
+    }
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idQuestion;
-    
-    @Column(nullable = false, unique = true)
-    private String content;
-    
-    @Column(nullable = false, unique = true, updatable = false)
+    @Column(name = "idQuestion", unique = true, nullable = false)
+    private int idQuestion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idQuiz")
+    private Quiz quiz;
+
+    @Column(name = "content")
+    private String contentQuestion;
+
     private boolean status;
-    
-    @Column(nullable = false, unique = true, updatable = false)
+
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private Date createDate;
 
-    
-    @ManyToOne
-	@JoinColumn(name="idQuiz")
-	private Quiz quiz;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "question", cascade = CascadeType.ALL)
+    private Set<Answer> answers = new HashSet<Answer>(0);
 
-   
-    @OneToMany(mappedBy = "question")
-	private List<Answer> answer = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "question")
-   	private List<QuizDetail> quizDetails = new ArrayList<>();
+    public int getIdQuestion() {
+        return idQuestion;
+    }
 
+    public void setIdQuestion(int idQuestion) {
+        this.idQuestion = idQuestion;
+    }
 
-	public Integer getIdQuestion() {
-		return idQuestion;
-	}
+    public Quiz getQuiz() {
+        return quiz;
+    }
 
+    public void setQuiz(Quiz quiz) {
+        this.quiz = quiz;
+    }
 
-	public void setIdQuestion(Integer idQuestion) {
-		this.idQuestion = idQuestion;
-	}
+    public String getContentQuestion() {
+        return contentQuestion;
+    }
 
+    public void setContentQuestion(String contentQuestion) {
+        this.contentQuestion = contentQuestion;
+    }
 
-	public String getContent() {
-		return content;
-	}
+    public boolean isStatus() {
+        return status;
+    }
 
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
 
-	public void setContent(String content) {
-		this.content = content;
-	}
+    public Date getCreateDate() {
+        return createDate;
+    }
 
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
 
-	public boolean isStatus() {
-		return status;
-	}
+    public Set<Answer> getAnswers() {
+        return answers;
+    }
 
-
-	public void setStatus(boolean status) {
-		this.status = status;
-	}
-
-
-	public Date getCreateDate() {
-		return createDate;
-	}
-
-
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
-
-
-	public Quiz getQuiz() {
-		return quiz;
-	}
-
-
-	public void setQuiz(Quiz quiz) {
-		this.quiz = quiz;
-	}
-
-
-	public List<Answer> getAnswer() {
-		return answer;
-	}
-
-
-	public void setAnswer(List<Answer> answer) {
-		this.answer = answer;
-	}
-    
+    public void setAnswers(Set<Answer> answers) {
+        this.answers = answers;
+    }
 }
