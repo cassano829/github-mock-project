@@ -6,11 +6,8 @@
 package com.mockproject.service;
 
 import com.mockproject.model.Quiz;
-import com.mockproject.model.QuizOfClass;
 import com.mockproject.repository.QuizOfClassRepository;
 import com.mockproject.repository.QuizRepository;
-import java.util.List;
-import java.util.Set;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -45,5 +42,9 @@ public class QuizService {
     
     public int getLastIdQuiz(){
         return quizRepository.getIdOfQuiz();
+    }
+    
+    public Page<Quiz> getAllQuizByIdSubjectAndIdTeacherAndNameQuiz(String nameQuiz,String idSubject,int idTeacher,Pageable pageable){
+        return  quizRepository.findAllByNameQuizAndIdSubjectAndIdUser(nameQuiz, idSubject, idTeacher, pageable);
     }
 }

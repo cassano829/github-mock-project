@@ -28,4 +28,8 @@ public interface QuizRepository extends JpaRepository<Quiz, Integer> {
 
     @Query(value = "SELECT max(idQuiz) FROM Quizes", nativeQuery = true)
     int getIdOfQuiz();
+    
+    @Query(value="SELECT q.* FROM Quizes q WHERE q.nameQuiz LIKE %?1% AND q.idSubject=?2 AND q.idUser=?3 ORDER BY q.idQuiz",
+            countQuery = "SELECT count(*) FROM Quizes q WHERE q.nameQuiz LIKE %?1% AND q.idSubject=?2 AND q.idUser=?3",nativeQuery = true)
+    Page<Quiz> findAllByNameQuizAndIdSubjectAndIdUser(String nameQuiz,String ibSubject,int idUser,Pageable pageable);
 }

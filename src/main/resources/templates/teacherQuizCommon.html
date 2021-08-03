@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Teacher Quiz List Page</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+              integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <link rel="stylesheet" th:href="@{/css/adminListAssignment.css}">
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+              integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    </head>
+
+    <body>
+
+        <header th:replace="~{/teacherAssignmentHeaderPage}"></header>
+        <!-- Page Content -->
+        <div id="content">
+            <div class="container-fluid">
+                <h3><i class="fas fa-book-open"></i> Quizes</h3>
+                <a><strong>Quizes</strong></a>
+                <ul class="as">
+                    <li class="act"><a th:href="@{'/teacher/quiz/showQuizesOfTeacher/'+${session.idSubject}+'/1'}">List Quizes</a></li>
+                    <li><a th:href="@{/teacher/quiz/create}">Add Quiz</a></li>
+                    <li style="float: right">
+                        <form class="form form-group" th:action="@{'/teacher/quiz/showQuizesOfTeacher/'+${session.idSubject}+'/1'}" method="get">
+                            <input type="text" placeholder="Search.." name="txtSearch" th:value="${search != null} ? ${search}:''">
+                            <button type="submit"><i class="fa fa-search"></i></button>
+                        </form>
+                    </li>
+                </ul>
+                <div class="main-container">
+                    <!--  -->
+                    <fieldset class="fs">
+                        <legend><strong>List Quizes</strong></legend>
+                        <div class="form-add-product">
+                            <div class="table table-responsive">
+                                <table class="tblinfo ">
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Name</th>
+                                        <th>Status</th>
+                                        <th>Open date</th>
+                                        <th>Due date</th>
+                                        <th>Number Of Question</th>
+                                        <th>Duration</th>
+                                        <th>Classes</th>
+                                        <th>Update</th>
+                                    </tr>
+                                    <tr th:each="quiz,state : ${quizes}">
+                                        <td>
+                                            <strong>
+                                                <span class="sub" th:text="${state.index}"></span>
+                                            </strong><br>
+
+                                        </td>
+                                        <td th:text="${quiz.nameQuiz}"></td>
+                                        <td th:text="${quiz.status}"></td>
+                                        <td th:text="${quiz.openDate}"></td>
+                                        <td th:text="${quiz.dueDate}"><span class="text-danger "></span></td>
+                                        <td th:text="${quiz.numOfQues}"></td>
+                                        <td th:text="${quiz.timeLimit}"></td>
+                                        <td>
+                                            <form th:action="@{/teacher/quiz/addClassToQuiz/1}" method="get">
+<!--                                                <input type="hidden" name="idSubject" th:value="${idSubject}">-->
+                                                <input type="hidden" name="idQuiz" th:value="${quiz.idQuiz}">
+                                                <button href="" class="btn justify-content-center"><i class="fas fa-eye" style="color: blue"></i></button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form th:action="@{/teacher/quiz/edit}" method="get">
+<!--                                                <input type="hidden" name="idSubject" th:value="${idSubject}">-->
+                                                <input type="hidden" name="idQuiz" th:value="${quiz.idQuiz}">
+                                                <button type="submit" class="btn justify-content-center"><i class="fas fa-edit" style="color: goldenrod"></i></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <!--  -->
+                </div>
+                <div class="paging" th:if="${quizes.getTotalPages() > 1}">
+                    <div>
+                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                        Page [[${page}]] of [[${quizes.getTotalPages()}]]
+                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+
+                        <a class="text-primary" th:if="${page > 1}" th:href="@{'/teacher/quiz/showQuizesOfTeacher/' + ${session.idSubject}+'/1?txtSearch='+${search}}">First</a>
+                        <b><span th:unless="${page > 1}">First</span></b>
+                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+
+                        <a class="text-primary" th:if="${page > 1}" th:href="@{'/teacher/quiz/showQuizesOfTeacher/'+ ${session.idSubject}+'/'+ ${page - 1}+'?txtSearch='+${search}}">Previous</a>
+                        <b><span th:unless="${page > 1}">Previous</span></b>
+                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+
+                        <span th:each="i : ${#numbers.sequence(1, quizes.getTotalPages())}">
+                            <a class="text-primary" th:if="${i != page}" th:href="@{'/teacher/quiz/showQuizesOfTeacher/' + ${session.idSubject}+'/'+${i}+'?txtSearch='+${search}}">[[${i}]]</a>
+                            <b><span th:unless="${i != page}">[[${i}]]</span></b>
+                            &nbsp;&nbsp;&nbsp;
+                        </span>
+                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+
+                        <a class="text-primary" th:if="${page < quizes.getTotalPages()}" th:href="@{'/teacher/quiz/showQuizesOfTeacher/'+ ${session.idSubject}+'/'+${page+1}+'?txtSearch='+${search}}">Next</a>
+                        <b><span th:unless="${page < quizes.getTotalPages()}">Next</span></b>
+                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+
+                        <a class="text-primary" th:if="${page < quizes.getTotalPages()}" th:href="@{'/teacher/quiz/showQuizesOfTeacher/' + ${session.idSubject} + '/' + ${quizes.getTotalPages()}+'?txtSearch='+${search}}">Last</a>
+                        <b><span th:unless="${page < quizes.getTotalPages()}">Last</span></b>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- jQuery CDN - Slim version (=without AJAX) -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js "
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo "
+crossorigin="anonymous "></script>
+<!-- Popper.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js "
+        integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ "
+crossorigin="anonymous "></script>
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js "
+        integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm "
+crossorigin="anonymous "></script>
+
+</body>
+
+</html>

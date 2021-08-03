@@ -20,11 +20,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  *
@@ -34,6 +31,15 @@ import lombok.ToString;
 @Data
 @Table(name = "Users")
 public class User implements Serializable {
+
+    public User(Integer idUser, String fullName, String email) {
+        this.idUser = idUser;
+        this.fullName = fullName;
+        this.email = email;
+    }
+
+    public User() {
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

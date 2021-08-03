@@ -49,8 +49,11 @@
                     <li>
                         <a href="teacher-assignment.html"><i class="fas fa-hand-point-right"></i>Assignment</a>
                     </li>
-                    <li class="act">
+                    <li class="act" th:if="${session.idClass != null}">
                         <a th:href="@{'/teacher/quiz/showListQuiz/'+${session.idClass}}+'/1'"><i class="fas fa-hand-point-right"></i>Quiz</a>
+                    </li>
+                    <li class="act" th:if="${session.idClass == null}">
+                        <a th:href="@{'/teacher/quiz/showQuizesOfTeacher/'+${session.idSubject}+'/1'}"><i class="fas fa-hand-point-right"></i>Quiz</a>
                     </li>
                 </ul>
             </nav>

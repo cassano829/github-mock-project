@@ -53,7 +53,7 @@
                         <a href="student-class-entered.html"><i class="fas fa-hand-point-right"></i>List Assignments</a>
                     </li>
                     <li class="act">
-                        <a th:href="@{'/student/quiz/showQuizesStudent/'+${session.class.idClass}}+'/'+${page}"><i class="fas fa-hand-point-right"></i>List Quizs</a>
+                        <a th:href="@{'/student/quiz/showQuizesStudent/'+${session.class.idClass}}+'/1'"><i class="fas fa-hand-point-right"></i>List Quizs</a>
                     </li>
                     <li>
                         <a href="student-mark-report.html"><i class="fas fa-hand-point-right"></i>Mark Report</a>
@@ -76,7 +76,7 @@
                                     </div>
                                     <br>
                                     <div>
-                                        <input type="submit" class="btn btn-finish btn-radius" name="action" value="Finish"/>
+                                        <input type="submit" id="submit-form" class="btn btn-finish btn-radius" name="action" value="Finish"/>
                                     </div>
                                 </div>
                             </div>
@@ -173,7 +173,7 @@
             var intervalCount = setInterval(function () {
             cal(timer);
             if (--timer < 0) {
-            $('#submit-form').submit();
+            $('#submit-form').click();
             clearInterval(intervalCount);
             }
             }, 1000);

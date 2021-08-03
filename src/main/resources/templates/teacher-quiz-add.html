@@ -50,8 +50,11 @@
                     <li>
                         <a href="teacher-assignment.html"><i class="fas fa-hand-point-right"></i>Assignment</a>
                     </li>
-                    <li class="act">
+                    <li class="act" th:if="${session.idClass != null}">
                         <a th:href="@{'/teacher/quiz/showListQuiz/'+${session.idClass}}+'/1'"><i class="fas fa-hand-point-right"></i>Quiz</a>
+                    </li>
+                    <li class="act" th:if="${session.idClass == null}">
+                        <a th:href="@{'/teacher/quiz/showQuizesOfTeacher/'+${session.idSubject}+'/1'}"><i class="fas fa-hand-point-right"></i>Quiz</a>
                     </li>
                 </ul>
             </nav>
@@ -130,12 +133,12 @@
         <!-- Bootstrap JS -->
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
         <script type="text/javascript">
-            function changeMinDueDate() {
-                document.getElementById("dueDate").setAttribute('min', document.getElementById("openDate").value);
-            }
-            function changeMaxOpenDate() {
-                document.getElementById("openDate").setAttribute('max', document.getElementById("dueDate").value);
-            }
+                                            function changeMinDueDate() {
+                                                document.getElementById("dueDate").setAttribute('min', document.getElementById("openDate").value);
+                                            }
+                                            function changeMaxOpenDate() {
+                                                document.getElementById("openDate").setAttribute('max', document.getElementById("dueDate").value);
+                                            }
         </script>
     </body>
 

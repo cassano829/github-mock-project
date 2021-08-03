@@ -21,6 +21,6 @@ public interface QuizOfStudentRepository extends JpaRepository<QuizOfStudent,Int
     @Query(value = "SELECT max(idQuizOfUser) FROM QuizesOfUser", nativeQuery = true)
     int getIdOfQuizOfUser();
     
-//    @Query("SELECT qs FROM QuizOfStudent qs WHERE qs.idQuizOfUser=(SELECT max(qos.idQuizOfUser) FROM QuizOfStudent qos JOIN qos.user u JOIN qos.quiz q WHERE u.idUser=?1 AND q.idQuiz=?2)")
-//    QuizOfStudent findByIdUserAndIdQuiz(int idUser,int idQuiz);
+    @Query("SELECT qs FROM QuizOfStudent qs WHERE qs.idUser=?1 AND qs.idQuiz=?2")
+    List<QuizOfStudent> findByIdUserAndIdQuiz(int idUser,int idQuiz);
 }

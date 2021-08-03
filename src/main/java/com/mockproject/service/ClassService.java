@@ -40,4 +40,8 @@ public class ClassService {
     public Page<Class> getAllClassByIdStudent(int idUser,Pageable pageable){
         return classRepository.findAllByIdUser(idUser,pageable);
     }
+    
+//    public List<Class> findClassByIdQuiz(int idQuiz){
+//        return classRepository.
+//    }
 }

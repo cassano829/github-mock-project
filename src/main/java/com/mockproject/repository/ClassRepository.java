@@ -27,4 +27,5 @@ public interface ClassRepository extends JpaRepository<Class, Integer>{
     
     @Query("SELECT c FROM Class c WHERE c.idClass in (SELECT uc.idClass FROM UserOfClass uc WHERE idUser=?1)")
     Page<Class> findAllByIdUser(int idStudent,Pageable pageable);
+    
 }

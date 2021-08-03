@@ -31,8 +31,8 @@ public class QuestionService {
         questionRepository.save(question);
     }
     
-    public List<Question> findListQuestionByIdQuiz(int idQuiz){
-        return questionRepository.findListQuestionByIdQuiz(idQuiz);
+    public List<Question> findListQuestionByIdQuiz(int numOfQues,int idQuiz){
+        return questionRepository.findListQuestionByIdQuiz(numOfQues,idQuiz);
     }
     
     public Page<Question> getQuestionsByIdQuiz(int idQuiz,Pageable pageable){

@@ -19,8 +19,8 @@ import org.springframework.data.jpa.repository.Query;
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Integer>{
     
-    @Query("SELECT q FROM Question q WHERE idQuiz=?1 AND status=1")
-    public List<Question> findListQuestionByIdQuiz(int idQuiz) ;
+    @Query(value="SELECT TOP(?1) q.* FROM Questions q WHERE idQuiz=?2 AND status=1 ORDER BY NEWID()",nativeQuery = true)
+    public List<Question> findListQuestionByIdQuiz(int numOfQues,int idQuiz) ;
     
     @Query("SELECT q FROM Question q WHERE idQuiz=?1 AND status=1")
     Page<Question> findAllByIdQuiz(int idQuiz,Pageable pageable);

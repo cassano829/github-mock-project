@@ -56,7 +56,7 @@ public class QuizController {
     public String showQuiz(HttpSession session,
             Model model, @PathVariable("idQuiz") int idQuiz) {
         Quiz quiz = quizService.getQuizByIdQuiz(idQuiz);
-        List<Question> questions = questionService.findListQuestionByIdQuiz(idQuiz);
+        List<Question> questions = questionService.findListQuestionByIdQuiz(quiz.getNumOfQues(),idQuiz);
         session.setAttribute("questions", questions);
         CustomUserDetail userDetail = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         QuizCart cart = new QuizCart(userDetail.getUser().getIdUser(), idQuiz);
@@ -108,14 +108,14 @@ public class QuizController {
 
         QuizOfStudent quizOfStudent = new QuizOfStudent();
         quizOfStudent.setIdQuiz(cart.getIdQuiz());
-        float score = (totalCorrect * 10 / questions.size());
+        double score = (totalCorrect * 10.0 / questions.size());
         if (score >= 5.0) {
             quizOfStudent.setPass(true);
         } else {
             quizOfStudent.setPass(false);
         }
         CustomUserDetail userDetail = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
+        quizOfStudent.setGrade(score);
         quizOfStudent.setIdUser(userDetail.getUser().getIdUser());
         quizOfStudent.setTotalCorrect(totalCorrect);
         quizOfStudent.setSubmitDate(df.format(new Date()));

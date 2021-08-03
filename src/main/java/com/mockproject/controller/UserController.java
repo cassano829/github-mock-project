@@ -7,12 +7,9 @@ package com.mockproject.controller;
 
 import com.mockproject.model.User;
 import com.mockproject.model.User_Role;
-import com.mockproject.security.CustomUserDetail;
 import com.mockproject.security.UserDetailServiceImp;
-import com.mockproject.service.ClassService;
 import com.mockproject.service.User_RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

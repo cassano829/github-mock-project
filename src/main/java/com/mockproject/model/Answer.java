@@ -75,8 +75,5 @@ public class Answer implements Serializable {
 
     public void setIsCorrect(boolean isCorrect) {
         this.isCorrect = isCorrect;
-    }
-
-    
-
+    }  
 }

@@ -5,8 +5,10 @@
  */
 package com.mockproject.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -32,7 +34,6 @@ public class Question {
 
     public Question() {
     }
-
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,7 +54,7 @@ public class Question {
     private Date createDate;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "question", cascade = CascadeType.ALL)
-    private Set<Answer> answers = new HashSet<Answer>(0);
+    private List<Answer> answers = new ArrayList<Answer>(0);
 
     public int getIdQuestion() {
         return idQuestion;
@@ -95,11 +96,13 @@ public class Question {
         this.createDate = createDate;
     }
 
-    public Set<Answer> getAnswers() {
+    public List<Answer> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(Set<Answer> answers) {
+    public void setAnswers(List<Answer> answers) {
         this.answers = answers;
     }
+
+   
 }

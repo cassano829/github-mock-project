@@ -6,7 +6,9 @@
 package com.mockproject.repository;
 
 import com.mockproject.model.QuizOfClass;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -14,5 +16,10 @@ import org.springframework.stereotype.Repository;
  * @author Asus
  */
 @Repository
-public interface QuizOfClassRepository extends JpaRepository<QuizOfClass,Integer>{
+public interface QuizOfClassRepository extends JpaRepository<QuizOfClass, Integer> {
+
+    @Query(value = "SELECT idClass FROM QuizesOfClass WHERE idQuiz=?1", nativeQuery = true)
+    List<Integer> findAllByIdQuiz(int idQuiz);
+
+    QuizOfClass findByIdQuizAndIdClass(int idQuiz, int idClass);
 }
