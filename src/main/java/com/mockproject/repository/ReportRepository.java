@@ -14,17 +14,17 @@ import com.mockproject.model.Subject;
 
 @Repository
 public interface ReportRepository extends JpaRepository<Report, Integer> {
-	List<Report> findReportByAssignment_idAssignmentAndClas_idClass(int idAssignment,int idClass);
+	List<Report> findReportByIdAssignmentAndIdClass(int idAssignment,int idClass);
 	
-	List<Report> findDistinctByQuiz_idQuizAndClas_idClass(int idQuiz,int idClass);
+	List<Report> findDistinctByIdQuizAndIdClass(int idQuiz,int idClass);
 	
-	List<Report> findReportByQuiz_idQuizAndClas_idClassAndUser_idUser(int idQuiz,int idClass,int idUser);
+	List<Report> findReportByIdQuizAndIdClassAndIdUser(int idQuiz,int idClass,int idUser);
 	
 
-	Report findReportByAssignment_idAssignmentAndClas_idClassAndUser_idUser(int idAssignment,int idClass,int idUser);
+	Report findReportByIdAssignmentAndIdClassAndIdUser(int idAssignment,int idClass,int idUser);
 	
 	
-	@Query(value = "SELECT max(grade) FROM Report r WHERE r.user.idUser=?1 and r.clas.idClass=?2 and r.quiz.idQuiz=?3")
+	@Query(value = "SELECT max(grade) FROM Report r WHERE r.idUser=?1 and r.idClass=?2 and r.idQuiz=?3")
 	public String findMaxQuizGrade(int idUser,int idClass,int idQuiz);
 	
 }

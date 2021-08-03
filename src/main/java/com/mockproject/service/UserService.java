@@ -23,6 +23,6 @@ public class UserService {
     UserRepository userRepository;
 
     public User findUserByidUser(int id){
-    	return userRepository.findUserByidUser(id);
+    	return userRepository.findUserByIdUser(id);
     }
 }

@@ -11,6 +11,5 @@ import com.mockproject.model.Subject;
 
 @Repository
 public interface AssignmentOfClassRepository extends JpaRepository<AssignmentOfClass, Integer> {
-	List<AssignmentOfClass> findAssignmentOfClassByClas_idClass(int idAssignmentOfClass);
-
+	List<AssignmentOfClass> findAssignmentOfClassByIdClass(int idAssignmentOfClass);
 }

@@ -40,13 +40,9 @@ public class UserOfClass {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idUserOfCLass;
 
-    @ManyToOne
-   	@JoinColumn(name="idClass")
-   	private Class clas;
+	private Integer idClass;
     
-    @ManyToOne
-   	@JoinColumn(name="idUser")
-   	private User user;
+	private Integer idUser;
 
 	public Integer getIdUserOfCLass() {
 		return idUserOfCLass;
@@ -56,21 +52,23 @@ public class UserOfClass {
 		this.idUserOfCLass = idUserOfCLass;
 	}
 
-	public Class getClas() {
-		return clas;
+	public Integer getIdClass() {
+		return idClass;
 	}
 
-	public void setClas(Class clas) {
-		this.clas = clas;
+	public void setIdClass(Integer idClass) {
+		this.idClass = idClass;
 	}
 
-	public User getUser() {
-		return user;
+	public Integer getIdUser() {
+		return idUser;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setIdUser(Integer idUser) {
+		this.idUser = idUser;
 	}
+
+	
     
     
 

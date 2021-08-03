@@ -66,11 +66,5 @@ public class Answer {
 
 	public void setQuestion(Question question) {
 		this.question = question;
-	}
-    
-    
-
-
-	
-    
+	}    
 }

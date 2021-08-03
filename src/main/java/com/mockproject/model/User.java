@@ -72,27 +72,6 @@ public class User implements Comparable<User> {
         }
         return false;
     }
-
-    @OneToMany(mappedBy = "user")
-	private List<Subject> subjects = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "user")
-	private List<Class> classes = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "user")
-	private List<Report> reportes = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "user")
-	private List<Quiz> quizes = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-  	private List<QuizOfUser> quizOfUsers = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "user")
-  	private List<Assignment> assignment = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "user")
-  	private List<UserOfClass> userOfClass = new ArrayList<>();
     
 	public Integer getIdUser() {
 		return idUser;
@@ -158,45 +137,6 @@ public class User implements Comparable<User> {
 		this.roles = roles;
 	}
 
-	public List<Subject> getSubjects() {
-		return subjects;
-	}
-
-	public void setSubjects(List<Subject> subjects) {
-		this.subjects = subjects;
-	}
-
-	public List<Class> getClasses() {
-		return classes;
-	}
-
-	public void setClasses(List<Class> classes) {
-		this.classes = classes;
-	}
-
-	public List<Report> getReportes() {
-		return reportes;
-	}
-
-	public void setReportes(List<Report> reportes) {
-		this.reportes = reportes;
-	}
-
-	public List<Quiz> getQuizes() {
-		return quizes;
-	}
-
-	public void setQuizes(List<Quiz> quizes) {
-		this.quizes = quizes;
-	}
-
-	public List<QuizOfUser> getQuizOfUsers() {
-		return quizOfUsers;
-	}
-
-	public void setQuizOfUsers(List<QuizOfUser> quizOfUsers) {
-		this.quizOfUsers = quizOfUsers;
-	}
 
 	@Override
 	public int compareTo(User o) {

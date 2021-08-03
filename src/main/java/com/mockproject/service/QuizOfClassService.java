@@ -5,9 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.mockproject.model.Subject;
-import com.mockproject.repository.ClassRepository;
 import com.mockproject.repository.QuizOfClassRepository;
-import com.mockproject.repository.SubjectRepository;
 import com.mockproject.model.Class;
 import com.mockproject.model.QuizOfClass;
 
@@ -18,6 +16,6 @@ public class QuizOfClassService {
 	private QuizOfClassRepository quizOfClassRepository;
 	
 	public List<QuizOfClass> findQuizOfClassByIdClass(int id){
-		return quizOfClassRepository.findQuizOfClassByClas_idClass(id);
+		return quizOfClassRepository.findQuizOfClassByIdClass(id);
 	}
 }

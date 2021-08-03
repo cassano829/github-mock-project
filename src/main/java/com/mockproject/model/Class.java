@@ -35,30 +35,14 @@ public class Class {
     @Column(nullable = false, unique = true, updatable = false)
     private Date createDate;
     
-    @Column(nullable = false, unique = true, updatable = false)
+    @Column
     private String password;
 
     
-    @ManyToOne
-	@JoinColumn(name="idUser")
-	private User user;
+    private Integer idUser;
 
     
-    @ManyToOne
-	@JoinColumn(name="idSubject")
-	private Subject subject;
-    
-    @OneToMany(mappedBy = "clas")
-	private List<Report> reports = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "clas")
-	private List<QuizOfClass> quizOfClass = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "clas")
-	private List<AssignmentOfClass> asignmentOfClass = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "clas")
-	private List<UserOfClass> userOfClass = new ArrayList<>();
+    private Integer idSubject;
 
 
 	public Integer getIdClass() {
@@ -111,27 +95,25 @@ public class Class {
 	}
 
 
-	public User getUser() {
-		return user;
+	public Integer getIdUser() {
+		return idUser;
 	}
 
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setIdUser(Integer idUser) {
+		this.idUser = idUser;
 	}
 
 
-	public Subject getSubject() {
-		return subject;
+	public Integer getIdSubject() {
+		return idSubject;
 	}
 
 
-	public void setSubject(Subject subject) {
-		this.subject = subject;
+	public void setIdSubject(Integer idSubject) {
+		this.idSubject = idSubject;
 	}
     
-    
 
-	
     
 }

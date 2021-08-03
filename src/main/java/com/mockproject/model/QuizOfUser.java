@@ -34,88 +34,85 @@ public class QuizOfUser {
     @Column
     private float grade;
     
-    @ManyToOne
-	@JoinColumn(name="idUser")
-	private User user;	
+    private Integer idUser;
 
     
-    @ManyToOne
-	@JoinColumn(name="idQuiz")
-	private Quiz quiz;
+   private Integer idQuiz;
     
+   	
     @OneToMany(mappedBy = "quizOfUser")
 	private List<QuizDetail> quizDetails = new ArrayList<>();
 
-    
-    
-	public QuizOfUser() {
-		
-	}
-
-	public QuizOfUser(boolean isPass, int totalCorrect, User user, Quiz quiz) {
-		super();
-		this.isPass = isPass;
-		this.totalCorrect = totalCorrect;
-		this.user = user;
-		this.quiz = quiz;
-	}
 
 	public Integer getIdQuizOfUser() {
 		return idQuizOfUser;
 	}
 
+
 	public void setIdQuizOfUser(Integer idQuizOfUser) {
 		this.idQuizOfUser = idQuizOfUser;
 	}
+
 
 	public boolean isPass() {
 		return isPass;
 	}
 
+
 	public void setPass(boolean isPass) {
 		this.isPass = isPass;
 	}
+
 
 	public int getTotalCorrect() {
 		return totalCorrect;
 	}
 
+
 	public void setTotalCorrect(int totalCorrect) {
 		this.totalCorrect = totalCorrect;
 	}
 
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public Quiz getQuiz() {
-		return quiz;
-	}
-
-	public void setQuiz(Quiz quiz) {
-		this.quiz = quiz;
-	}
-
-	public List<QuizDetail> getQuizDetails() {
-		return quizDetails;
-	}
-
-	public void setQuizDetails(List<QuizDetail> quizDetails) {
-		this.quizDetails = quizDetails;
-	}
 
 	public float getGrade() {
 		return grade;
 	}
 
+
 	public void setGrade(float grade) {
 		this.grade = grade;
 	}
-    
+
+
+	public Integer getIdUser() {
+		return idUser;
+	}
+
+
+	public void setIdUser(Integer idUser) {
+		this.idUser = idUser;
+	}
+
+
+	public Integer getIdQuiz() {
+		return idQuiz;
+	}
+
+
+	public void setIdQuiz(Integer idQuiz) {
+		this.idQuiz = idQuiz;
+	}
+
+
+	public List<QuizDetail> getQuizDetails() {
+		return quizDetails;
+	}
+
+
+	public void setQuizDetails(List<QuizDetail> quizDetails) {
+		this.quizDetails = quizDetails;
+	}
+
     
     
 }

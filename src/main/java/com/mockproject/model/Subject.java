@@ -32,16 +32,7 @@ public class Subject {
     private String createDate;
 
     
-    @ManyToOne
-	@JoinColumn(name="idUser")
-	private User user;
-    
-    @OneToMany(mappedBy = "subject")
-	private List<Class> classes = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "subject")
-	private List<Assignment> assignment = new ArrayList<>();
-
+	private Integer idUser;
 
 	public Integer getIdSubject() {
 		return idSubject;

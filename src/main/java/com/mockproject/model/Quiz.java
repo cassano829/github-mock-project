@@ -3,10 +3,12 @@ package com.mockproject.model;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,54 +28,32 @@ public class Quiz implements Comparable<Quiz> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idQuiz;
     
-    @Column(nullable = false, unique = true)
+    @Column
     private Integer numOfQues;
     
-    @Column(nullable = false, unique = true, updatable = false)
+    @Column
     private Date timeLimit;
     
-    @Column(nullable = false, unique = true, updatable = false)
+    @Column
     private boolean status;
     
-    @Column(nullable = false, unique = true, updatable = false)
+    @Column
     private Date createDate;
     
-    @Column(nullable = false, unique = true, updatable = false)
+    @Column
     private String name;
 
     
-    @ManyToOne
-	@JoinColumn(name="idUser")
-	private User user;
-
-   
-    @OneToMany(mappedBy = "quiz")
-	private List<Report> reports = new ArrayList<>();
-
-    @OneToMany(mappedBy = "quiz")
-	private List<QuizOfClass> quizOfClass = new ArrayList<>();
+    private Integer idUser;
     
-    @OneToMany(mappedBy = "quiz")
-	private List<Question> question = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL)
-	private List<QuizOfUser> quizOfUser = new ArrayList<>();
+    @OneToMany(mappedBy = "quiz",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Set<Question> question;
     
     
-    
-	public String getName() {
-		return name;
-	}
-
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-
 	public Integer getIdQuiz() {
 		return idQuiz;
 	}
+
 
 
 	public void setIdQuiz(Integer idQuiz) {
@@ -81,9 +61,11 @@ public class Quiz implements Comparable<Quiz> {
 	}
 
 
+
 	public Integer getNumOfQues() {
 		return numOfQues;
 	}
+
 
 
 	public void setNumOfQues(Integer numOfQues) {
@@ -91,9 +73,11 @@ public class Quiz implements Comparable<Quiz> {
 	}
 
 
+
 	public Date getTimeLimit() {
 		return timeLimit;
 	}
+
 
 
 	public void setTimeLimit(Date timeLimit) {
@@ -101,9 +85,11 @@ public class Quiz implements Comparable<Quiz> {
 	}
 
 
+
 	public boolean isStatus() {
 		return status;
 	}
+
 
 
 	public void setStatus(boolean status) {
@@ -111,9 +97,11 @@ public class Quiz implements Comparable<Quiz> {
 	}
 
 
+
 	public Date getCreateDate() {
 		return createDate;
 	}
+
 
 
 	public void setCreateDate(Date createDate) {
@@ -121,14 +109,40 @@ public class Quiz implements Comparable<Quiz> {
 	}
 
 
-	public User getUser() {
-		return user;
+
+	public String getName() {
+		return name;
 	}
 
 
-	public void setUser(User user) {
-		this.user = user;
+
+	public void setName(String name) {
+		this.name = name;
 	}
+
+
+
+	public Integer getIdUser() {
+		return idUser;
+	}
+
+
+
+	public void setIdUser(Integer idUser) {
+		this.idUser = idUser;
+	}
+
+
+	public Set<Question> getQuestion() {
+		return question;
+	}
+
+
+
+	public void setQuestion(Set<Question> question) {
+		this.question = question;
+	}
+
 
 
 	@Override

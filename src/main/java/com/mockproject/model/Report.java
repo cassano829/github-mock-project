@@ -26,22 +26,15 @@ public class Report {
     @Column(nullable = false, unique = true)
     private float grade;
     
-    @ManyToOne
-	@JoinColumn(name="idUser")
-	private User user;
+   
+	private Integer idUser;
 
 
-    @ManyToOne
-   	@JoinColumn(name="idQuiz")
-   	private Quiz quiz;
+	private Integer idQuiz;
     
-    @ManyToOne
-	@JoinColumn(name="idClass")
-	private Class clas;
+	private Integer idClass;
     
-    @ManyToOne
-	@JoinColumn(name="idAssignment")
-	private Assignment assignment;
+	private Integer idAssignment;
 
 	public Integer getIdReport() {
 		return idReport;
@@ -59,27 +52,37 @@ public class Report {
 		this.grade = grade;
 	}
 
-	public User getUser() {
-		return user;
+	public Integer getIdUser() {
+		return idUser;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setIdUser(Integer idUser) {
+		this.idUser = idUser;
 	}
 
-	public Quiz getQuiz() {
-		return quiz;
+	public Integer getIdQuiz() {
+		return idQuiz;
 	}
 
-	public void setQuiz(Quiz quiz) {
-		this.quiz = quiz;
+	public void setIdQuiz(Integer idQuiz) {
+		this.idQuiz = idQuiz;
 	}
 
-	public Class getClas() {
-		return clas;
+	public Integer getIdClass() {
+		return idClass;
 	}
 
-	public void setClas(Class clas) {
-		this.clas = clas;
+	public void setIdClass(Integer idClass) {
+		this.idClass = idClass;
 	}
+
+	public Integer getIdAssignment() {
+		return idAssignment;
+	}
+
+	public void setIdAssignment(Integer idAssignment) {
+		this.idAssignment = idAssignment;
+	}
+
+	
 }

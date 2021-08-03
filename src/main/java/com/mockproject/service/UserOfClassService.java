@@ -6,11 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.mockproject.model.Subject;
 import com.mockproject.model.UserOfClass;
-import com.mockproject.repository.ClassRepository;
 import com.mockproject.repository.QuizDetailRepository;
 import com.mockproject.repository.QuizOfClassRepository;
 import com.mockproject.repository.QuizOfUserRepository;
-import com.mockproject.repository.SubjectRepository;
 import com.mockproject.repository.UserOfClassRepository;
 import com.mockproject.model.Class;
 import com.mockproject.model.QuizDetail;
@@ -23,7 +21,7 @@ public class UserOfClassService {
 	@Autowired
 	private UserOfClassRepository userOfClassRepository;
 
-	public List<UserOfClass> findUserOfClassByClas_idClass(int id){
-		return userOfClassRepository.findUserOfClassByClas_idClass(id);
+	public List<UserOfClass> findUserOfClassByIdClass(int id){
+		return userOfClassRepository.findUserOfClassByIdClass(id);
 	}
 }

@@ -40,19 +40,10 @@ public class Assignment {
 	@Column(nullable = false, unique = true)
 	private Date createDate;
     
-	@OneToMany(mappedBy = "assignment")
-	private List<AssignmentOfClass> assignmentOfClasses = new ArrayList<>();
-	
-	@OneToMany(mappedBy = "assignment")
-	private List<Report> report = new ArrayList<>();
 
-	@ManyToOne
-	@JoinColumn(name="idSubject")
-	private Subject subject;
+	private Integer idSubject;
 	
-	@ManyToOne
-	@JoinColumn(name="idUser")
-	private User user;
+	private Integer idUser;
 
 	public Integer getIdAssignment() {
 		return idAssignment;
@@ -102,31 +93,21 @@ public class Assignment {
 		this.createDate = createDate;
 	}
 
-	public List<AssignmentOfClass> getAssignmentOfClasses() {
-		return assignmentOfClasses;
+	public Integer getIdSubject() {
+		return idSubject;
 	}
 
-	public void setAssignmentOfClasses(List<AssignmentOfClass> assignmentOfClasses) {
-		this.assignmentOfClasses = assignmentOfClasses;
+	public void setIdSubject(Integer idSubject) {
+		this.idSubject = idSubject;
 	}
 
-	public Subject getSubject() {
-		return subject;
+	public Integer getIdUser() {
+		return idUser;
 	}
 
-	public void setSubject(Subject subject) {
-		this.subject = subject;
+	public void setIdUser(Integer idUser) {
+		this.idUser = idUser;
 	}
 
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	
-	
     
 }

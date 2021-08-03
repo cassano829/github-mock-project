@@ -19,13 +19,7 @@ import org.springframework.stereotype.Repository;
  * @author ACER
  */
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
-
-    User findUserByEmail(String email);
-    
-    @Query("SELECT u FROM User u WHERE u.verificationCode = ?1")
-    public User findByVerificationCode(String code);
-    
-    User findUserByidUser(int id);
+public interface UserRepository extends JpaRepository<User, Integer> {    
+    User findUserByIdUser(int id);
     
 }

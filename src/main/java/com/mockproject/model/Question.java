@@ -43,8 +43,6 @@ public class Question {
     @OneToMany(mappedBy = "question")
 	private List<Answer> answer = new ArrayList<>();
     
-    @OneToMany(mappedBy = "question")
-   	private List<QuizDetail> quizDetails = new ArrayList<>();
 
 
 	public Integer getIdQuestion() {

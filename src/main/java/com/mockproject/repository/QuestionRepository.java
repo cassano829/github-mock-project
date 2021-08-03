@@ -11,7 +11,5 @@ import com.mockproject.model.Subject;
 
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Integer> {
-	List<Question> findQuestionByQuiz_idQuizAndStatus(int id,boolean status);
-	
-	List<Question> findQuestionByidQuestion(int id);
+	List<Question> findQuestionByIdQuestion(int id);
 }

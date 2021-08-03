@@ -25,14 +25,9 @@ public class AssignmentOfClass {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idAssignmentOfClass;
     
+	private Integer idClass;
     
-    @ManyToOne
-	@JoinColumn(name="idClass")
-	private Class clas;
-    
-    @ManyToOne
-	@JoinColumn(name="idAssignment")
-	private Assignment assignment;
+	private Integer idAssignment;
 
 	public Integer getIdAssignmentOfClass() {
 		return idAssignmentOfClass;
@@ -42,22 +37,22 @@ public class AssignmentOfClass {
 		this.idAssignmentOfClass = idAssignmentOfClass;
 	}
 
-	public Class getClas() {
-		return clas;
+	public Integer getIdClass() {
+		return idClass;
 	}
 
-	public void setClas(Class clas) {
-		this.clas = clas;
+	public void setIdClass(Integer idClass) {
+		this.idClass = idClass;
 	}
 
-	public Assignment getAssignment() {
-		return assignment;
+	public Integer getIdAssignment() {
+		return idAssignment;
 	}
 
-	public void setAssignment(Assignment assignment) {
-		this.assignment = assignment;
+	public void setIdAssignment(Integer idAssignment) {
+		this.idAssignment = idAssignment;
 	}
 
-    
-    
+	
+	
 }

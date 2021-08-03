@@ -25,14 +25,10 @@ public class QuizOfClass {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idQuizOfClass;
        
-    @ManyToOne
-	@JoinColumn(name="idClass")
-	private Class clas;
+	private Integer idClass;
 
     
-    @ManyToOne
-	@JoinColumn(name="idQuiz")
-	private Quiz quiz;
+    private Integer idQuiz;
 
 
 	public Integer getIdQuizOfClass() {
@@ -45,26 +41,25 @@ public class QuizOfClass {
 	}
 
 
-	public Class getClas() {
-		return clas;
+	public Integer getIdClass() {
+		return idClass;
 	}
 
 
-	public void setClas(Class clas) {
-		this.clas = clas;
+	public void setIdClass(Integer idClass) {
+		this.idClass = idClass;
 	}
 
 
-	public Quiz getQuiz() {
-		return quiz;
+	public Integer getIdQuiz() {
+		return idQuiz;
 	}
 
 
-	public void setQuiz(Quiz quiz) {
-		this.quiz = quiz;
+	public void setIdQuiz(Integer idQuiz) {
+		this.idQuiz = idQuiz;
 	}
     
     
-    
-    
+
 }

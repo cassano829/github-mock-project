@@ -12,5 +12,5 @@ import com.mockproject.model.UserOfClass;
 
 @Repository
 public interface UserOfClassRepository extends JpaRepository<UserOfClass, Integer> {
-	List<UserOfClass> findUserOfClassByClas_idClass(int id);
+	List<UserOfClass> findUserOfClassByIdClass(int id);
 }

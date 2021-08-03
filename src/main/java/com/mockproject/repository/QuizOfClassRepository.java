@@ -11,5 +11,5 @@ import com.mockproject.model.Subject;
 
 @Repository
 public interface QuizOfClassRepository extends JpaRepository<QuizOfClass, Integer> {
-	List<QuizOfClass> findQuizOfClassByClas_idClass(int id);
+	List<QuizOfClass> findQuizOfClassByIdClass(int id);
 }
