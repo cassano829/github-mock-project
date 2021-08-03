@@ -17,22 +17,25 @@
     <body>
         <header class="header" id="header">
             <nav class="navbar navbar-expand-lg navbar-light">
-                <h2><a exact="true" class="logo" href="shopping">LMS</a></h2>
+                <h2><a exact="true" class="logo" th:href="@{#}">LMS</a></h2>
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
                     </li>
                 </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link" href="#" id="navbarDropdown" style=" color: #7d99ff; " data-toggle="dropdown"
-                           aria-haspopup="true" aria-expanded="false" >
-                            <span sec:authentication="name">Username</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" th:href="@{/logout}">Logout</a>
-                        </div>
-                    </li>
-                </ul>
+                <div sec:authorize="isAuthenticated()">
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" id="navbarDropdown" style=" color: #7d99ff; " data-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="false" >
+                                Welcome <b><span sec:authentication="name">Username</span></b>
+                                <span sec:authentication="principal.authorities">Roles</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" th:href="@{/logout}">Logout</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
 
             </nav>
         </header>
@@ -43,20 +46,20 @@
                     <li>
                         <a href="student-home.html"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
                     </li>
-                    <li>
-                        <a href="student-account.html"><i class="fas fa-id-card"></i>Account</a>
-                    </li>
                     <li class="active">
                         <a th:href="@{/student/class/viewClassesOfStudent/1}"><i class="fas fa-list-ul"></i>Class</a>
                     </li>
                     <li>
-                        <a href="student-class-entered.html"><i class="fas fa-hand-point-right"></i>List Assignments</a>
+                        <a th:href="@{'/student/assignment/' + ${session.studentCurrentIdClass}}"><i class="fas fa-hand-point-right"></i>List Assignments</a>
                     </li>
                     <li class="act">
-                        <a th:href="@{'/student/quiz/showQuizesStudent/'+${session.class.idClass}}+'/'+${page}"><i class="fas fa-hand-point-right"></i>List Quizs</a>
+                        <a th:href="@{'/student/quiz/showQuizesStudent/' + ${session.class.idClass}}+'/1'"><i class="fas fa-hand-point-right"></i>List Quizzes</a>
                     </li>
                     <li>
-                        <a href="student-mark-report.html"><i class="fas fa-hand-point-right"></i>Mark Report</a>
+                        <a th:href="@{#}"><i class="fas fa-hand-point-right"></i>Mark Report</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/student/account}"><i class="fas fa-id-card"></i>Account</a>
                     </li>
                 </ul>
 
@@ -76,7 +79,7 @@
                                     </div>
                                     <br>
                                     <div>
-                                        <input type="submit" class="btn btn-finish btn-radius" name="action" value="Finish"/>
+                                        <input type="submit" id="submit-form" class="btn btn-finish btn-radius" name="action" value="Finish"/>
                                     </div>
                                 </div>
                             </div>
@@ -86,10 +89,10 @@
                         <div class="quiz-container mt-4">
                             <div class="row">
                                 <div class="col-md-12 body-content bg-white">
-                                    <h1 class="text-center text-danger">Subject ID - Subject Name</h1>
+                                    <h1 class="text-center text-danger" th:text="${session.nameQuiz}"></h1>
                                     <hr>
                                     <h2 id="question" th:text="'Question '+${questionIndex + 1}+': '+${session.questions.get(questionIndex).contentQuestion}">Question 1: How to use Spring boot?</h2>
-                                    <div class="form-group" id="answer-form" method="get">
+                                    <div class="form-group" id="answer-form" method="post">
                                         <div class="quiz-header">
                                             <ol type="A">
                                                 <li th:each="answer,state : ${session.questions.get(questionIndex).getAnswers()}">
@@ -116,7 +119,7 @@
                                         <div class="row question-panel text-center">
                                             <th:block th:if="${session.questions != null}">
                                                 <div th:each="question,state : ${session.questions}">
-                                                    <button class="btn btn-paging-question" type="submit" name="questionIndex"
+                                                    <button th:classappend="${state.index == questionIndex} ? 'bg-primary'" class="btn btn-paging-question" type="submit" name="questionIndex"
                                                             th:value="${state.index}"><span th:text="${state.index + 1}"></span></button>
                                                 </div>
                                             </th:block>
@@ -146,7 +149,16 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
                 integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
         crossorigin="anonymous"></script>
-        <script th:inline="javascript">
+        <script th:inline="javascript">  
+
+            function cal(timer) {
+            var minutes = parseInt(timer / 60, 10);
+            var seconds = parseInt(timer % 60, 10);
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+            document.querySelector('#timer').textContent = minutes + ":" + seconds;
+            }
+
             function submitQuiz() {
             $.ajax({
             url: 'quiz',
@@ -159,36 +171,58 @@
             });
             }
 
-            function cal(timer) {
-            var minutes = parseInt(timer / 60, 10);
-            var seconds = parseInt(timer % 60, 10);
-            minutes = minutes < 10 ? "0" + minutes : minutes;
-            seconds = seconds < 10 ? "0" + seconds : seconds;
-            document.querySelector('#timer').textContent = minutes + ":" + seconds;
-            }
-
             function startTimer(duration) {
             var timer = duration;
             cal(timer);
             var intervalCount = setInterval(function () {
             cal(timer);
             if (--timer < 0) {
-            $('#submit-form').submit();
+            document.getElementById("submit-form").click();
             clearInterval(intervalCount);
             }
+
             }, 1000);
             }
+
             window.onload = function () {
             var endTime = new Date(Date.parse(new Date([[${session.TimeStartQuiz}]])) + [[${session.timeLimit}]] * 60 * 1000);
             var curTime = new Date().getTime();
             var diff = Math.round((endTime - curTime) / 1000);
-            startTimer(diff);
+            var fiveMinutes = diff;
+            startTimer(fiveMinutes);
             }
-            $("input[type=radio]").click(function () {
-            if ($(this).prop("checked")) {
-            submitQuiz()
-            }
-            });
+
+//
+//            function cal(timer) {
+//            var minutes = parseInt(timer / 60, 10);
+//            var seconds = parseInt(timer % 60, 10);
+//            minutes = minutes < 10 ? "0" + minutes : minutes;
+//            seconds = seconds < 10 ? "0" + seconds : seconds;
+//            document.querySelector('#timer').textContent = minutes + ":" + seconds;
+//            }
+//
+//            function startTimer(duration) {
+//            var timer = duration;
+//            cal(timer);
+//            var intervalCount = setInterval(function () {
+//            cal(timer);
+//            if (--timer < 0) {
+//            $('#submit-form').click();
+//            clearInterval(intervalCount);
+//            }
+//            }, 1000);
+//            }
+//            window.onload = function () {
+//            var endTime = new Date(Date.parse(new Date([[${session.TimeStartQuiz}]])) + [[${session.timeLimit}]] * 60 * 1000);
+//            var curTime = new Date().getTime();
+//            var diff = Math.round((endTime - curTime) / 1000);
+//            startTimer(diff);
+//            }
+//            $("input[type=radio]").click(function () {
+//            if ($(this).prop("checked")) {
+//            submitQuiz()
+//            }
+//            });
         </script>
     </body>
 

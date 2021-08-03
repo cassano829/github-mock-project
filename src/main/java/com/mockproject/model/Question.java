@@ -5,9 +5,8 @@
  */
 package com.mockproject.model;
 
+import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,6 +20,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import org.springframework.format.annotation.DateTimeFormat;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -28,18 +29,17 @@ import org.springframework.format.annotation.DateTimeFormat;
  */
 @Entity
 @Table(name = "Questions")
-public class Question {
+public class Question implements Serializable{
 
     public Question() {
     }
 
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idQuestion", unique = true, nullable = false)
     private int idQuestion;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idQuiz")
     private Quiz quiz;
 
@@ -102,4 +102,5 @@ public class Question {
     public void setAnswers(Set<Answer> answers) {
         this.answers = answers;
     }
+
 }

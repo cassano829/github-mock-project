@@ -24,33 +24,34 @@ public class QuestionService {
     @Autowired
     QuestionRepository questionRepository;
 
-    public Question findbyId(int idQuestion){
-        return questionRepository. getById(idQuestion);
+    public Question findbyId(int idQuestion) {
+        return questionRepository.getById(idQuestion);
     }
+
     public void save(Question question) {
         questionRepository.save(question);
     }
-    
-    public List<Question> findListQuestionByIdQuiz(int idQuiz){
-        return questionRepository.findListQuestionByIdQuiz(idQuiz);
+
+    public List<Question> findListQuestionByIdQuiz(int limit, int idQuiz) {
+        return questionRepository.findListQuestionByIdQuiz(limit, idQuiz);
     }
-    
-    public Page<Question> getQuestionsByIdQuiz(int idQuiz,Pageable pageable){
-        return questionRepository.findAllByIdQuiz(idQuiz,pageable);
+
+    public Page<Question> getQuestionsByIdQuiz(int idQuiz, Pageable pageable) {
+        return questionRepository.findAllByIdQuiz(idQuiz, pageable);
     }
-    
-    public int findAnswerByIdCorrect(int questionId){
-        Question question=questionRepository.findById(questionId).get();
-        for(Answer answer:question.getAnswers()){
-            if(answer.isIsCorrect()){
+
+    public int findAnswerByIdCorrect(int questionId) {
+        Question question = questionRepository.findById(questionId).get();
+        for (Answer answer : question.getAnswers()) {
+            if (answer.isIsCorrect()) {
                 return answer.getIdAnswer();
             }
         }
         return -1;
     }
-    
-    public int countNumOfQuesOfQuiz(int idQuiz){
+
+    public int countNumOfQuesOfQuiz(int idQuiz) {
         return questionRepository.countNumOfQuesOfQuiz(idQuiz);
     }
-    
+
 }

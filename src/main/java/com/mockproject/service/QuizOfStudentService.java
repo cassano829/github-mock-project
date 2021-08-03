@@ -20,37 +20,37 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class QuizOfStudentService {
-    
+
     public final SimpleDateFormat df = new SimpleDateFormat("yyyy-MMM-dd hh:mm:ss");
-    
+
     @Autowired
     QuizOfStudentRepository repository;
-    
+
     @Autowired
     MailService mailService;
 
-    
-    public void save(QuizOfStudent quizOfStudent){
+    public void save(QuizOfStudent quizOfStudent) {
         repository.save(quizOfStudent);
     }
-    public int getIdOfQuizOfUser(){
+
+    public int getIdOfQuizOfUser() {
         return repository.getIdOfQuizOfUser();
     }
-    
-    public void sendEmailToNotifyQuiz(User user,int totalCorrect,int numOfQues){
+
+    public void sendEmailToNotifyQuiz(User user, int totalCorrect, int numOfQues) {
         String subject = "Notification for your quiz";
         String senderName = "Learning Management System Team";
-        float score=10/numOfQues*totalCorrect;
+        double score = 10.0 / numOfQues * totalCorrect;
         String mailContent = "<p>Dear " + user.getFullName() + ",<br>"
                 + "The following quiz submission was recorded by LMS.admin: <br>"
-                + "Student                 : "+user.getFullName()+" ("+user.getEmail()+")<br>"
-                + "Submitted Date          : "+df.format(new Date())+"<br>"
-                + "Number of correct answer: "+totalCorrect+"/"+numOfQues+"<br>"
-                + "Score                   : "+score+"</p>";
+                + "Student                 : " + user.getFullName() + " (" + user.getEmail() + ")<br>"
+                + "Submitted Date          : " + df.format(new Date()) + "<br>"
+                + "Number of correct answer: " + totalCorrect + "/" + numOfQues + "<br>"
+                + "Score                   : " + score + "</p>";
         mailContent += "<p>Thank you,<br> Learning Management System Team</p>";
         mailService.sendMailToNotify(subject, senderName, mailContent, user.getEmail());
     }
-    
+
 //    public QuizOfStudent getQuizReviewByIdStudentAndIdQuiz(int idUser,int idQuiz){
 //        return repository.findByIdUserAndIdQuiz(idUser, idQuiz);
 //    }

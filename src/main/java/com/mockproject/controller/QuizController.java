@@ -56,7 +56,8 @@ public class QuizController {
     public String showQuiz(HttpSession session,
             Model model, @PathVariable("idQuiz") int idQuiz) {
         Quiz quiz = quizService.getQuizByIdQuiz(idQuiz);
-        List<Question> questions = questionService.findListQuestionByIdQuiz(idQuiz);
+        int numOfQues = quiz.getNumOfQues();
+        List<Question> questions = questionService.findListQuestionByIdQuiz(numOfQues, idQuiz);
         session.setAttribute("questions", questions);
         CustomUserDetail userDetail = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         QuizCart cart = new QuizCart(userDetail.getUser().getIdUser(), idQuiz);
@@ -65,6 +66,7 @@ public class QuizController {
         Timestamp startQuiz = new Timestamp(System.currentTimeMillis());
         session.setAttribute("TimeStartQuiz", startQuiz);
         session.setAttribute("timeLimit", quiz.getTimeLimit());
+        session.setAttribute("nameQuiz", quiz.getNameQuiz());
         return "quiz";
     }
 
@@ -108,7 +110,7 @@ public class QuizController {
 
         QuizOfStudent quizOfStudent = new QuizOfStudent();
         quizOfStudent.setIdQuiz(cart.getIdQuiz());
-        float score = (totalCorrect * 10 / questions.size());
+        double score = (totalCorrect * 10.0 / questions.size());
         if (score >= 5.0) {
             quizOfStudent.setPass(true);
         } else {
@@ -119,8 +121,9 @@ public class QuizController {
         quizOfStudent.setIdUser(userDetail.getUser().getIdUser());
         quizOfStudent.setTotalCorrect(totalCorrect);
         quizOfStudent.setSubmitDate(df.format(new Date()));
-        int idQuizOfStudent = quizOfStudentService.getIdOfQuizOfUser();
-        quizOfStudent.setIdQuizOfUser(idQuizOfStudent + 1);
+        quizOfStudent.setGrade(score);
+//        int idQuizOfStudent = quizOfStudentService.getIdOfQuizOfUser();
+//        quizOfStudent.setIdQuizOfUser(idQuizOfStudent + 1);
         quizOfStudentService.save(quizOfStudent);
         for (Integer questionId : cart.getQuizCart().keySet()) {
             QuizDetail quizDetail = new QuizDetail();

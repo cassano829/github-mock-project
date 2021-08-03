@@ -1,11 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
+
 package com.mockproject.repository;
 
 import com.mockproject.model.Subject;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -17,5 +15,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SubjectRepository extends JpaRepository<Subject, String> {
 
-    Subject findByIdSubject(String idSubject);
+    List<Subject> findByNameSubjectContains(String nameSubject);
+
+    List<Subject> findAllByIdUser(int idUser);
+
+    @Query(value = "SELECT * FROM Subjects s WHERE status =1 OR status = 0 ORDER BY s.status DESC",nativeQuery = true)
+    List<Subject> findAll();
+
+    @Query(value = "SELECT * FROM Subjects s WHERE idSubject LIKE ?1 AND (status =1 OR status = 0)",nativeQuery = true)
+    Subject getByIdNonFilter(String idSubject);
+
 }

@@ -10,7 +10,6 @@ html, body {
 .main-content{
     box-shadow: 2px 3px 3px rgba(0,0,0,.2);
     width: 100%;
-    height: 50%;
 }
 .bg{
     display: flex;

@@ -11,9 +11,9 @@ import org.springframework.stereotype.Repository;
 
 /**
  *
- * @author Asus
+ * @author ACER
  */
 @Repository
-public interface QuizDetailRepository extends JpaRepository<QuizDetail, Integer> {
-
+public interface QuizDetailRepository extends JpaRepository<QuizDetail, Integer>{
+    
 }

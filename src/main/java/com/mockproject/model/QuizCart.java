@@ -10,17 +10,18 @@ import java.util.HashMap;
 
 /**
  *
- * @author Asus
+ * @author ACER
  */
 public class QuizCart implements Serializable{
+
     private int idUser;
     private int idQuiz;
-    
+
     private HashMap<Integer, Integer> quizCart;
 
-    public QuizCart(int user_id,int idQuiz) {
+    public QuizCart(int user_id, int idQuiz) {
         this.idUser = user_id;
-        this.idQuiz=idQuiz;
+        this.idQuiz = idQuiz;
         this.quizCart = new HashMap<>();
     }
 
@@ -40,8 +41,6 @@ public class QuizCart implements Serializable{
         this.idUser = idUser;
     }
 
-    
-
     public HashMap<Integer, Integer> getQuizCart() {
         return quizCart;
     }
@@ -49,5 +48,4 @@ public class QuizCart implements Serializable{
     public void setQuizCart(HashMap<Integer, Integer> quizCart) {
         this.quizCart = quizCart;
     }
-
 }

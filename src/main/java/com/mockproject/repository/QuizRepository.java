@@ -25,7 +25,9 @@ public interface QuizRepository extends JpaRepository<Quiz, Integer> {
     @Query(value = "SELECT * FROM Quizes WHERE nameQuiz LIKE %?1% AND idQuiz IN (SELECT qc.idQuiz FROM QuizesOfClass qc WHERE qc.idClass=?2) ORDER BY idQuiz DESC",
             countQuery = "SELECT count(*) FROM Quizes WHERE nameQuiz LIKE %?1% AND idQuiz IN (SELECT qc.idQuiz FROM QuizesOfClass qc WHERE qc.idClass=?2)", nativeQuery = true)
     Page<Quiz> findAllByNameQuiz(String nameQuiz, int idClass, Pageable pageable);
+        
+    Quiz findQuizByIdQuiz(Integer idQuiz);
 
-    @Query(value = "SELECT max(idQuiz) FROM Quizes", nativeQuery = true)
-    int getIdOfQuiz();
+//    @Query(value = "SELECT max(idQuiz) FROM Quizes", nativeQuery = true)
+//    int getIdOfQuiz();
 }

@@ -12,13 +12,13 @@ import org.springframework.stereotype.Service;
 
 /**
  *
- * @author Asus
+ * @author ACER
  */
 @Service
 public class QuizDetailService {
     @Autowired
     QuizDetailRepository repository;
-    
+
     public void insertQuizDetail(QuizDetail quizDetail){
         repository.save(quizDetail);
     }

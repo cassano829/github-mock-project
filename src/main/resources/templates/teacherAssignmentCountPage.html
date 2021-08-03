@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Teacher Assignment Count Page</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+              integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <link rel="stylesheet" th:href="@{/css/adminCountAssignment.css}">
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+              integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+        <script src="https://cdn.ckeditor.com/ckeditor5/29.0.0/classic/ckeditor.js"></script>
+
+        <style>
+            td:nth-child(odd) {
+                font-weight: normal;
+            }
+            form {
+                text-align: left;
+            }
+            .btn:hover, .btn:focus{
+                background-color: #017BFF;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <header th:replace="~{/teacherAssignmentHeaderPage}"></header>
+        <!-- Page Content -->
+
+        <div id="content">
+            <div class="container-fluid">
+
+                <ul class="as rounded">
+                    <li class="bg-secondary"><a th:href="@{/teacher/assignment/list}">List Assignment</a></li>
+                    <li><a th:href="@{/teacher/assignment/create}">Create</a></li>
+                </ul>
+
+                <div class="main-container">
+
+                    <form th:action="@{/teacher/assignment/grade/class}">
+
+                        <a class="collapsible border rounded bg-white">
+                            <i class="fas fa-sort-down"></i><strong>Assignment Detail</strong>
+                        </a>
+
+                        <div class="con border rounded mt-3 p-3 bg-white">
+
+                            <div class="mb-3">
+                                <label>
+                                    <strong>Subject</strong>
+                                </label>
+                                <div>
+                                    <input class="form-control col-5" th:value="${assignmentData.idSubject}" readonly>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label>
+                                    <strong>Title</strong>
+                                </label>
+                                <div>
+                                    <input class="form-control col-5" th:value="${assignmentData.title}" readonly>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label>
+                                    <strong>Content</strong>
+                                </label>
+                                <div>
+                                    <textarea id="editors" th:utext="${assignmentData.content}" readonly></textarea>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div th:if="${assignmentData.attachments != null and !assignmentData.attachments.empty}">
+                                    <label>Download link: </label>
+                                    <a class="text-primary" th:href="@{${assignmentData.attachments}}" download>download</a>
+                                </div>
+
+                                <div th:unless="${assignmentData.attachments != null and !assignmentData.attachments.empty}">
+                                    <label>Download link: No files to download</label>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label>
+                                    <strong>Create Date</strong>
+                                </label>
+                                <div>
+                                    <input readonly type="datetime-local" class="form-control col-5" th:value="${#dates.format(assignmentData.createDate,'yyyy-MM-dd')}+'T'+${#dates.format(assignmentData.createDate,'HH:mm:ss')}">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label>
+                                    <strong>Deadline</strong>
+                                </label>
+                                <div>
+                                    <input readonly type="datetime-local" class="form-control col-5" th:value="${#dates.format(assignmentData.deadline,'yyyy-MM-dd')}+'T'+${#dates.format(assignmentData.deadline,'HH:mm:ss')}">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label><strong>Create By :</strong></label><span th:text="${#authentication.getPrincipal().getUser().getFullName()}"></span>
+                            </div>
+                        </div>
+
+                        <div class="border rounded bg-white mt-3 mb-3 p-2">
+                            <label><strong>Choose class</strong></label>
+                            <div>
+                                <span th:if="${listAssignmentOfClass==null or listAssignmentOfClass.empty}">This assignment 0 class</span>
+                               
+                                <div th:if="${listAssignmentOfClass!=null and !listAssignmentOfClass.empty}">
+                                    <select class="form-control col-5"  th:name="idClass">
+                                        <option th:each="class : ${listAssignmentOfClass}" th:value="${class.idClass}" th:text="${'['+ class.idClass +'] ' + mapClasses.get(class.idClass)}">
+                                    </select>
+                                    <button class="btn btn-primary mt-3" type="submit">Select</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div th:unless="${assignmentOfUsers!=null and !assignmentOfUsers.empty}">
+                            <h3 class="text-danger">This assignment has no submission</h3>
+                        </div>
+
+                        <div th:if="${assignmentOfUsers!=null and !assignmentOfUsers.empty}">
+                            <table class="table bg-white border rounded">
+
+                                <tr>
+                                    <th>Id Assignment Of Student</th>
+                                    <th>Id Class</th>
+                                    <th>Id User</th>
+                                    <th>Full Name</th>
+                                    <th>Upload Time</th>
+                                    <th>Detail and Grading</th>
+                                </tr>
+
+                                <tr th:each="assignmentOfUser : ${assignmentOfUsers}">
+                                    <td th:text="${assignmentOfUser.idAssignmentOfUser}"></td>
+                                    <td th:text="${assignmentOfUser.idClass}"></td>
+                                    <td th:text="${assignmentOfUser.idUser}"></td>
+                                    <td th:text="${mapUser.get(assignmentOfUser.idUser).fullName}"></td>
+                                    <td th:text="${assignmentOfUser.uploadTime}"></td>
+                                    <td>
+                                        <a class="text-primary" th:href="@{'/teacher/assignment/grade/detail/' + ${assignmentOfUser.idAssignmentOfUser}}">grade</a>
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </div>
+                    </form>
+
+                    <strong th:if="${assignmentOfStudents!=null and !assignmentOfStudents.empty}">
+                        <a class="sub" th:if="${assignmentOfStudents.getTotalPages() > 1}" th:each="i : ${#numbers.sequence(1, assignmentOfStudents.getTotalPages())}" th:href="@{'/teacher/assignment/grade/class/page/' + ${i}}" th:text="${i + '  '}"></a>
+                    </strong>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let editor;
+        ClassicEditor
+                .create(document.querySelector('#editors'))
+                .then(newEditor => {
+                    editor = newEditor;
+                    editor.isReadOnly = true;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+    </script>
+
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js "
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo "
+    crossorigin="anonymous "></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js "
+            integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ "
+    crossorigin="anonymous "></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js "
+            integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm "
+    crossorigin="anonymous "></script>
+    <script>
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+
+        for (i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "block";
+                }
+            });
+        }
+    </script>
+
+</body>
+
+</html>
