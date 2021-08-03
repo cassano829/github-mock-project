@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -66,11 +67,12 @@ public class AssignmentTeacherController {
         return "teacherAssignmentListPage";
     }
 
-    @GetMapping("/assignmentOfClass/{id}")
-    public String showAssignmentOfClass(HttpSession session, @PathVariable("id") Integer idClass, Model model) {
+//    @GetMapping("/assignmentOfClass/{id}")
+    @GetMapping("/assignmentOfClass/{id}/{page}")
+    public String showAssignmentOfClass(@PathVariable("page") int pageNumber, HttpSession session, @PathVariable("id") Integer idClass, Model model) {
 //        String idSubject = assignmentClassRepository.findById(idClass).get().getIdSubject();
 //        session.setAttribute("teacherSubjectAssignment", idSubject);
-        List<Assignment> list = assignmentRepository.getListClassesByIdAssignmentInside(idClass);
+        Page<Assignment> list = assignmentRepository.getListAssignmentOfClass(idClass, PageRequest.of(pageNumber - 1, 4));
         model.addAttribute("class", assignmentClassRepository.findById(idClass).get());
         model.addAttribute("listAssignmentOfClass", list);
         return "assignmentOfClass";

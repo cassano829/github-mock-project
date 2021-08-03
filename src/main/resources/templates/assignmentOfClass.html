@@ -69,10 +69,10 @@
                     </div>
 
                     <div class="main-container">
-                        <div th:if="${listAssignmentOfClass.size() == 0}">
+                        <div th:if="${listAssignmentOfClass.getTotalElements() == 0}">
                             <h3 class="text-danger" text-center>Empty Assignment!</h3>
                         </div>
-                        <div th:unless="${listAssignmentOfClass.size() == 0}">
+                        <div th:unless="${listAssignmentOfClass.getTotalElements() == 0}">
                             <div class="row pb-5 mb-4">
                                 <div class="col-3 mt-4" th:each="assignment : ${listAssignmentOfClass}">
                                     <!-- Card-->
@@ -90,6 +90,9 @@
                                     </div>
                                 </div>
                             </div>
+                            <strong>
+                                <a class="sub" th:if="${listAssignmentOfClass.getTotalPages() > 1}" th:each="i : ${#numbers.sequence(1, listAssignmentOfClass.getTotalPages())}" th:href="@{'/teacher/assignment/assignmentOfClass/' + ${class.idClass} + '/' + ${i}}" th:text="${i + '  '}"></a>
+                            </strong>
                         </div>
 
                     </div>
