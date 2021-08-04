@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.mockproject.repository;
 
 import com.mockproject.model.Assignment;
@@ -25,6 +20,6 @@ public interface AssignmentRepository extends CrudRepository<Assignment, Integer
     @Query("from Assignment a where a.status = 1 and a.idAssignment in (select aoc.idAssignment from AssignmentsOfClass aoc where aoc.idClass = ?1)")
     public Page<Assignment> getListAssignmentOfClass(Integer idClass, Pageable pageable);
 
-//    @Query(value = "SELECT a FROM Assignment a WHERE a.status = 1 and a.idAssignment in (SELECT aoc.idAssignment FROM AssignmentsOfClass aoc WHERE aoc.idClass = ?1)")
-//    public List<Assignment> getListClassesByIdAssignmentInside(Integer idClass);
+    Assignment findAssignmentByIdAssignment(int idClass);
+
 }

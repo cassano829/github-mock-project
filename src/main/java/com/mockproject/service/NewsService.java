@@ -55,7 +55,7 @@ public class NewsService {
         news.setStatus(false);
         save(news);
     }
-    
+
     public void restore(Integer id) {
         News news = getNewsById(id);
         news.setStatus(true);

@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping(value = "/subject")
@@ -37,7 +38,7 @@ public class SubjectController {
     private final Validator validator = factory.getValidator();
 
     @RequestMapping(value = "/teacher")
-    public String subjectTeacherPage(Model model){
+    public String subjectTeacherPage(HttpSession session, Model model){
         List<Subject> subjectList = service.searchByName("");
         for (Subject s : subjectList) {
             try {
@@ -47,6 +48,7 @@ public class SubjectController {
             }
         }
         model.addAttribute("subject_list", subjectList);
+        session.removeAttribute("idClass");
         return "teacher-subject";
     }
 

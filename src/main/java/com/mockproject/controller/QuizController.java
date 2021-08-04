@@ -9,11 +9,11 @@ import com.mockproject.model.Question;
 import com.mockproject.model.Quiz;
 import com.mockproject.model.QuizCart;
 import com.mockproject.model.QuizDetail;
-import com.mockproject.model.QuizOfStudent;
+import com.mockproject.model.QuizOfUser;
 import com.mockproject.security.CustomUserDetail;
 import com.mockproject.service.QuestionService;
 import com.mockproject.service.QuizDetailService;
-import com.mockproject.service.QuizOfStudentService;
+import com.mockproject.service.QuizOfUserService;
 import com.mockproject.service.QuizService;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -39,18 +39,15 @@ public class QuizController {
 
     @Autowired
     QuestionService questionService;
-
-//    @Autowired
-//    AnswerService answerService;
+    
     @Autowired
-    QuizOfStudentService quizOfStudentService;
+    QuizOfUserService quizOfUserService;
 
     @Autowired
     QuizDetailService quizDetailService;
 
     @Autowired
     QuizService quizService;
-    
 
     @GetMapping("/student/quiz/showQuiz/{idQuiz}")
     public String showQuiz(HttpSession session,
@@ -93,11 +90,13 @@ public class QuizController {
 
         if (request.getParameter("action") != null && request.getParameter("action").equals("Finish")) {
             page = submitQuiz(session, model, request);
+
         }
         return page;
     }
 
     public String submitQuiz(HttpSession session, Model model, HttpServletRequest request) {
+
         QuizCart cart = (QuizCart) session.getAttribute("quizCart");
         int totalCorrect = 0;
         List<Question> questions = (List<Question>) session.getAttribute("questions");
@@ -108,7 +107,7 @@ public class QuizController {
             }
         }
 
-        QuizOfStudent quizOfStudent = new QuizOfStudent();
+        QuizOfUser quizOfStudent = new QuizOfUser();
         quizOfStudent.setIdQuiz(cart.getIdQuiz());
         double score = (totalCorrect * 10.0 / questions.size());
         if (score >= 5.0) {
@@ -122,36 +121,21 @@ public class QuizController {
         quizOfStudent.setTotalCorrect(totalCorrect);
         quizOfStudent.setSubmitDate(df.format(new Date()));
         quizOfStudent.setGrade(score);
-//        int idQuizOfStudent = quizOfStudentService.getIdOfQuizOfUser();
-//        quizOfStudent.setIdQuizOfUser(idQuizOfStudent + 1);
-        quizOfStudentService.save(quizOfStudent);
+        quizOfUserService.save(quizOfStudent);
         for (Integer questionId : cart.getQuizCart().keySet()) {
             QuizDetail quizDetail = new QuizDetail();
             quizDetail.setIdQuestion(questionId);
-            quizDetail.setQuizOfStudent(quizOfStudent);
+            quizDetail.setQuizOfUser(quizOfStudent);
             quizDetail.setUserAnswer(cart.getQuizCart().get(questionId));
             quizDetailService.insertQuizDetail(quizDetail);
         }
 
         //send notification
-        quizOfStudentService.sendEmailToNotifyQuiz(userDetail.getUser(), totalCorrect, questions.size());
-
+        quizOfUserService.sendEmailToNotifyQuiz(userDetail.getUser(), totalCorrect, questions.size());
         session.removeAttribute("quizCart");
         session.removeAttribute("questionIndex");
         session.removeAttribute("TimeStartQuiz");
-        return "studentHome";
+        return "redirect:/student/markReport";
     }
-
-//    @GetMapping("/quizReview/{idQuiz}")
-//    public String viewQuizReviewPage(Model model,@PathVariable("idQuiz") int idQuiz) {
-//        CustomUserDetail userDetail = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        QuizOfStudent quizOfStudent=quizOfStudentService.getQuizReviewByIdStudentAndIdQuiz(userDetail.getUser().getIdUser(), idQuiz);
-//        System.out.println(quizOfStudent.getQuiz().getNameQuiz());
-//        System.out.println(quizOfStudent.getSubmitDate());
-//        model.addAttribute("quizReview", quizOfStudent);
-//        
-//        return "quiz-review";
-//    }
-    
 
 }

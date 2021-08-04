@@ -87,6 +87,7 @@ public class AssignmentStudentController {
     @PostMapping("create/submit")
     public String assignmentCreateSubmitionSubmit(AssignmentsOfUser assignmentsOfUser) {
         assignmentsOfUser.setUploadTime(new Date());
+        assignmentsOfUser.setGrade(-1);
         assignmentsOfUserRepository.save(assignmentsOfUser);
         return "redirect:/student/assignment/create/" + assignmentsOfUser.getIdAssignment() + "?success=1";
     }
@@ -115,6 +116,7 @@ public class AssignmentStudentController {
             _assignmentsOfUser.setContent(assignmentsOfUser.getContent());
             _assignmentsOfUser.setUploadTime(new Date());
             _assignmentsOfUser.setAttachments(assignmentsOfUser.getAttachments());
+            _assignmentsOfUser.setGrade(assignmentsOfUser.getGrade());
             assignmentsOfUserRepository.save(_assignmentsOfUser);
         }
         return "redirect:/student/assignment/update/" + assignmentsOfUser.getIdAssignment() + "?success=1";

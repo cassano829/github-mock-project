@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -12,7 +13,6 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 /**
  *
@@ -21,12 +21,15 @@ import org.springframework.data.repository.query.Param;
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Integer> {
 
-    @Query(value="SELECT TOP(?1) q.* FROM Questions q WHERE idQuiz=?2 AND status=1 ORDER BY NEWID()",nativeQuery = true)
-    public List<Question> findListQuestionByIdQuiz(int numOfQues, int idQuiz) ;
+    @Query(value = "SELECT TOP(?1) q.* FROM Questions q WHERE idQuiz=?2 AND status=1 ORDER BY NEWID()", nativeQuery = true)
+    public List<Question> findListQuestionByIdQuiz(int numOfQues, int idQuiz);
 
     @Query("SELECT q FROM Question q WHERE idQuiz=?1 AND status=1")
     Page<Question> findAllByIdQuiz(int idQuiz, Pageable pageable);
 
     @Query(value = "SELECT count(*) FROM Questions WHERE status=1 AND idQuiz=?1 ", nativeQuery = true)
     int countNumOfQuesOfQuiz(int idQuiz);
+
+    List<Question> findQuestionByIdQuestion(int id);
+
 }

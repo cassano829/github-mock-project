@@ -1,40 +1,31 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.mockproject.service;
 
-import com.mockproject.model.QuizOfStudent;
-import com.mockproject.model.User;
-import com.mockproject.repository.QuizOfStudentRepository;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.mockproject.repository.QuizOfUserRepository;
+import com.mockproject.model.QuizOfUser;
+import com.mockproject.model.User;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-/**
- *
- * @author Asus
- */
 @Service
-public class QuizOfStudentService {
+public class QuizOfUserService {
 
     public final SimpleDateFormat df = new SimpleDateFormat("yyyy-MMM-dd hh:mm:ss");
 
     @Autowired
-    QuizOfStudentRepository repository;
-
-    @Autowired
     MailService mailService;
 
-    public void save(QuizOfStudent quizOfStudent) {
-        repository.save(quizOfStudent);
+    @Autowired
+    private QuizOfUserRepository quizOfUserRepository;
+
+    public void save(QuizOfUser quizOfStudent) {
+        quizOfUserRepository.save(quizOfStudent);
     }
 
     public int getIdOfQuizOfUser() {
-        return repository.getIdOfQuizOfUser();
+        return quizOfUserRepository.getIdOfQuizOfUser();
     }
 
     public void sendEmailToNotifyQuiz(User user, int totalCorrect, int numOfQues) {
@@ -51,7 +42,16 @@ public class QuizOfStudentService {
         mailService.sendMailToNotify(subject, senderName, mailContent, user.getEmail());
     }
 
-//    public QuizOfStudent getQuizReviewByIdStudentAndIdQuiz(int idUser,int idQuiz){
-//        return repository.findByIdUserAndIdQuiz(idUser, idQuiz);
-//    }
+    public List<QuizOfUser> findQuizOfUserByIdUserAndIdQuiz(int idUser, int idQuiz) {
+        return quizOfUserRepository.findQuizOfUserByIdUserAndIdQuiz(idUser, idQuiz);
+    }
+
+    public Double findMaxQuizGrade(int idUser, int idQuiz) {
+        return quizOfUserRepository.findMaxQuizGrade(idUser, idQuiz);
+    }
+
+    public QuizOfUser findByIdQuizOfUser(int idQuizOfUser) {
+        return quizOfUserRepository.findByIdQuizOfUser(idQuizOfUser);
+    }
+
 }

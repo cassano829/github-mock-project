@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -25,9 +26,11 @@ public interface QuizRepository extends JpaRepository<Quiz, Integer> {
     @Query(value = "SELECT * FROM Quizes WHERE nameQuiz LIKE %?1% AND idQuiz IN (SELECT qc.idQuiz FROM QuizesOfClass qc WHERE qc.idClass=?2) ORDER BY idQuiz DESC",
             countQuery = "SELECT count(*) FROM Quizes WHERE nameQuiz LIKE %?1% AND idQuiz IN (SELECT qc.idQuiz FROM QuizesOfClass qc WHERE qc.idClass=?2)", nativeQuery = true)
     Page<Quiz> findAllByNameQuiz(String nameQuiz, int idClass, Pageable pageable);
-        
+
     Quiz findQuizByIdQuiz(Integer idQuiz);
 
-//    @Query(value = "SELECT max(idQuiz) FROM Quizes", nativeQuery = true)
-//    int getIdOfQuiz();
+    @Query(value = "SELECT q.* FROM Quizes q WHERE q.nameQuiz LIKE %?1% AND q.idSubject=?2 AND q.idUser=?3 ORDER BY q.idQuiz DESC",
+            countQuery = "SELECT count(*) FROM Quizes q WHERE q.nameQuiz LIKE %?1% AND q.idSubject=?2 AND q.idUser=?3", nativeQuery = true)
+    Page<Quiz> getAllQuizByIdSubjectAndIdTeacherAndNameQuiz(String nameQuiz, String ibSubject, int idUser, Pageable pageable);
+
 }

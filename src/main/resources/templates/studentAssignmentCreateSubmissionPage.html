@@ -115,14 +115,7 @@
                         <input type="hidden" th:name="idAssignment" th:value="${assignmentData.idAssignment}">
                         <input type="hidden" th:name="idClass" th:value="${session.studentCurrentIdClass}">
 
-                        <div class="mb-3">
-                            <label>
-                                <strong>Id User</strong>
-                            </label>
-                            <div>
-                                <input class="form-control col-5" th:value="${#authentication.getPrincipal().getUser().getFullName() + ', id = ' + #authentication.getPrincipal().getUser().getIdUser()}" readonly>
-                            </div>
-                        </div>
+                        
                         <div class="mb-3">
                             <label>
                                 <strong>Content</strong>

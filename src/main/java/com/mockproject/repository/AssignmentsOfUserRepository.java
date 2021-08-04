@@ -16,11 +16,13 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  *
  * @author truon
  */
-public interface AssignmentsOfUserRepository extends CrudRepository<AssignmentsOfUser, Integer>, PagingAndSortingRepository<AssignmentsOfUser, Integer>{
-    
+public interface AssignmentsOfUserRepository extends CrudRepository<AssignmentsOfUser, Integer>, PagingAndSortingRepository<AssignmentsOfUser, Integer> {
+
     public Page<AssignmentsOfUser> findByIdAssignmentAndIdClass(Integer idAssignment, Integer idClass, Pageable pageable);
-    
+
     public AssignmentsOfUser findByIdAssignmentAndIdClassAndIdUser(Integer idAssignment, Integer idClass, Integer idUser);
-    
+
     public List<AssignmentsOfUser> findByIdClassAndIdUser(Integer idClass, Integer idUser);
+
+    AssignmentsOfUser findAssignmentOfUserByIdAssignmentAndIdUser(Integer idAssignment, Integer idUser);
 }

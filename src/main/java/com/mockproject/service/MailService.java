@@ -46,8 +46,8 @@ public class MailService {
             Logger.getLogger(MailService.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void sendMailToNotify(String subject,String senderName,String mailContent,String emailTo){
+
+    public void sendMailToNotify(String subject, String senderName, String mailContent, String emailTo) {
         MimeMessage msg = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(msg);
         try {

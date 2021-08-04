@@ -48,11 +48,16 @@
                         <a th:href="@{/subject/teacher}"><i class="fas fa-book-open"></i>Subjects</a>
                     </li>
                     <li>
-                        <a th:href="@{'/teacher/assignment/assignmentOfClass/' + ${session.idClass}}"><i class="fas fa-hand-point-right"></i>Assignment</a>
+                        <a th:href="@{'/teacher/assignment/assignmentOfClass/' + ${session.idClass} + '/1'}"><i class="fas fa-hand-point-right"></i>Assignment</a>
                     </li>
-                    <li class="act">
-                        <a th:href="@{'/teacher/quiz/showListQuiz/' + ${session.idClass}}+'/1'"><i class="fas fa-hand-point-right"></i>Quiz</a>
+
+                    <li class="act" th:if="${session.idClass != null}">
+                        <a th:href="@{'/teacher/quiz/showListQuiz/'+${session.idClass}}+'/1'"><i class="fas fa-hand-point-right"></i>Quiz</a>
                     </li>
+                    <li class="act" th:if="${session.idClass == null}">
+                        <a th:href="@{'/teacher/quiz/showQuizesOfTeacher/'+${session.idSubject}+'/1'}"><i class="fas fa-hand-point-right"></i>Quiz</a>
+                    </li>
+
                     <li>
                         <a th:href="@{/teacher/account}"><i class="fas fa-id-card"></i>Account</a>
                     </li>
@@ -111,14 +116,15 @@
                                 <div class="form-group">
                                     <label>Status: </label>
                                     <select name="status">
-                                        <option value="started" th:selected="${session.newQuiz != null AND session.newQuiz.status == 'started'}">started</option>
-                                        <option value="not started" th:selected="${session.newQuiz != null AND session.newQuiz.status == 'not started'}">not started</option>
+                                        <option value="started" th:selected="${session.newQuiz != null AND session.newQuiz.status == 'started'}">Started</option>
+                                        <option value="not started" th:selected="${session.newQuiz != null AND session.newQuiz.status == 'not started'}">Not started</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-secondary" name="action" value="addQuestion">Add Questions</button>
                                     <button th:if="${session.newQuiz != null}" type="submit" class="btn btn-primary"  name="action" value="createQuiz">Create</button>
-                                    <a th:href="@{'/teacher/quiz/showListQuiz/'+${session.idClass}+'/1'}" class="btn btn-light">Cancel</a>
+                                    <a th:if="${session.idClass != null}" th:href="@{'/teacher/quiz/showListQuiz/'+${session.idClass}+'/1'}" class="btn btn-light">Cancel</a>
+                                    <a th:if="${session.idClass == null}" th:href="@{'/teacher/quiz/showQuizesOfTeacher/'+${session.idSubject}+'/1'}"><i class="btn btn-light"></i>Cancel</a>
                                 </div>
                             </form>
                         </fieldset>

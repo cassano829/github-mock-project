@@ -15,7 +15,6 @@ import com.mockproject.repository.UserRepository;
 import com.mockproject.security.CustomUserDetail;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -57,6 +56,7 @@ public class AssignmentTeacherController {
     @GetMapping("/{id}")
     public String assignmentListBySubjectId(@PathVariable("id") String idSubject, HttpSession session, Model model) {
         session.setAttribute("teacherSubjectAssignment", idSubject);
+        session.setAttribute("idSubject", idSubject);
         Map<Integer, User> mapUser = userRepository.findAll().stream().collect(Collectors.toMap(User::getIdUser, user -> user));
 
         model.addAttribute("page", 1);
@@ -75,6 +75,7 @@ public class AssignmentTeacherController {
         Page<Assignment> list = assignmentRepository.getListAssignmentOfClass(idClass, PageRequest.of(pageNumber - 1, 4));
         model.addAttribute("class", assignmentClassRepository.findById(idClass).get());
         model.addAttribute("listAssignmentOfClass", list);
+        session.setAttribute("idClass", idClass);
         return "assignmentOfClass";
     }
 
@@ -160,7 +161,7 @@ public class AssignmentTeacherController {
         assignmentOfClassRepository.findByIdAssignment(idAssignment).forEach(s -> {
             map.put(s.getIdClass(), s.getIdAssignment());
         });
-        
+
         Integer idUser = ((CustomUserDetail) authentication.getPrincipal()).getUser().getIdUser();
 
         model.addAttribute("page", 1);
@@ -178,7 +179,7 @@ public class AssignmentTeacherController {
         assignmentOfClassRepository.findByIdAssignment(idAssignment).forEach(s -> {
             map.put(s.getIdClass(), s.getIdAssignment());
         });
-        
+
         Integer idUser = ((CustomUserDetail) authentication.getPrincipal()).getUser().getIdUser();
 
         model.addAttribute("page", page);

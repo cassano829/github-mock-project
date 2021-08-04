@@ -9,6 +9,8 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
@@ -17,6 +19,8 @@ import java.io.Serializable;
 @Entity
 @Data
 @Table(name = "Roles")
+@Getter
+@Setter
 public class Role implements Serializable {
 
     @Id
@@ -26,14 +30,4 @@ public class Role implements Serializable {
 
     @Column(name = "nameRole")
     private String name;
-
-//    public int hashCode() {
-//        return Objects.hash(this.name);
-//    }
-//
-//    public boolean equals(Object o) {
-//        if (o == this) { return true; }
-//        if (o == null || !(o instanceof Role) ) { return false; }
-//        return Objects.equals(this.name, ((Role) o).name);
-//    }
 }

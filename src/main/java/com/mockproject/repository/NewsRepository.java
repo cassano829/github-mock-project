@@ -17,11 +17,11 @@ import org.springframework.stereotype.Repository;
  * @author ACER
  */
 @Repository
-public interface NewsRepository extends JpaRepository<News, Integer>{
-    
+public interface NewsRepository extends JpaRepository<News, Integer> {
+
     @Query("SELECT n FROM News n WHERE n.status = 1 ORDER BY n.createDate DESC")
     Page<News> findAllNewsStatusOrderedDateDesc(Pageable page);
-    
+
     @Query("SELECT n FROM News n ORDER BY n.createDate DESC")
     Page<News> findAllNewsOrderedDateDesc(Pageable page);
 }

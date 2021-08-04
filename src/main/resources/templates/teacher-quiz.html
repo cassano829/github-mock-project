@@ -51,7 +51,7 @@
                         <a th:href="@{'/teacher/assignment/assignmentOfClass/' + ${session.idClass} + '/1'}"><i class="fas fa-hand-point-right"></i>Assignment</a>
                     </li>
                     <li class="act">
-                        <a th:href="@{'/teacher/quiz/showListQuiz/'+${session.idClass}}+'/1'"><i class="fas fa-hand-point-right"></i>Quiz</a>
+                        <a th:href="@{'/teacher/quiz/showListQuiz/'+${session.idClass} + '/1'}"><i class="fas fa-hand-point-right"></i>Quiz</a>
                     </li>
                     <li>
                         <a th:href="@{/teacher/account}"><i class="fas fa-id-card"></i>Account</a>
@@ -92,7 +92,7 @@
                                             <th>Duration</th>
                                             <th>Action</th>
                                         </tr>
-                                        
+
                                         <th:block  th:each="quiz,state : ${quizes}">
                                             <tr>
                                                 <td th:text="${state.index + 1}"></td>
@@ -107,8 +107,9 @@
                                                 <td th:text="${quiz.numOfQues}"></td>
                                                 <td th:text="${quiz.timeLimit} + ' Minutes'"></td>
                                                 <td>
-                                                    <form th:action="@{#}">
+                                                    <form th:action="@{/teacher/quiz/viewStudentsOfQuiz}">
                                                         <input type="hidden" name="idQuiz" th:value="${quiz.idQuiz}">
+                                                        <input type="hidden" name="idClass" th:value="${session.idClass}">
                                                         <button type="submit" class="btn-primary" style="margin: 2px"><i class="fas fa-eye"></i></button>
                                                     </form>
                                                     <form th:action="@{/teacher/quiz/edit}" method="get">
@@ -139,7 +140,6 @@
                 </div>
             </div>
         </div>
-
 
         <!-- jQuery CDN - Slim version (=without AJAX) -->
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js " integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo " crossorigin="anonymous "></script>

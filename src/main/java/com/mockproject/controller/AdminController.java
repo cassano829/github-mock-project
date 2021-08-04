@@ -15,6 +15,7 @@ import com.mockproject.service.NewsService;
 import com.mockproject.service.RoleService;
 import com.mockproject.service.User_RoleService;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -165,15 +166,22 @@ public class AdminController {
         return "admin-account";
     }
 
-//    @RequestMapping("/user")
-    @GetMapping("/user")
+    @RequestMapping("/user")
+//    @GetMapping("/user")
     public String adminUserPage(Model model) {
-
+        CustomUserDetail user = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<User> userList = service.loadAllUsers();
-        userList = prepareUserList(userList);
+        List<User> listDisplayUser = new ArrayList<>();
+       
+        for(User u : userList){
+            if(u.getIdUser() != user.getIdUser()){
+                listDisplayUser.add(u);
+            }
+        }
+        listDisplayUser = prepareUserList(listDisplayUser);
 
         model.addAttribute("roleList", roleService.getRoleList());
-        model.addAttribute("userList", userList);
+        model.addAttribute("userList", listDisplayUser);
 
         return "admin-users";
     }

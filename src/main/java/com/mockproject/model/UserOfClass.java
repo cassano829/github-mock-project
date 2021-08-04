@@ -11,20 +11,21 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-/**
- *
- * @author Asus
- */
 @Entity
 @Data
 @Table(name = "UsersOfClass")
+@Getter
+@Setter
 public class UserOfClass {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idUserOfClass;
-    
+
     private int idUser;
-    
+
     private int idClass;
 }

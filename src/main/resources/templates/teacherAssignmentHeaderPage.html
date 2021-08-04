@@ -43,7 +43,7 @@
             </li>
             <li>
                 <!--<a th:href="@{'/teacher/quiz/showListQuiz/'+${session.idClass}}+'/1'"><i class="fas fa-hand-point-right"></i>Quiz</a>-->
-                <a th:href="@{#}"><i class="fas fa-hand-point-right"></i>Quiz</a>
+                <a th:href="@{'/teacher/quiz/showQuizesOfTeacher/' + ${session.teacherSubjectAssignment} + '/1'}"><i class="fas fa-hand-point-right"></i>Quiz</a>
             </li>
             <li>
                 <a th:href="@{/teacher/account}"><i class="fas fa-id-card"></i>Account</a>

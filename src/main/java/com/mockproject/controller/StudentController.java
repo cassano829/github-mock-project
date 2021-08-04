@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 package com.mockproject.controller;
+
+import com.mockproject.model.Answer;
 import com.mockproject.service.QuizService;
 import java.util.Date;
 import org.springframework.data.domain.PageRequest;
@@ -27,9 +29,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import com.mockproject.model.Class;
+import com.mockproject.model.Question;
+import com.mockproject.model.Quiz;
+import com.mockproject.model.QuizDetail;
+import com.mockproject.model.QuizOfClass;
+import com.mockproject.model.QuizOfUser;
 import com.mockproject.model.User;
 import com.mockproject.repository.UserRepository;
+import com.mockproject.service.AnswerService;
+import com.mockproject.service.QuestionService;
+import com.mockproject.service.QuizDetailService;
+import com.mockproject.service.QuizOfClassService;
+import com.mockproject.service.QuizOfUserService;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.TreeMap;
 import javax.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,8 +56,6 @@ import org.springframework.web.bind.annotation.RequestParam;
  *
  * @author ACER
  */
-
-
 @Controller
 @RequestMapping("/student")
 public class StudentController {
@@ -70,6 +83,65 @@ public class StudentController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    QuizOfClassService quizOfClassService;
+
+    @Autowired
+    QuizOfUserService quizOfUserService;
+
+    @Autowired
+    QuizDetailService quizDetailService;
+
+    @Autowired
+    QuestionService questionService;
+
+    @Autowired
+    AnswerService answerService;
+
+    @GetMapping("/markReport")
+    public String HistoryProcess(Model model, HttpSession session) {
+        TreeMap<Quiz, List<QuizOfUser>> tree = new TreeMap<Quiz, List<QuizOfUser>>();
+        CustomUserDetail user = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Quiz> listQuizes = new ArrayList<>();
+        List<QuizOfClass> listQuizOfClass = new ArrayList<>();
+        int idClass = (int) session.getAttribute("studentCurrentIdClass");
+        
+        listQuizOfClass = quizOfClassService.findQuizOfClassByIdClass(idClass);
+
+        //tim tat ca quiz cua lop
+        for (QuizOfClass quizOfClass : listQuizOfClass) {
+            listQuizes.add(quizService.getQuizByIdQuiz(quizOfClass.getIdQuiz()));
+        }
+
+        for (Quiz quiz : listQuizes) {
+            List<QuizOfUser> listQuizOfUser = quizOfUserService.findQuizOfUserByIdUserAndIdQuiz(user.getIdUser(), quiz.getIdQuiz());
+            if (listQuizOfUser.size() != 0) {
+                tree.put(quiz, listQuizOfUser);
+            }
+
+        }
+        model.addAttribute("nameClass", classService.getClassById(idClass).getNameClass());
+        session.setAttribute("quizInfoes", tree);
+        return "student-mark-report";
+    }
+
+    @GetMapping("/quizReview")
+    public String feedBackPage(Model model, @RequestParam(value = "idQuizOfUser") int idQuizOfUser) {
+        List<QuizDetail> listQuizDetail = new ArrayList<QuizDetail>();
+        LinkedHashMap<Question, List<Answer>> ht = new LinkedHashMap<Question, List<Answer>>();
+        listQuizDetail = quizDetailService.findQuizDetailByQuizOfUser_idQuizOfUser(idQuizOfUser);
+        QuizOfUser qou = quizOfUserService.findByIdQuizOfUser(idQuizOfUser);
+        Quiz q = quizService.getQuizByIdQuiz(qou.getIdQuiz());
+        for (QuizDetail quizDetail : listQuizDetail) {
+            Question question = questionService.findbyId(quizDetail.getIdQuestion());
+            ht.put(question, answerService.findAnswerByQuestion_idQuestion(question.getIdQuestion()));
+        }
+        model.addAttribute("nameQuiz", q.getNameQuiz());
+        model.addAttribute("listQuizDetails", listQuizDetail);
+        model.addAttribute("feedbacks", ht);
+        return "student-quiz-review";
+    }
 
     @GetMapping("/quiz/showQuizesStudent/{idClass}/{page}")
     public String viewQuizesOfStudentPage(Model model, @PathVariable("idClass") int idClass, @PathVariable("page") int page, HttpSession session) {

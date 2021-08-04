@@ -48,10 +48,13 @@
                         <a th:href="@{/subject/teacher}"><i class="fas fa-list-ul"></i>Subjects</a>
                     </li>
                     <li>
-                        <a th:href="@{'/teacher/assignment/assignmentOfClass/' + ${session.idClass}}"><i class="fas fa-hand-point-right"></i>Assignment</a>
+                        <a th:href="@{'/teacher/assignment/assignmentOfClass/' + ${session.idClass} + '/1'}"><i class="fas fa-hand-point-right"></i>Assignment</a>
                     </li>
-                    <li class="act">
-                        <a th:href="@{'/teacher/quiz/showListQuiz/' + ${session.idClass}}+'/1'"><i class="fas fa-hand-point-right"></i>Quiz</a>
+                    <li class="act" th:if="${session.idClass != null}">
+                        <a th:href="@{'/teacher/quiz/showListQuiz/'+${session.idClass}}+'/1'"><i class="fas fa-hand-point-right"></i>Quiz</a>
+                    </li>
+                    <li class="act" th:if="${session.idClass == null}">
+                        <a th:href="@{'/teacher/quiz/showQuizesOfTeacher/'+${session.idSubject}+'/1'}"><i class="fas fa-hand-point-right"></i>Quiz</a>
                     </li>
                     <li>
                         <a th:href="@{/teacher/account}"><i class="fas fa-id-card"></i>Account</a>
@@ -120,7 +123,7 @@
                                             <div class="form-group">
 
                                                 <button type="submit" class="btn btn-primary">Create</button>
-                                                <a href="@{/teacher-quiz-add.html}" class="btn btn-light">Cancel</a>
+                                                <a th:href="@{/teacher/quiz/create}" class="btn btn-light">Cancel</a>
                                                 <button type="submit" name="action" value="done" class="btn btn-primary float-right">Done</button>
                                             </div>
                                         </form>

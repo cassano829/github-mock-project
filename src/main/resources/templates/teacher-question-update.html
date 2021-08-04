@@ -48,10 +48,13 @@
                         <a th:href="@{/subject/teacher}"><i class="fas fa-book-open"></i>Subjects</a>
                     </li>
                     <li>
-                        <a th:href="@{'/teacher/assignment/assignmentOfClass/' + ${session.idClass}}"><i class="fas fa-hand-point-right"></i>Assignment</a>
+                        <a th:href="@{'/teacher/assignment/assignmentOfClass/' + ${session.idClass} + '/1'}"><i class="fas fa-hand-point-right"></i>Assignment</a>
                     </li>
-                    <li class="act">
-                        <a th:href="@{'/teacher/quiz/showListQuiz/' + ${session.idClass}}+'/1'"><i class="fas fa-hand-point-right"></i>Quiz</a>
+                    <li class="act" th:if="${session.idClass != null}">
+                        <a th:href="@{'/teacher/quiz/showListQuiz/'+${session.idClass}}+'/1'"><i class="fas fa-hand-point-right"></i>Quiz</a>
+                    </li>
+                    <li class="act" th:if="${session.idClass == null}">
+                        <a th:href="@{'/teacher/quiz/showQuizesOfTeacher/'+${session.idSubject}+'/1'}"><i class="fas fa-hand-point-right"></i>Quiz</a>
                     </li>
                     <li>
                         <a th:href="@{/teacher/account}"><i class="fas fa-id-card"></i>Account</a>
@@ -110,7 +113,7 @@
                                                 <!--<input type="hidden" name="answers" th:field="*{answers}">-->
                                                 <input type="hidden" name="createDate" th:field="*{createDate}">
                                                 <button type="submit" class="btn btn-primary">Update</button>
-                                                <button type="reset" class="btn btn-light">Cancel</a>
+                                                <a th:href="@{'/teacher/quiz/questions/'+${session.editingQuiz.idQuiz}+'/1'}" class="btn btn-light">Cancel</a>
                                             </div>
                                         </form>
                                     </div>

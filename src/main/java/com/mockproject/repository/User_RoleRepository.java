@@ -14,6 +14,6 @@ import org.springframework.stereotype.Repository;
  * @author ACER
  */
 @Repository
-public interface User_RoleRepository extends JpaRepository<User_Role, Integer>{
-    
+public interface User_RoleRepository extends JpaRepository<User_Role, Integer> {
+
 }

@@ -7,12 +7,12 @@ package com.mockproject.repository;
 
 import com.mockproject.model.Role;
 import com.mockproject.model.User;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import org.springframework.stereotype.Repository;
 
 /**
  *
@@ -23,20 +23,17 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     User findUserByEmail(String email);
 
-//    User findUserByVerificationCode(String code);
-
-//    @Query("SELECT * " +
-//            "FROM Users u JOIN RolesOfUser ru ON u.idUser = ru.idUser " +
-//            "WHERE (u.email LIKE %:email% AND ru.idRole = :roleId AND u.status = :status)")
-//    public List<User> search(@Param("email")String email, @Param("roleId")int roleId, @Param("status")boolean status);
-
     List<User> findAllByEmailContainsAndRolesAndStatus(String email, Role role, boolean status);
 
     User findUsersByIdUser(int idUser);
-    
+
     @Query("SELECT u FROM User u WHERE u.verificationCode = ?1")
     public User findByVerificationCode(String code);
-    
+
     User findUserByIdUser(int id);
-    
+
+    @Query("SELECT new com.mockproject.model.User(u.idUser,u.fullName,u.email) FROM User u "
+            + "WHERE u.idUser IN (SELECT uoc.idUser FROM UserOfClass uoc WHERE uoc.idClass=?1)")
+    List<User> findAllByidClass(int idClass);
+
 }

@@ -11,6 +11,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Data
@@ -19,6 +21,8 @@ import java.io.Serializable;
 @Where(clause = "status=true")
 @FilterDef(name = "deletedSubjectFilter", parameters = @ParamDef(name = "status", type = "boolean"))
 @Filter(name = "deletedSubjectFilter", condition = "status = :status")
+@Getter
+@Setter
 public class Subject implements Serializable {
 
     @Id

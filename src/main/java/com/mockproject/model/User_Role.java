@@ -29,10 +29,26 @@ public class User_Role {
         this.idRole = idRole;
     }
 
-
     @Id
     @Column(name = "idUser")
     private int idUser;
     @Column(name = "idRole")
     private int idRole;
+
+    public Integer getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(Integer idUser) {
+        this.idUser = idUser;
+    }
+
+    public int getIdRole() {
+        return idRole;
+    }
+
+    public void setIdRole(int idRole) {
+        this.idRole = idRole;
+    }
+
 }

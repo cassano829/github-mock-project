@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -20,27 +21,28 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class QuizService {
-    
+
     @Autowired
     QuizRepository quizRepository;
-    
+
     @Autowired
     QuizOfClassRepository quizOfClassRepository;
 
-    public Quiz getQuizByIdQuiz(int idQuiz){
+    public Quiz getQuizByIdQuiz(int idQuiz) {
         return quizRepository.findQuizByIdQuiz(idQuiz);
     }
-    
+
     @Transactional
-    public void saveQuiz(Quiz quiz){
+    public void saveQuiz(Quiz quiz) {
         quizRepository.saveAndFlush(quiz);
     }
-    
-    public Page<Quiz> searchQuiz(String search,int idClass,Pageable pageable){
-        return quizRepository.findAllByNameQuiz(search,idClass,pageable);
+
+    public Page<Quiz> searchQuiz(String search, int idClass, Pageable pageable) {
+        return quizRepository.findAllByNameQuiz(search, idClass, pageable);
     }
     
-//    public int getLastIdQuiz(){
-//        return quizRepository.getIdOfQuiz();
-//    }
+    public Page<Quiz> getAllQuizByIdSubjectAndIdTeacherAndNameQuiz(String nameQuiz, String ibSubject, int idUser, Pageable pageable){
+        return quizRepository.getAllQuizByIdSubjectAndIdTeacherAndNameQuiz(nameQuiz, ibSubject, idUser, pageable);
+    }
+    
 }

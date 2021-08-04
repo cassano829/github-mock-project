@@ -6,7 +6,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -22,6 +21,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
@@ -31,7 +32,9 @@ import lombok.Data;
 @Data
 @Table(name = "Users")
 @SQLDelete(sql = "UPDATE Users SET status = 'false' WHERE idUser=?")
-public class User implements Serializable {
+@Getter
+@Setter
+public class User implements Comparable<User> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,13 +53,13 @@ public class User implements Serializable {
 
     @NotBlank(message = "Password can't be empty")
     @NotEmpty(message = "Password can't be empty")
-    @Size.List ({
-            @Size(min=8, message="Password must be at least 8 characters"),
-            @Size(max=60, message="Password must be less than 16 characters")
+    @Size.List({
+        @Size(min = 8, message = "Password must be at least 8 characters"),
+        @Size(max = 60, message = "Password must be less than 16 characters")
     })
     private String password;
 
-    private boolean status=Boolean.TRUE;
+    private boolean status = Boolean.TRUE;
 
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     @Column(name = "createDate")
@@ -79,5 +82,21 @@ public class User implements Serializable {
             }
         }
         return false;
-    }   
+    }
+
+    @Override
+    public int compareTo(User o) {
+        // TODO Auto-generated method stub
+        return this.getIdUser() - o.getIdUser();
+    }
+
+    public User(Integer idUser, String fullName, String email) {
+        this.idUser = idUser;
+        this.fullName = fullName;
+        this.email = email;
+    }
+
+    public User() {
+    }
+
 }

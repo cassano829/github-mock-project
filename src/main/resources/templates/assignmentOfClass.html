@@ -49,7 +49,7 @@
                         <a th:href="@{/subject/teacher}"><i class="fas fa-book-open"></i>Subjects</a>
                     </li>
                     <li class="act">
-                        <a th:href="@{'/teacher/assignment/assignmentOfClass/' + ${class.idClass}}"><i class="fas fa-hand-point-right"></i>Assignment</a>
+                        <a th:href="@{'/teacher/assignment/assignmentOfClass/' + ${class.idClass} + '/1'}"><i class="fas fa-hand-point-right"></i>Assignment</a>
                     </li>
                     <li>
                         <a th:href="@{'/teacher/quiz/showListQuiz/'+${class.idClass}}+'/1'"><i class="fas fa-hand-point-right"></i>Quiz</a>
@@ -82,7 +82,7 @@
                                                                                 <a href="#" class="btn"><i class="far fa-trash-alt"></i></a>
                                                                             </div>-->
                                         <div class="card-body">
-                                            <h5 class="text-dark" th:text="${assignment.title}">Name Assignment </h5>
+                                            <a th:href="@{/teacher/assignmentReport(idAssignment=${assignment.idAssignment},idClass=${class.idClass},page=1)}"><h5 class="text-dark" th:text="${assignment.title}">Name Assignment </h5></a>
                                             <div>
                                                 <label>Deadline: <b th:text="${assignment.deadline}"></b></label>
                                             </div>

@@ -114,7 +114,7 @@
                             <label><strong>Choose class</strong></label>
                             <div>
                                 <span th:if="${listAssignmentOfClass==null or listAssignmentOfClass.empty}">This assignment 0 class</span>
-                               
+
                                 <div th:if="${listAssignmentOfClass!=null and !listAssignmentOfClass.empty}">
                                     <select class="form-control col-5"  th:name="idClass">
                                         <option th:each="class : ${listAssignmentOfClass}" th:value="${class.idClass}" th:text="${'['+ class.idClass +'] ' + mapClasses.get(class.idClass)}">
@@ -155,9 +155,16 @@
                         </div>
                     </form>
 
-                    <strong th:if="${assignmentOfStudents!=null and !assignmentOfStudents.empty}">
-                        <a class="sub" th:if="${assignmentOfStudents.getTotalPages() > 1}" th:each="i : ${#numbers.sequence(1, assignmentOfStudents.getTotalPages())}" th:href="@{'/teacher/assignment/grade/class/page/' + ${i}}" th:text="${i + '  '}"></a>
-                    </strong>
+                    <!--                    <strong th:if="${assignmentOfStudents!=null and !assignmentOfStudents.empty}">
+                                            <a class="sub" th:if="${assignmentOfStudents.getTotalPages() > 1}" th:each="i : ${#numbers.sequence(1, assignmentOfStudents.getTotalPages())}" th:href="@{'/teacher/assignment/grade/class/page/' + ${i}}" th:text="${i + '  '}"></a>
+                                        </strong>-->
+                    <div th:if="${assignmentOfUsers!=null and !assignmentOfUsers.empty}">
+                        <div th:if="${assignmentOfUsers.getTotalPages() > 1}">
+                            <strong>
+                                <a class="ml-3" th:each="i : ${#numbers.sequence(1, assignmentOfUsers.getTotalPages())}" th:href="@{'/teacher/assignment/grade/class/page/' + ${i}}" th:classappend ="${i == page} ? text-dark : text-primary" th:text="${i}"></a>
+                            </strong>
+                        </div>
+                    </div>
 
                 </div>
             </div>

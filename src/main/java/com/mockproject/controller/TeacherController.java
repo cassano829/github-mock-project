@@ -6,7 +6,9 @@
 package com.mockproject.controller;
 
 import com.mockproject.model.Answer;
-import com.mockproject.service.QuizOfStudentService;
+import com.mockproject.model.Assignment;
+import com.mockproject.model.AssignmentsOfClass;
+import com.mockproject.model.AssignmentsOfUser;
 import com.mockproject.model.User;
 import com.mockproject.security.UserDetailServiceImp;
 import com.mockproject.service.ClassService;
@@ -29,13 +31,23 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.mockproject.model.Class;
 import com.mockproject.model.Question;
 import com.mockproject.model.QuizOfClass;
-import com.mockproject.repository.QuizOfClassRepository;
+import com.mockproject.model.QuizOfUser;
+import com.mockproject.model.UserOfClass;
+import com.mockproject.service.AssignmentOfClassService;
+import com.mockproject.service.AssignmentOfUserService;
+import com.mockproject.service.AssignmentService;
 import com.mockproject.service.QuestionService;
+import com.mockproject.service.QuizOfClassService;
+import com.mockproject.service.QuizOfUserService;
+import com.mockproject.service.UserOfClassService;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.data.domain.Page;
@@ -52,7 +64,7 @@ public class TeacherController {
     public final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 
     @Autowired
-    QuizOfStudentService quizOfStudentService;
+    QuizOfUserService quizOfUserService;
     private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     private final Validator validator = factory.getValidator();
 
@@ -72,13 +84,183 @@ public class TeacherController {
     QuestionService questionService;
 
     @Autowired
-    QuizOfClassRepository quizOfClassRepository;
-
-    @Autowired
     UserDetailServiceImp userService;
 
     @Autowired
     UserDetailServiceImp service;
+
+    @Autowired
+    AssignmentService assignmentService;
+
+    @Autowired
+    AssignmentOfClassService assignmentOfClassService;
+
+    @Autowired
+    AssignmentOfUserService assignmentOfUserService;
+
+    @Autowired
+    QuizOfClassService quizOfClassService;
+
+    @Autowired
+    UserOfClassService userOfClassService;
+
+    @GetMapping("/quiz/viewStudentsOfQuiz")
+    public String viewListStudentOfQuiz(HttpServletRequest request, Model model, HttpSession session) {
+        int idQuiz = Integer.parseInt(request.getParameter("idQuiz"));
+        int idClass = (int) session.getAttribute("idClass");
+        List<User> usersOfClass = userService.findAllByidClass(idClass);
+        Map<User, List<QuizOfUser>> mapQuizOfStudent = new HashMap<>();
+        for (User user : usersOfClass) {
+            List<QuizOfUser> quizOfStudents = quizOfUserService.findQuizOfUserByIdUserAndIdQuiz(user.getIdUser(), idQuiz);
+            mapQuizOfStudent.put(user, quizOfStudents);
+        }
+        model.addAttribute("mapQuizOfStudent", mapQuizOfStudent);
+        model.addAttribute("nameQuiz", quizService.getQuizByIdQuiz(idQuiz).getNameQuiz());
+        return "teacher-quiz-report";
+    }
+
+    @GetMapping("/quiz/showQuizesOfTeacher/{idSubject}/{page}")
+    public String showQuizesofTeacher(HttpServletRequest request, Model model, HttpSession session, @PathVariable("idSubject") String idSubject, @PathVariable("page") int page) {
+        CustomUserDetail userDetail = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String search = "";
+        if (request.getParameter("txtSearch") != null) {
+            search = request.getParameter("txtSearch");
+        }
+        Page<Quiz> quizs = quizService.getAllQuizByIdSubjectAndIdTeacherAndNameQuiz(search, idSubject, userDetail.getUser().getIdUser(), PageRequest.of(page - 1, 4));
+        model.addAttribute("search", search);
+        model.addAttribute("quizes", quizs);
+        model.addAttribute("page", page);
+        session.setAttribute("idSubject", idSubject);
+        return "teacherQuizCommon";
+    }
+
+    @GetMapping("/quiz/addClassToQuiz/{page}")
+    public String showAllClassOfTeacher(@PathVariable("page") int page, Model model, HttpSession session, HttpServletRequest request) {
+        String idSubject = (String) session.getAttribute("idSubject");
+        int idQuiz = Integer.parseInt(request.getParameter("idQuiz"));
+        CustomUserDetail userDetail = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Integer> addedClasses = quizOfClassService.findAllByIdQuiz(idQuiz);
+        model.addAttribute("classes", classService.getListClassByIdTeacherAndIdSubject(userDetail.getUser().getIdUser(), idSubject, PageRequest.of(page - 1, 4)));
+        model.addAttribute("addedClasses", addedClasses);
+        model.addAttribute("page", page);
+        model.addAttribute("idQuiz", idQuiz);
+        return "teacherAddQuizToClass";
+    }
+
+    @GetMapping("/quiz/addClassToQuiz/{page}/add")
+    public String addQuizToClass(@PathVariable("page") int page, HttpServletRequest request, Model model) {
+        int idClass = Integer.parseInt(request.getParameter("idClass"));
+        int idQuiz = Integer.parseInt(request.getParameter("idQuiz"));
+        QuizOfClass quizOfClass = new QuizOfClass();
+        quizOfClass.setIdClass(idClass);
+        quizOfClass.setIdQuiz(idQuiz);
+        quizOfClassService.save(quizOfClass);
+        model.addAttribute("page", page);
+        return "redirect:/teacher/quiz/addClassToQuiz/" + page + "?idQuiz=" + idQuiz;
+    }
+
+    @GetMapping("/quiz/addClassToQuiz/{page}/undo")
+    public String undoAddQuizToClass(@PathVariable("page") int page, HttpServletRequest request, Model model) {
+        int idClass = Integer.parseInt(request.getParameter("idClass"));
+        int idQuiz = Integer.parseInt(request.getParameter("idQuiz"));
+        QuizOfClass quizOfClass = quizOfClassService.findByIdQuizAndIdClass(idQuiz, idClass);
+        quizOfClassService.delete(quizOfClass);
+        model.addAttribute("page", page);
+        return "redirect:/teacher/quiz/addClassToQuiz/" + page + "?idQuiz=" + idQuiz;
+    }
+
+    @GetMapping("/classReport/{idClass}")
+    public String teacherClassReportPage(HttpSession session, @PathVariable(name = "idClass") int idClass, Model model) {
+        ArrayList<String> listTitleQuizAndAssignment = new ArrayList<String>();
+        List<AssignmentsOfClass> listAssignmentOfClass = new ArrayList<AssignmentsOfClass>();
+        List<QuizOfClass> listQuizOfClass = new ArrayList<QuizOfClass>();
+        List<UserOfClass> listUserOfClass = new ArrayList<UserOfClass>();
+        List<User> listUser = new ArrayList<User>();
+        LinkedHashMap<User, ArrayList<Double>> infoStudent = new LinkedHashMap<User, ArrayList<Double>>();
+        Assignment assignment = new Assignment();
+
+        listAssignmentOfClass = assignmentOfClassService.findAssignmentOfClassByIdClass(idClass);
+        listQuizOfClass = quizOfClassService.findQuizOfClassByIdClass(idClass);
+
+        //add title
+        listTitleQuizAndAssignment.add("StudentID");
+        listTitleQuizAndAssignment.add("Student Name");
+        for (AssignmentsOfClass assignmentOfClass : listAssignmentOfClass) {
+            assignment = assignmentService.findAssignmentByidAssignment(assignmentOfClass.getIdAssignment());
+            listTitleQuizAndAssignment.add(assignment.getTitle());
+
+        }
+        for (QuizOfClass quizOfClass : listQuizOfClass) {
+            Quiz quiz = quizService.getQuizByIdQuiz(quizOfClass.getIdQuiz());
+            listTitleQuizAndAssignment.add(quiz.getNameQuiz());
+        }
+
+        //tim tat ca user trong class
+        listUserOfClass = userOfClassService.findUserOfClassByIdClass(idClass);
+        for (UserOfClass userOfClass : listUserOfClass) {
+            listUser.add(userService.getUserByIdUser(userOfClass.getIdUser()));
+        }
+
+        for (User user : listUser) {
+            ArrayList<Double> listGrade = new ArrayList<Double>();
+            //lay diem Assignment cua user
+            for (AssignmentsOfClass assignmentOfClass : listAssignmentOfClass) {
+                assignment = assignmentService.findAssignmentByidAssignment(assignmentOfClass.getIdAssignment());
+                AssignmentsOfUser asu = assignmentOfUserService.findAssignmentOfUserByIdAssignmentAndIdUser(assignment.getIdAssignment(), user.getIdUser());
+                if (asu != null) {
+                    listGrade.add(asu.getGrade());
+                } else {
+                    listGrade.add(-1.0);
+                }
+            }
+
+            //lay diem quiz cua User
+            double max = 0;
+            for (QuizOfClass quizOfClass : listQuizOfClass) {
+                Quiz quiz = quizService.getQuizByIdQuiz(quizOfClass.getIdQuiz());
+                List<QuizOfUser> qou = quizOfUserService.findQuizOfUserByIdUserAndIdQuiz(user.getIdUser(), quiz.getIdQuiz());
+                if (qou.size() != 0) {
+                    max = qou.get(0).getGrade();
+                    for (int i = 1; i < qou.size(); i++) {
+                        if (qou.get(i).getGrade() > max) {
+                            max = qou.get(i).getGrade();
+                        }
+                    }
+                    listGrade.add(max);
+                } else {
+                    listGrade.add(-1.0);
+                }
+            }
+
+            infoStudent.put(user, listGrade);
+        }
+        model.addAttribute("infoStudent", infoStudent);
+        model.addAttribute("nameClass", classService.getClassById(idClass).getNameClass());
+        model.addAttribute("titles", listTitleQuizAndAssignment);
+        session.setAttribute("idClass", idClass);
+        return "teacher-class-report";
+    }
+
+    @GetMapping("/assignmentReport")
+    public String teacherAsignmentReportPage(HttpSession session, Model model, @RequestParam(name = "idAssignment") int idAssignment,
+            @RequestParam(name = "idClass") int idClass, @RequestParam("page") int pageNumber) {
+        Map<Integer, User> mapUser = userService.findAll().stream().collect(Collectors.toMap(User::getIdUser, user -> user));
+
+        //GET GRADE OF USER BY IDCLASS AND ID ASSIGNMENT
+//        Map<Integer, Double> mapGrade = reportService.customFindByIdClassAndIdAssignment(idClass, idAssignment)
+//                .stream().collect(Collectors.toMap(Report::getIdUser, report -> report.getGrade()));
+        //GET LIST ASSIGNMENTOFUSER BY ID ASSIGNMENT AND ID CLASS
+        Page<AssignmentsOfUser> listAssignemntOfUser = assignmentOfUserService.findByIdAssignmentAndIdClass(idAssignment, idClass, PageRequest.of(pageNumber - 1, 5));
+
+        model.addAttribute("idClass", idClass);
+        model.addAttribute("idAssignment", idAssignment);
+        model.addAttribute("page", pageNumber);
+        model.addAttribute("mapUser", mapUser);
+//        model.addAttribute("mapGrade", mapGrade);
+        model.addAttribute("assignmentsOfUsers", listAssignemntOfUser);
+
+        return "teacher-assignment-report";
+    }
 
     @GetMapping("/quiz/showListQuiz/{idClass}/{page}")
     public String showListQuizOfClass(HttpSession session, Model model, @PathVariable("idClass") int idClass,
@@ -98,21 +280,25 @@ public class TeacherController {
         return "teacher-quiz";
     }
 
-//    @GetMapping("/quiz/viewListQuizStudent")
-//    public String viewListQuizOfStudent(HttpServletRequest request,Model model){
-//        int idQuiz=Integer.parseInt(request.getParameter("idQuiz"));
-//        model.addAttribute("quizOfStudents",quizOfStudentService.getListQuizOfStudentByIdQuiz(idQuiz));
-//        return "quizOfClass";
-//    }
     @GetMapping("/quiz/create")
-    public String viewCreatePage() {
+    public String viewCreatePage(HttpSession session) {
+        session.removeAttribute("questions");
         return "teacher-quiz-add";
     }
 
     @PostMapping("/quiz/create/save")
     public String createQuiz(HttpSession session, HttpServletRequest request, Model model) throws Exception {
-        int idClass = (int) session.getAttribute("idClass");
-        String url = "redirect:/teacher/quiz/showListQuiz/" + idClass + "/1";
+        String url = "";
+        int idClass = -1;
+        String idSubject = (String) session.getAttribute("idSubject");
+        if (session.getAttribute("idClass") != null) {
+            idClass = (int) session.getAttribute("idClass");
+            url = "redirect:/teacher/quiz/showListQuiz/" + idClass + "/1";
+        } else {
+            //Cần para idSubject request hoặc session đều đc.
+            url = "redirect:/teacher/quiz/showQuizesOfTeacher/" + idSubject + "/1";
+        }
+
         String action = request.getParameter("action");
         String nameQuiz = request.getParameter("nameQuiz");
         int timeLimit = Integer.parseInt(request.getParameter("timeLimit"));
@@ -130,7 +316,7 @@ public class TeacherController {
             quiz.setDueDate(dueDate);
             quiz.setStatus(status);
             quiz.setIdUser(userDetail.getUser().getIdUser());
-            String idSubject = (String) session.getAttribute("idSubject");
+            idSubject = (String) session.getAttribute("idSubject");
             quiz.setIdSubject(idSubject);
             if (session.getAttribute("questions") != null) {
                 questions = (List<Question>) session.getAttribute("questions");
@@ -156,10 +342,12 @@ public class TeacherController {
                 for (Question question : questions) {
                     questionService.save(question);
                 }
-                QuizOfClass quizOfClass = new QuizOfClass();
-                quizOfClass.setIdQuiz(newQuiz.getIdQuiz());
-                quizOfClass.setIdClass(idClass);
-                quizOfClassRepository.save(quizOfClass);
+                if (session.getAttribute("idClass") != null) {
+                    QuizOfClass quizOfClass = new QuizOfClass();
+                    quizOfClass.setIdQuiz(newQuiz.getIdQuiz());
+                    quizOfClass.setIdClass(idClass);
+                    quizOfClassService.save(quizOfClass);
+                }
                 session.removeAttribute("newQuiz");
             }
         }
@@ -181,7 +369,7 @@ public class TeacherController {
         question.setCreateDate(new Date());
         question.setStatus(true);
         question.setQuiz(quiz);
-        Set<Answer> answers = question.getAnswers();
+        List<Answer> answers = question.getAnswers();
         for (int i = 0; i < answerContents.length; i++) {
             Answer answer = new Answer();
             answer.setContent(answerContents[i]);
@@ -223,9 +411,18 @@ public class TeacherController {
 
     @PostMapping("/quiz/update")
     public String updateQuiz(@ModelAttribute("quiz") Quiz quiz, HttpSession session) {
-        int idClass = (int) session.getAttribute("idClass");
+        String url = "";
+        if (session.getAttribute("idClass") != null) {
+            int idClass = (int) session.getAttribute("idClass");
+            url = "redirect:/teacher/quiz/showListQuiz/" + idClass + "/1";
+        } else {
+            if (session.getAttribute("idSubject") != null) {
+                String idSubject = (String) session.getAttribute("idSubject");
+                url = "redirect:/teacher/quiz/showQuizesOfTeacher/" + idSubject + "/1";
+            }
+        }
         quizService.saveQuiz(quiz);
-        return "redirect:/teacher/quiz/showListQuiz/" + idClass + "/1";
+        return url;
     }
 
     @GetMapping("/quiz/questions/{idQuiz}/{page}")
@@ -250,7 +447,7 @@ public class TeacherController {
     @PostMapping("/quiz/question/editQuestion/update")
     public String updateQuestion(HttpSession session, @ModelAttribute("question") Question question, HttpServletRequest request) {
         Quiz quiz = question.getQuiz();
-        Set<Answer> ans = (Set<Answer>) session.getAttribute("answers");
+        List<Answer> ans = (List<Answer>) session.getAttribute("answers");
         int correctAnswer = Integer.parseInt(request.getParameter("correctAnswer"));
         String[] answerContents = request.getParameterValues("answerContent");
         int i = 0;
@@ -297,7 +494,7 @@ public class TeacherController {
         question.setCreateDate(new Date());
         question.setStatus(true);
         question.setQuiz(quizService.getQuizByIdQuiz(idQuiz));
-        Set<Answer> answers = question.getAnswers();
+        List<Answer> answers = question.getAnswers();
         for (int i = 0; i < answerContents.length; i++) {
             Answer answer = new Answer();
             answer.setContent(answerContents[i]);

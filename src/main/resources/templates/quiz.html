@@ -56,7 +56,7 @@
                         <a th:href="@{'/student/quiz/showQuizesStudent/' + ${session.class.idClass}}+'/1'"><i class="fas fa-hand-point-right"></i>List Quizzes</a>
                     </li>
                     <li>
-                        <a th:href="@{#}"><i class="fas fa-hand-point-right"></i>Mark Report</a>
+                        <a th:href="@{/student/markReport}"><i class="fas fa-hand-point-right"></i>Mark Report</a>
                     </li>
                     <li>
                         <a th:href="@{/student/account}"><i class="fas fa-id-card"></i>Account</a>
@@ -66,7 +66,6 @@
             </nav>
             <!-- Page Content -->
             <div id="content">
-
                 <form th:action="@{/student/quiz/chooseQuestion}" method="get">
                     <div class="container-fluid">
                         <h3><i class="fas fa-id-card"></i> Quiz</h3>
@@ -91,11 +90,11 @@
                                 <div class="col-md-12 body-content bg-white">
                                     <h1 class="text-center text-danger" th:text="${session.nameQuiz}"></h1>
                                     <hr>
-                                    <h2 id="question" th:text="'Question '+${questionIndex + 1}+': '+${session.questions.get(questionIndex).contentQuestion}">Question 1: How to use Spring boot?</h2>
-                                    <div class="form-group" id="answer-form" method="post">
+                                    <h5 id="question" class="m-4" th:text="'Question '+${questionIndex + 1}+': '+${session.questions.get(questionIndex).contentQuestion}"></h5>
+                                    <div class="form-group" id="answer-form" method="get">
                                         <div class="quiz-header">
                                             <ol type="A">
-                                                <li th:each="answer,state : ${session.questions.get(questionIndex).getAnswers()}">
+                                                <li class="m-2" th:each="answer,state : ${session.questions.get(questionIndex).getAnswers()}">
                                                     <input type="radio" name="answer" th:value="${answer.idAnswer}" th:id="${state.index}" class="answer mr-3"
                                                            th:checked="${session.quizCart.quizCart.get(session.questions.get(questionIndex).idQuestion) == answer.idAnswer}"/>
                                                     <label th:for="${state.index}" id="a_text" th:text="${answer.content}"></label>
@@ -108,24 +107,24 @@
                             </div>
                             <div class="row">
                                 <div class="d-flex justify-content-between footer">
-                                    <div>
+                                    <div class="col-3 d-flex align-items-center justify-content-center">
                                         <th:block th:unless="${questionIndex eq 0}">
                                             <button type="submit" class="btn btn-paging" name="questionIndex" th:value="${questionIndex - 1}"> 
                                                 &larr;Previous
                                             </button>
                                         </th:block>
                                     </div>
-                                    <div>
-                                        <div class="row question-panel text-center">
+                                    <div  class="col-6 d-flex align-items-center justify-content-center">
+                                        <div class="row">
                                             <th:block th:if="${session.questions != null}">
                                                 <div th:each="question,state : ${session.questions}">
-                                                    <button th:classappend="${state.index == questionIndex} ? 'bg-primary'" class="btn btn-paging-question" type="submit" name="questionIndex"
+                                                    <button class="btn btn-paging-question" type="submit" name="questionIndex"
                                                             th:value="${state.index}"><span th:text="${state.index + 1}"></span></button>
                                                 </div>
                                             </th:block>
                                         </div>
                                     </div>
-                                    <div>
+                                    <div class="col-3 d-flex align-items-center justify-content-center">
                                         <th:block th:if="${questionIndex < session.questions.size()-1}">
                                             <button class="btn btn-paging" type="submit" name="questionIndex" th:value="${questionIndex + 1}">Next
                                                 &rarr;</button>
@@ -133,7 +132,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
 
                     </div>
@@ -225,5 +223,4 @@
 //            });
         </script>
     </body>
-
 </html>

@@ -38,6 +38,16 @@ public class AssignmentsOfUser {
     private Date uploadTime;
     
     private String attachments;
+    
+    private double grade;
+
+    public double getGrade() {
+        return grade;
+    }
+
+    public void setGrade(double grade) {
+        this.grade = grade;
+    }
 
     public Integer getIdAssignmentOfUser() {
         return idAssignmentOfUser;

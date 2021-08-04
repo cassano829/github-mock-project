@@ -36,6 +36,9 @@ public class Assignment implements Serializable {
     private String content;
 
     private boolean status;
+    
+//    @OneToMany(mappedBy = "assignment")
+//    private List<Report> reports = new ArrayList<>();
 
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")

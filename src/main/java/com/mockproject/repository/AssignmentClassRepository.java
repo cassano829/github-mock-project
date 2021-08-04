@@ -17,13 +17,13 @@ import com.mockproject.model.Class;
  *
  * @author truon
  */
-public interface AssignmentClassRepository extends CrudRepository<com.mockproject.model.Class, Integer>, PagingAndSortingRepository<com.mockproject.model.Class, Integer>{
-    
+public interface AssignmentClassRepository extends CrudRepository<Class, Integer>, PagingAndSortingRepository<Class, Integer> {
+
     public Page<Class> findByIdSubjectAndStatus(String idSubject, boolean status, Pageable pageAble);
-    
+
     public Page<Class> findByIdSubjectAndIdUserAndStatus(String idSubject, Integer idUser, boolean status, Pageable pageable);
-    
+
     @Query(value = "from Class where idClass in (select aoc.idClass from AssignmentsOfClass aoc where aoc.idAssignment = ?1)")
     public List<Class> getListClassByIdAssignment(Integer idAssignment);
-    
+
 }

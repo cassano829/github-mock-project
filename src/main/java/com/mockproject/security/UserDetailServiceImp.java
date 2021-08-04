@@ -15,11 +15,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 /**
@@ -46,8 +44,12 @@ public class UserDetailServiceImp implements UserDetailsService {
         return new CustomUserDetail(user);
     }
 
-    public List<User> loadAllUsers(){
+    public List<User> loadAllUsers() {
         return repo.findAll();
+    }
+
+    public List<User> findAllByidClass(int idClass) {
+        return repo.findAllByidClass(idClass);
     }
 
     public User loadUserByIdUser(int idUser) {
@@ -66,11 +68,15 @@ public class UserDetailServiceImp implements UserDetailsService {
         return user;
     }
 
-    public void updateAdminAcount(User user){
+    public List<User> findAll() {
+        return repo.findAll();
+    }
+
+    public void updateAdminAcount(User user) {
         encodePassword(user);
 
         User tmp = loadUserByIdUser(user.getIdUser());
-        if(tmp != null){
+        if (tmp != null) {
             tmp.setFullName(user.getFullName());
             tmp.setEmail(user.getEmail());
             tmp.setPassword(user.getPassword());
@@ -78,9 +84,9 @@ public class UserDetailServiceImp implements UserDetailsService {
         repo.save(tmp);
     }
 
-    public void updateUserAccount(User user){
+    public void updateUserAccount(User user) {
         User tmp = loadUserByIdUserNonFilter(user.getIdUser());
-        if(tmp != null) {
+        if (tmp != null) {
             tmp.setFullName(user.getFullName());
             tmp.setEmail(user.getEmail());
             tmp.setStatus(user.isStatus());
@@ -103,7 +109,7 @@ public class UserDetailServiceImp implements UserDetailsService {
         mailSender.sendMail(user, rdn);
     }
 
-    public int registerTeacher(User teacher){
+    public int registerTeacher(User teacher) {
         encodePassword(teacher);
         teacher.setCreateDate(df.format(new Date()));
         teacher.setStatus(true);
@@ -123,7 +129,7 @@ public class UserDetailServiceImp implements UserDetailsService {
         User user = repo.findUserByEmail(email);
         return user;
     }
-    
+
     public User getUserByIdUser(int id) {
         User user = repo.findUserByIdUser(id);
         return user;
@@ -134,9 +140,9 @@ public class UserDetailServiceImp implements UserDetailsService {
         return existedUser == null;
     }
 
-    public boolean isEmailUniqueUpdate(String email,int idUser) {
+    public boolean isEmailUniqueUpdate(String email, int idUser) {
         User existedUser = repo.findUserByEmail(email);
-        if(existedUser == null){
+        if (existedUser == null) {
             return true;
         }
         return idUser == existedUser.getIdUser();
@@ -159,5 +165,7 @@ public class UserDetailServiceImp implements UserDetailsService {
         }
     }
 
-    public List<User> searchUser(String email,Role role,boolean status){ return repo.findAllByEmailContainsAndRolesAndStatus(email,role,status);}
+    public List<User> searchUser(String email, Role role, boolean status) {
+        return repo.findAllByEmailContainsAndRolesAndStatus(email, role, status);
+    }
 }

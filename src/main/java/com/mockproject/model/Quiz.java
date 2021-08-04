@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.mockproject.model;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -17,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
@@ -26,7 +19,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  */
 @Entity
 @Table(name = "Quizes")
-public class Quiz implements Serializable{
+public class Quiz implements Comparable<Quiz> {
 
     public Quiz() {
     }
@@ -135,6 +128,12 @@ public class Quiz implements Serializable{
 
     private String idSubject;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "quiz",cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "quiz", cascade = CascadeType.ALL)
     private Set<Question> questions;
+
+    @Override
+    public int compareTo(Quiz o) {
+        // TODO Auto-generated method stub
+        return this.getIdQuiz() - o.getIdQuiz();
+    }
 }
