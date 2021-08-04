@@ -158,7 +158,6 @@ Quiz STYLE
     width: 100%;
     font-size: 1.1rem;
     font-family: inherit;
-    height: 90px;
 }
 
 button:hover {
@@ -208,10 +207,8 @@ button:focus {
 
 .btn-paging {
     border-radius: 10px;
-    width: 125px;
     color: #000;
     background-color: #fff;
-    margin: 24px 80px 0px 100px
 }
 
 .btn-paging-question {

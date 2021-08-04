@@ -122,7 +122,8 @@
                                     <input type="hidden" name="idUser" th:field="*{idUser}">
                                     <input type="hidden" name="idSubject" th:field="*{idSubject}">
                                     <button type="submit" class="btn btn-primary"  name="action" value="updateQuiz">Update</button>
-                                    <a th:href="@{'/teacher/quiz/showListQuiz/'+${session.idClass}+'/1'}" class="btn btn-light">Cancel</a>
+                                    <a th:if="${session.idClass != null}" th:href="@{'/teacher/quiz/showListQuiz/'+${session.idClass}+'/1'}" class="btn btn-light">Cancel</a>
+                                    <a th:if="${session.idClass == null}" th:href="@{'/teacher/quiz/showQuizesOfTeacher/'+${session.idSubject}+'/1'}"><i class="btn btn-light"></i>Cancel</a>
                                 </div>
                             </form>
                         </fieldset>

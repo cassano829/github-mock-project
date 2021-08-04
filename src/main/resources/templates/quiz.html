@@ -88,11 +88,11 @@
                                 <div class="col-md-12 body-content bg-white">
                                     <h1 class="text-center text-danger">Subject ID - Subject Name</h1>
                                     <hr>
-                                    <h2 id="question" th:text="'Question '+${questionIndex + 1}+': '+${session.questions.get(questionIndex).contentQuestion}">Question 1: How to use Spring boot?</h2>
+                                    <h5 id="question" class="m-4" th:text="'Question '+${questionIndex + 1}+': '+${session.questions.get(questionIndex).contentQuestion}"></h5>
                                     <div class="form-group" id="answer-form" method="get">
                                         <div class="quiz-header">
                                             <ol type="A">
-                                                <li th:each="answer,state : ${session.questions.get(questionIndex).getAnswers()}">
+                                                <li class="m-2" th:each="answer,state : ${session.questions.get(questionIndex).getAnswers()}">
                                                     <input type="radio" name="answer" th:value="${answer.idAnswer}" th:id="${state.index}" class="answer mr-3"
                                                            th:checked="${session.quizCart.quizCart.get(session.questions.get(questionIndex).idQuestion) == answer.idAnswer}"/>
                                                     <label th:for="${state.index}" id="a_text" th:text="${answer.content}"></label>
@@ -105,15 +105,15 @@
                             </div>
                             <div class="row">
                                 <div class="d-flex justify-content-between footer">
-                                    <div>
+                                    <div class="col-3 d-flex align-items-center justify-content-center">
                                         <th:block th:unless="${questionIndex eq 0}">
                                             <button type="submit" class="btn btn-paging" name="questionIndex" th:value="${questionIndex - 1}"> 
                                                 &larr;Previous
                                             </button>
                                         </th:block>
                                     </div>
-                                    <div>
-                                        <div class="row question-panel text-center">
+                                    <div  class="col-6 d-flex align-items-center justify-content-center">
+                                        <div class="row">
                                             <th:block th:if="${session.questions != null}">
                                                 <div th:each="question,state : ${session.questions}">
                                                     <button class="btn btn-paging-question" type="submit" name="questionIndex"
@@ -122,7 +122,7 @@
                                             </th:block>
                                         </div>
                                     </div>
-                                    <div>
+                                    <div class="col-3 d-flex align-items-center justify-content-center">
                                         <th:block th:if="${questionIndex < session.questions.size()-1}">
                                             <button class="btn btn-paging" type="submit" name="questionIndex" th:value="${questionIndex + 1}">Next
                                                 &rarr;</button>
@@ -130,7 +130,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
 
                     </div>
@@ -147,6 +146,14 @@
                 integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
         crossorigin="anonymous"></script>
         <script th:inline="javascript">
+            function cal(timer) {
+            var minutes = parseInt(timer / 60, 10);
+            var seconds = parseInt(timer % 60, 10);
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+            document.querySelector('#timer').textContent = minutes + ":" + seconds;
+            }
+
             function submitQuiz() {
             $.ajax({
             url: 'quiz',
@@ -159,36 +166,26 @@
             });
             }
 
-            function cal(timer) {
-            var minutes = parseInt(timer / 60, 10);
-            var seconds = parseInt(timer % 60, 10);
-            minutes = minutes < 10 ? "0" + minutes : minutes;
-            seconds = seconds < 10 ? "0" + seconds : seconds;
-            document.querySelector('#timer').textContent = minutes + ":" + seconds;
-            }
-
             function startTimer(duration) {
             var timer = duration;
             cal(timer);
             var intervalCount = setInterval(function () {
             cal(timer);
             if (--timer < 0) {
-            $('#submit-form').click();
+            document.getElementById("submit-form").click();
             clearInterval(intervalCount);
             }
+
             }, 1000);
             }
+
             window.onload = function () {
             var endTime = new Date(Date.parse(new Date([[${session.TimeStartQuiz}]])) + [[${session.timeLimit}]] * 60 * 1000);
             var curTime = new Date().getTime();
             var diff = Math.round((endTime - curTime) / 1000);
-            startTimer(diff);
+            var fiveMinutes = diff;
+            startTimer(fiveMinutes);
             }
-            $("input[type=radio]").click(function () {
-            if ($(this).prop("checked")) {
-            submitQuiz()
-            }
-            });
         </script>
     </body>
 

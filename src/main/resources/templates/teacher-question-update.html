@@ -110,7 +110,7 @@
                                                 <input type="hidden" name="answers" th:field="*{answers}">
                                                 <input type="hidden" name="createDate" th:field="*{createDate}">
                                                 <button type="submit" class="btn btn-primary">Update</button>
-                                                <a href="teacher-quiz-edit.html" class="btn btn-light">Cancel</a>
+                                                <a th:href="@{'/teacher/quiz/questions/'+${session.editingQuiz.idQuiz}+'/1'}" class="btn btn-light">Cancel</a>
                                             </div>
                                         </form>
                                     </div>
