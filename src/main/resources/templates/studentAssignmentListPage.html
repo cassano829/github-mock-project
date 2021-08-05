@@ -56,10 +56,23 @@
                                             <br><label>Status: </label>
                                             <span  class="text-primary"  th:text="${assignment.status}"></span>
 
+                                            <!--//MODIFIED>>>>>>>>>>>>>>>>>>>>>>>>>>START-->
+                                            <br><label>Grade: </label>
+                                            <span class="text-danger" th:if="${mapAssignmentOfUser.get(assignment.idAssignment) == -1}" >Not Graded</span>
+                                            <span class="text-primary" th:if="${mapAssignmentOfUser.get(assignment.idAssignment) > -1}" th:text="${mapAssignmentOfUser.get(assignment.idAssignment)}" ></span>
+                                            <!--//MODIFIED>>>>>>>>>>>>>>>>>>>>>>>>>>END-->
+
                                             <br><label>Submission: </label>
+                                            <!--//MODIFIED>>>>>>>>>>>>>>>>>>>>>>>>>>START-->
                                             <div th:if="${mapAssignment.containsKey(assignment.idAssignment) and assignment.deadline.after(#dates.createNow())}">
-                                                <a class="text-primary" th:href="@{'/student/assignment/update/' + ${assignment.idAssignment}}">Update</a>
+                                                <div th:if="${mapAssignmentOfUser.get(assignment.idAssignment) == -1}">
+                                                    <a class="text-primary" th:href="@{'/student/assignment/update/' + ${assignment.idAssignment}}">Update</a>
+                                                </div>
+                                                <div th:if="${mapAssignmentOfUser.get(assignment.idAssignment) > -1}">
+                                                    <a  class="text-primary" th:href="@{'/student/assignment/view/' + ${assignment.idAssignment}}">View</a>
+                                                </div>
                                             </div>
+                                            <!--//MODIFIED>>>>>>>>>>>>>>>>>>>>>>>>>>END-->
                                             <div th:if="${!mapAssignment.containsKey(assignment.idAssignment) and assignment.deadline.after(#dates.createNow())}">
                                                 <a class="text-primary"  th:href="@{'/student/assignment/create/' + ${assignment.idAssignment}}">Add</a>
                                             </div>

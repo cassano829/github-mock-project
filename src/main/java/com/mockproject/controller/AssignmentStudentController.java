@@ -14,6 +14,7 @@ import com.mockproject.security.CustomUserDetail;
 import com.mockproject.service.ClassService;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpSession;
@@ -44,7 +45,7 @@ public class AssignmentStudentController {
 
     @Autowired
     ClassService classService;
-    
+
     @Autowired
     AssignmentsOfUserRepository assignmentsOfUserRepository;
 
@@ -55,6 +56,14 @@ public class AssignmentStudentController {
 
         User _user = ((CustomUserDetail) authentication.getPrincipal()).getUser();
         List<AssignmentsOfUser> list = assignmentsOfUserRepository.findByIdClassAndIdUser(idClass, _user.getIdUser());
+
+        //MODIFIED>>>>>>>>>>>>>>>>>>>>>>>>>>START
+        Integer idUser = ((CustomUserDetail) authentication.getPrincipal()).getUser().getIdUser();
+        Map<Integer, Double> mapAssignmentOfUser = assignmentsOfUserRepository.findByIdClassAndIdUser(idClass, idUser)
+                .stream().collect(Collectors.toMap(AssignmentsOfUser::getIdAssignment, assignmentsOfUser -> assignmentsOfUser.getGrade()));
+
+        model.addAttribute("mapAssignmentOfUser", mapAssignmentOfUser);
+        //MODIFIED>>>>>>>>>>>>>>>>>>>>>>>>>>END
 
         model.addAttribute("mapAssignment", list.stream().collect(Collectors.toMap(AssignmentsOfUser::getIdAssignment, user -> user.getIdAssignment())));
         model.addAttribute("mapUser", userRepository.findAll().stream().collect(Collectors.toMap(User::getIdUser, user -> user)));
@@ -67,6 +76,14 @@ public class AssignmentStudentController {
         Integer idClass = (Integer) session.getAttribute("studentCurrentIdClass");
         User _user = ((CustomUserDetail) authentication.getPrincipal()).getUser();
         List<AssignmentsOfUser> list = assignmentsOfUserRepository.findByIdClassAndIdUser(idClass, _user.getIdUser());
+
+        //MODIFIED>>>>>>>>>>>>>>>>>>>>>>>>>>START
+        Integer idUser = ((CustomUserDetail) authentication.getPrincipal()).getUser().getIdUser();
+        Map<Integer, Double> mapAssignmentOfUser = assignmentsOfUserRepository.findByIdClassAndIdUser(idClass, idUser)
+                .stream().collect(Collectors.toMap(AssignmentsOfUser::getIdAssignment, assignmentsOfUser -> assignmentsOfUser.getGrade()));
+
+        model.addAttribute("mapAssignmentOfUser", mapAssignmentOfUser);
+        //MODIFIED>>>>>>>>>>>>>>>>>>>>>>>>>>END
 
         model.addAttribute("mapAssignment", list.stream().collect(Collectors.toMap(AssignmentsOfUser::getIdAssignment, user -> user.getIdAssignment())));
         model.addAttribute("mapUser", userRepository.findAll().stream().collect(Collectors.toMap(User::getIdUser, user -> user)));
