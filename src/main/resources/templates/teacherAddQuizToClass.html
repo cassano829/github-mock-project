@@ -51,8 +51,8 @@
                                             <span class="text-danger" th:unless="${addedClasses.contains(class.idClass)}">Not Added</span>
                                         </td>
                                         <td>
-                                            <a th:if="${addedClasses.contains(class.idClass)}" th:href="@{'/teacher/quiz/addClassToQuiz/'+${page}+'/undo?idClass='+${class.idClass}+'&idQuiz='+${idQuiz}}">Undo</a>
-                                            <a th:unless="${addedClasses.contains(class.idClass)}" th:href="@{'/teacher/quiz/addClassToQuiz/'+${page}+'/add?idClass='+${class.idClass}+'&idQuiz='+${idQuiz}}">Add</a>
+                                            <a th:if="${addedClasses.contains(class.idClass)}" class="text-primary" th:href="@{'/teacher/quiz/addClassToQuiz/'+${page}+'/undo?idClass='+${class.idClass}+'&idQuiz='+${idQuiz}}">Undo</a>
+                                            <a th:unless="${addedClasses.contains(class.idClass)}" class="text-primary" th:href="@{'/teacher/quiz/addClassToQuiz/'+${page}+'/add?idClass='+${class.idClass}+'&idQuiz='+${idQuiz}}">Add</a>
                                         </td>
                                     </tr>
                                 </table>

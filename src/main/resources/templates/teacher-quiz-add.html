@@ -47,8 +47,12 @@
                     <li class="active">
                         <a th:href="@{/subject/teacher}"><i class="fas fa-book-open"></i>Subjects</a>
                     </li>
-                    <li>
+                    
+                    <li th:if="${session.idClass != null}">
                         <a th:href="@{'/teacher/assignment/assignmentOfClass/' + ${session.idClass} + '/1'}"><i class="fas fa-hand-point-right"></i>Assignment</a>
+                    </li>
+                    <li th:if="${session.idClass == null}">
+                        <a th:href="@{'/teacher/assignment/'+${session.idSubject}}"><i class="fas fa-hand-point-right"></i>Assignment</a>
                     </li>
 
                     <li class="act" th:if="${session.idClass != null}">
