@@ -125,7 +125,7 @@ public class TeacherGradingAssignmentController {
     }
 
     @GetMapping("/detail/submit/{id}")
-    public String userAssignmentGrading(@PathVariable("id") Integer idAssignmentOfUser, @RequestParam("mark") Integer mark, Model model) {
+    public String userAssignmentGrading(@PathVariable("id") Integer idAssignmentOfUser, @RequestParam("mark") Double mark, Model model) {
 
         AssignmentsOfUser aou = assignmentsOfUserRepository.findById(idAssignmentOfUser).get();
         aou.setGrade(mark);

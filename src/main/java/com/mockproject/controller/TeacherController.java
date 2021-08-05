@@ -624,7 +624,7 @@ public class TeacherController {
         }
     }
 
-    @GetMapping("/account")
+    @RequestMapping("/account")
     public String teacherAccountPage(Model model
     ) {
         CustomUserDetail user = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

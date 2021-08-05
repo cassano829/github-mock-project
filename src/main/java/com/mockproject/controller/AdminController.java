@@ -158,8 +158,8 @@ public class AdminController {
         return "adminHome";
     }
 
-//    @RequestMapping("/account")
-    @GetMapping("/account")
+    @RequestMapping("/account")
+//    @GetMapping("/account")
     public String adminAccountPage(Model model) {
         CustomUserDetail user = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         model.addAttribute("user", user.getUser());
